@@ -1,14 +1,15 @@
-path = '../circuits/circuito1.txt'
+def parser(file_path):
+    matrix = list()
 
-matrix = []
+    f = open(file_path, "r")
 
-with open(path, 'r') as file:
-    line = file.readline()
-
-    while line:
+    for line in f:
         line = line.replace("\n", "")
         elems = line.split(" ")
         matrix.append(elems)
-        line = file.readline()
 
-print(matrix)
+    f.close()
+
+    return (matrix)
+
+parser("../circuits/circuito1.txt")
