@@ -1,13 +1,14 @@
 class Node:
-    def __init__(self, x, y, vel_x, vel_y):
+    def __init__(self, x, y, vel_x, vel_y, final_state):
         self.pos = (x, y)
         self.vel = (vel_x, vel_y)
+        self.final_state = final_state
 
     def __str__(self):
-        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel)
+        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel) + " finalState?=" + str(self.final_state)
 
     def __repr__(self):
-        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel)
+        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel) + " finalState?=" + str(self.final_state)
 
     def get_pos(self):
         return self.pos
