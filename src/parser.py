@@ -3,13 +3,36 @@ def parser(file_path):
 
     f = open(file_path, "r")
 
+    start = None
+    finish = list()
+
+    h = open(file_path, "r")
+    y_max = len(h.readlines())
+    h.close()
+
+    y = 0
     for line in f:
         line = line.replace("\n", "")
         elems = line.split(" ")
+
+        x = 0
+        for char in elems:
+            if char == "P":
+                start = (x, y_max - y - 1)
+            elif char == "F":
+                finish.append((x, y_max - y - 1))
+
+
+            x+= 1
+
         matrix.append(elems)
 
+        y += 1
+
+
     f.close()
+    matrix.reverse()
 
-    return (matrix)
+    return (matrix, start, finish)
 
-parser("../circuits/circuito1.txt")
+(matrix, start, finish) = parser("../circuits/circuito1.txt")
