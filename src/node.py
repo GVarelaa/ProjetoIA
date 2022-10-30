@@ -1,8 +1,9 @@
 class Node:
-    def __init__(self, x, y, vel_x, vel_y, final_state):
+    def __init__(self, x, y, vel_x, vel_y, final_state, out):
         self.pos = (x, y)
         self.vel = (vel_x, vel_y)
         self.final_state = final_state
+        self.out = False
 
     def __str__(self):
         return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel) + " finalState?=" + str(self.final_state)
@@ -28,6 +29,9 @@ class Node:
     def get_vel_y(self):
         return self.vel[1]
 
+    def get_out(self):
+        return self.out
+
     def set_pos(self, x, y):
         self.pos = (x,y)
 
@@ -45,6 +49,9 @@ class Node:
 
     def set_vel_y(self, vel_y):
         self.vel[1] = vel_y
+
+    def set_out(self, out):
+        self.out = out
 
     def __eq__(self, other):
         return self.pos == other.pos and self.vel == other.vel

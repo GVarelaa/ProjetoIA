@@ -19,6 +19,17 @@ class Graph:
             if node.get_pos() == pos:
                 return node
 
-    #def add_edge(self, node1, node2, weight):
+    def add_edge(self, node1, node2, weight):
+        if node1 not in self.nodes:
+            self.nodes.append(node1)
+            self.graph[(node1.get_pos(), node1.get_vel())] = set()
+
+        if node2 not in self.nodes:
+            self.nodes.append(node2)
+            self.graph[(node2.get_pos(), node2.get_vel())] = set()
+
+        self.graph[(node1.get_pos(), node1.get_vel())].add((node2, weight))
+        self.graph[(node2.get_pos(), node2.get_vel())].add((node1, weight)) # tou a partir do principio que é bidirecional
+
 
 

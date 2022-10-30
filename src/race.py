@@ -1,17 +1,19 @@
 from node import Node
 from parser import parser
+from graph import Graph
 
 class Race:
-    def __init__(self, matrix):
+    def __init__(self, matrix, graph):
         self.matrix = matrix
+        self.graph = graph
 
-    def nextState(self, state, acPair, matrix):
+    def next_state(self, state, acel_pair, matrix):
         # Given an initial state, returns a resulting state
         # According to the choices of accelerations (acX, acY)
         # And to the matrix (map) of the circuit
 
-        dispX = state.get_vel_x() + acPair[0]
-        dispY = state.get_vel_y() + acPair[1]
+        dispX = state.get_vel_x() + acel_pair[0]
+        dispY = state.get_vel_y() + acel_pair[1]
 
         currX = state.get_pos_x()
         currY = state.get_pos_y()
@@ -24,6 +26,7 @@ class Race:
         newY = currY + dispY
         newVelX = currVelX
         newVelY = currVelY
+        out = False
 
         #Deslocamento horizontal
 
@@ -35,9 +38,10 @@ class Race:
                 mult = -1
             
             if (matrix[currY][currX + i * mult] == 'F'):
-                return Node(currX + i * mult, currY, newVelX, newVelY, True)
+                return Node(currX + i * mult, currY, newVelX, newVelY, True, out)
             
             if (matrix[currY][currX + i * mult] == 'X'):
+                out = True
                 newVelX = newVelY = 0
                 newX = currX + i * mult + inc * mult
                 
@@ -53,17 +57,39 @@ class Race:
                 mult = -1
             
             if (matrix[currY + j * mult][newX] == 'F'):
-                return Node(currX, currY + j * mult, newVelX, newVelY, True)
+                return Node(currX, currY + j * mult, newVelX, newVelY, True, out)
 
             if (matrix[currY + j * mult][newX] == 'X'):
+                out = True
                 newVelY = newVelX = 0
                 newY = currY + j * mult + inc * mult
                 
                 break
 
-        newState = Node(newX, newY, newVelX, newVelY, False)
+        newState = Node(newX, newY, newVelX, newVelY, False, out)
         return newState
 
+
+    def build_state(self, state, acel_pair, matrix):
+        n = self.next_state(state, acel_pair, matrix)
+
+        if n.get_out():
+            self.graph.add_edge(state, n, 25)
+        else:
+            self.graph.add_edge(state, n, 1)
+
+    def build_states_from_node(self, state, matrix):
+        self.build_state(state, (1,1), matrix)
+        self.build_state(state, (1, -1), matrix)
+        self.build_state(state, (1, 0), matrix)
+        self.build_state(state, (-1, 1), matrix)
+        self.build_state(state, (-1, -1), matrix)
+        self.build_state(state, (-1, 0), matrix)
+        self.build_state(state, (0, 0), matrix)
+        self.build_state(state, (0, 1), matrix)
+        self.build_state(state, (0, -1), matrix)
+
+    #def build_graph(self, initial_state):
 
 mat = parser("../circuits/circuito1.txt")
 
