@@ -24,13 +24,11 @@ def parser(file_path):
             elif char == "F":
                 finish.append((x, y_max - y - 1))
 
-
-            x+= 1
+            x += 1
 
         matrix.append(elems)
 
         y += 1
-
 
     f.close()
 

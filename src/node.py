@@ -1,15 +1,15 @@
 class Node:
-    def __init__(self, x, y, vel_x, vel_y, final_state, out):
+    def __init__(self, x, y, vel_x, vel_y, is_final_state, is_out):
         self.pos = (x, y)
         self.vel = (vel_x, vel_y)
-        self.final_state = final_state
-        self.out = out
+        self.is_final_state = is_final_state
+        self.is_out = is_out
 
     def __str__(self):
-        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel) + " finalState?=" + str(self.final_state) + " out=" + str(self.out)
+        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel) + " is_final_state=" + str(self.is_final_state) + " is_out=" + str(self.is_out)
 
     def __repr__(self):
-        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel) + " finalState?=" + str(self.final_state) + " out=" + str(self.out)
+        return "node: pos=" + str(self.pos) + " velocity=" + str(self.vel) + " is_final_state=" + str(self.is_final_state) + " is_out=" + str(self.is_out)
 
     def get_pos(self):
         return self.pos
@@ -29,14 +29,14 @@ class Node:
     def get_vel_y(self):
         return self.vel[1]
 
-    def get_out(self):
-        return self.out
+    def get_is_final_state(self):
+        return self.is_final_state
 
-    def get_final_state(self):
-        return self.final_state
+    def get_is_out(self):
+        return self.is_out
 
     def set_pos(self, x, y):
-        self.pos = (x,y)
+        self.pos = (x, y)
 
     def set_pos_x(self, x):
         self.pos[0] = x
@@ -53,11 +53,11 @@ class Node:
     def set_vel_y(self, vel_y):
         self.vel[1] = vel_y
 
-    def set_out(self, out):
-        self.out = out
+    def set_is_final_state(self, is_final_state):
+        self.is_final_state = is_final_state
 
-    def set_final_state(self, state):
-        self.final_state = state
+    def set_is_out(self, is_out):
+        self.is_out = is_out
 
     def __eq__(self, other):
         return self.pos == other.pos and self.vel == other.vel
