@@ -9,8 +9,15 @@ class Graph:
 
     def __str__(self):
         string = ""
-        for key in self.m_graph.keys():
-            string = string + "Nodo " + str(key) + ": " + str(self.m_graph[key]) + "\n"
+        for key in self.graph.keys():
+            string = string + "Nodo " + str(key) + ": " + str(self.graph[key]) + "\n"
+
+        return string
+
+    def __repr__(self):
+        string = ""
+        for key in self.graph.keys():
+            string = string + "Nodo " + str(key) + ": " + str(self.graph[key]) + "\n"
 
         return string
 

@@ -33,6 +33,7 @@ def parser(file_path):
 
 
     f.close()
-    matrix.reverse()
+
+    matrix = list(zip(*matrix[::-1]))
 
     return (matrix, start, finish)
