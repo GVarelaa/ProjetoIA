@@ -19,6 +19,8 @@ def parser(file_path):
         for char in elems:
             if char == "P":
                 start = (x, y_max - y - 1)
+                elems[x] = "-"
+
             elif char == "F":
                 finish.append((x, y_max - y - 1))
 
@@ -34,5 +36,3 @@ def parser(file_path):
     matrix.reverse()
 
     return (matrix, start, finish)
-
-(matrix, start, finish) = parser("../circuits/circuito1.txt")

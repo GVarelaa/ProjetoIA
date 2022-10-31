@@ -57,7 +57,4 @@ class Node:
         return self.pos == other.pos and self.vel == other.vel
 
     def __hash__(self):
-        l = list()
-        l.append(self.pos)
-        l.append(self.vel)
-        return hash(l)
+        return hash((self.pos, self.vel))
