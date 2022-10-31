@@ -78,18 +78,34 @@ class Race:
         else:
             self.graph.add_edge(state, n, 1)
 
-    def build_states_from_node(self, state, matrix):
-        self.build_state(state, (1,1), matrix)
-        self.build_state(state, (1, -1), matrix)
-        self.build_state(state, (1, 0), matrix)
-        self.build_state(state, (-1, 1), matrix)
-        self.build_state(state, (-1, -1), matrix)
-        self.build_state(state, (-1, 0), matrix)
-        self.build_state(state, (0, 0), matrix)
-        self.build_state(state, (0, 1), matrix)
-        self.build_state(state, (0, -1), matrix)
+        return n
 
-    #def build_graph(self, initial_state):
+    def build_states_from_node(self, state, matrix):
+        nodes = list()
+
+        nodes.append(self.build_state(state, (1  , 1), matrix))
+        nodes.append(self.build_state(state, (1  , -1), matrix))
+        nodes.append(self.build_state(state, (1  , 0), matrix))
+        nodes.append(self.build_state(state, (-1 , 1), matrix))
+        nodes.append(self.build_state(state, (-1 , -1), matrix))
+        nodes.append(self.build_state(state, (-1 , 0), matrix))
+        nodes.append(self.build_state(state, (0  , 0), matrix))
+        nodes.append(self.build_state(state, (0  , 1), matrix))
+        nodes.append(self.build_state(state, (0  , -1), matrix))
+
+        return nodes
+
+    def build_graph(self, initial_state):
+        nodes = list()
+        nodes += self.build_states_from_node(initial_state, self.matrix)
+
+        while nodes is not Empty:
+
+
+
+
+
+
 
 mat = parser("../circuits/circuito1.txt")
 
