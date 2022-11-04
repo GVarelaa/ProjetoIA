@@ -10,7 +10,9 @@ class Graph:
     def __str__(self):
         string = ""
         for key in self.graph.keys():
-            string = string + "Nodo " + str(key) + ": " + str(self.graph[key]) + "\n"
+            string = string + str(key) + ": \n"
+            for node in self.graph[key]:
+                string += "     " + str(node) + "\n"
 
         return string
 
@@ -36,7 +38,8 @@ class Graph:
             self.graph[node2] = set()
 
         self.graph[node1].add((node2, weight))
-        #self.graph[(node2.get_pos(), node2.get_vel())].add((node1, weight)) # tou a partir do principio que é bidirecional
+
+
 
 
 

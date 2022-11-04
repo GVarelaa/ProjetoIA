@@ -17,21 +17,21 @@ class Race:
         # And to the matrix (map) of the circuit
 
         # displacements
-        disp_x = state.get_vel_x() + accel_pair[0]
-        disp_y = state.get_vel_y() + accel_pair[1]
+        disp_x = state.vel[0] + accel_pair[0]
+        disp_y = state.vel[1] + accel_pair[1]
 
-        curr_pos_x = state.get_pos_x()
-        curr_pos_y = state.get_pos_y()
+        curr_pos_x = state.pos[0]
+        curr_pos_y = state.pos[1]
 
-        curr_vel_x = state.get_vel_x()
-        curr_vel_y = state.get_vel_y()
+        curr_vel_x = state.vel[0]
+        curr_vel_y = state.vel[1]
 
         # Values if there are no obstacles in the way
         new_pos_x = curr_pos_x + disp_x
         new_pos_y = curr_pos_y + disp_y
         new_vel_x = curr_vel_x + accel_pair[0]
         new_vel_y = curr_vel_y + accel_pair[1]
-        is_out = False
+        crashed = False
 
         # Deslocamento horizontal
         for i in range(1, abs(disp_x) + 1):
@@ -42,10 +42,10 @@ class Race:
                 mult = -1
 
             if self.matrix[curr_pos_x + i * mult][curr_pos_y] == 'F':
-                return Node(curr_pos_x + i * mult, curr_pos_y, new_vel_x, new_vel_y, True, False)
+                return Node(curr_pos_x + i * mult, curr_pos_y, new_vel_x, new_vel_y, True, False, accel_pair)
 
             if self.matrix[curr_pos_x + i * mult][curr_pos_y] == 'X':
-                is_out = True
+                crashed = True
                 new_vel_x = new_vel_y = 0
                 new_pos_x = curr_pos_x + i * mult + inc * mult
 
@@ -60,16 +60,16 @@ class Race:
                 mult = -1
 
             if self.matrix[new_pos_x][curr_pos_y + j * mult] == 'F':
-                return Node(curr_pos_x, curr_pos_y + j * mult, new_vel_x, new_vel_y, True, False)
+                return Node(curr_pos_x, curr_pos_y + j * mult, new_vel_x, new_vel_y, True, False, accel_pair)
 
             if self.matrix[new_pos_x][curr_pos_y + j * mult] == 'X':
-                is_out = True
+                crashed = True
                 new_vel_y = new_vel_x = 0
                 new_pos_y = curr_pos_y + j * mult + inc * mult
 
                 break
 
-        new_state = Node(new_pos_x, new_pos_y, new_vel_x, new_vel_y, False, is_out)
+        new_state = Node(new_pos_x, new_pos_y, new_vel_x, new_vel_y, False, crashed, accel_pair)
         #print(new_state)
         return new_state
 
@@ -123,12 +123,12 @@ class Race:
         #            self.build_graph(node, states_processed)
 
         for node in adjs:
-            if node.get_is_out():
+            if node.crashed:
                 self.graph.add_edge(initial_state, node, 25)
             else:
                 self.graph.add_edge(initial_state, node, 1)
 
-            if not node.get_is_final_state() and node not in states_processed:
+            if not node.is_final_state and node not in states_processed:
                 self.build_graph(node, states_processed)
 
             states_processed.append(node)
