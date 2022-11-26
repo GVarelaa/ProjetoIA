@@ -73,7 +73,7 @@ class Race:
         #print(new_state)
         return new_state
 
-    def build_states_from_node(self, state):
+    def expand_state(self, state):
         nodes = list()
 
         n1 = self.next_state(state, (1, 1))
@@ -107,20 +107,9 @@ class Race:
 
     def build_graph(self, initial_state, states_processed):
         adjs = list()
-        adjs = self.build_states_from_node(initial_state)  # estados possiveis
+        adjs = self.expand_state(initial_state)  # estados possiveis
 
         states_processed.append(initial_state)
-
-        #for node in adjs:
-        #    if node not in states_processed:
-        #        states_processed.append(node)
-        #        if node.get_is_out():
-        #            self.graph.add_edge(initial_state, node, 25)
-        #        else:
-        #            self.graph.add_edge(initial_state, node, 1)
-        #
-        #        if not node.get_is_final_state():
-        #            self.build_graph(node, states_processed)
 
         for node in adjs:
             if node.crashed:
@@ -133,14 +122,3 @@ class Race:
 
             states_processed.append(node)
 
-
-#(matrix, start, final) = parser("../circuits/circuito1.txt")
-#graph = Graph()
-#
-#r = Race(matrix, graph)
-#
-#initial_state = Node(1, 3, 0, 0, False, False)
-#
-#r.build_graph(initial_state, [])
-#print(graph)
-#
