@@ -76,32 +76,15 @@ class Race:
     def expand_state(self, state):
         nodes = list()
 
-        n1 = self.next_state(state, (1, 1))
-        nodes.append(n1)
-
-        n2 = self.next_state(state, (1, -1))
-        nodes.append(n2)
-
-        n3 = self.next_state(state, (1, 0))
-        nodes.append(n3)
-
-        n4 = self.next_state(state, (-1, 1))
-        nodes.append(n4)
-
-        n5 = self.next_state(state, (-1, -1))
-        nodes.append(n5)
-
-        n6 = self.next_state(state, (0, -1))
-        nodes.append(n6)
-
-        n7 = self.next_state(state, (-1, 0))
-        nodes.append(n7)
-
-        n8 = self.next_state(state, (0, 0))
-        nodes.append(n8)
-
-        n9 = self.next_state(state, (0, 1))
-        nodes.append(n9)
+        nodes.append(self.next_state(state, (1, 1)))
+        nodes.append(self.next_state(state, (1, -1)))
+        nodes.append(self.next_state(state, (1, 0)))
+        nodes.append(self.next_state(state, (-1, 1)))
+        nodes.append(self.next_state(state, (-1, -1)))
+        nodes.append(self.next_state(state, (0, -1)))
+        nodes.append(self.next_state(state, (-1, 0)))
+        nodes.append(self.next_state(state, (0, 0)))
+        nodes.append(self.next_state(state, (0, 1)))
 
         return nodes
 
