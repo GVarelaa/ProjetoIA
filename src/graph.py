@@ -1,3 +1,4 @@
+import math
 from node import Node
 
 class Graph:
@@ -39,6 +40,29 @@ class Graph:
 
         self.graph[node1].add((node2, weight))
 
+    def get_arc_cost(self, node1, node2):
+        if (node1 == node2):
+            return 0
+
+        custoT = math.inf
+        set = self.graph[node1]
+
+        for (name, weight) in set:
+            if (name == node2):
+                custoT = weight
+
+        return custoT
+
+    def calcula_custo(self, caminho):
+        custo = 0
+        i = 0
+
+        while i + 1 < len(caminho):
+            custo = custo + self.get_arc_cost(caminho[i], caminho[i + 1])
+            i = i + 1
+
+        return custo
+
     def procura_DFS(self, start, end, path=[], visited=set()):
         path.append(start)
         visited.add(start)
@@ -48,7 +72,7 @@ class Graph:
             custoT = self.calcula_custo(path)
             return (path, custoT)
 
-        for (adjacente, peso) in self.m_graph[start]:
+        for (adjacente, peso) in self.graph[start]:
             if adjacente not in visited:
                 resultado = self.procura_DFS(adjacente, end, path, visited)
                 if resultado is not None:
