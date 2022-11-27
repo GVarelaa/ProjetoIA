@@ -1,4 +1,6 @@
 import math
+from queue import Queue
+
 from node import Node
 
 class Graph:
@@ -82,6 +84,42 @@ class Graph:
         return None
 
 
+    def procura_BFS(self, start, end):
+        #definir nodos visitados para evitar ciclos
+        visited = set()
+        q = Queue()
 
+        #adicionar o nodo inicial à fila e aos visitados
+        q.put(start)
+        visited.add(start)
 
+        #garantir que o start node nao tem pais...
+        parent = dict()
+        parent[start] = None
+
+        path_found = False
+        while not q.empty() and path_found == False:
+            nodo_atual = q.get()
+            #nodo_name = nodo_atual.getName();
+            if nodo_atual == end:
+                path_found = True
+            else:
+                for (adj, peso) in self.m_graph[nodo_atual]:
+                    if adj not in visited:
+                        q.put(adj)
+                        parent[adj] = nodo_atual
+                        visited.add(adj)
+
+        #reconstruir o caminho
+        path = []
+        if path_found:
+            path.append(end)
+            while parent[end] is not None:
+                path.append(parent[end])
+                end = parent[end]
+            path.reverse()
+            #funçao calcula custo caminho
+            custo = self.calcula_custo(path)
+
+        return (path, custo)
 
