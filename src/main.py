@@ -28,10 +28,11 @@ def menu_build_graph():
                 break
 
             case other:
-                print("Opção inválida")
+                print("\nOpção inválida!\n")
                 break
 
     return race
+
 
 def menu(g):
     opt = -1
@@ -75,8 +76,12 @@ def menu(g):
                 end = input("Nodo final: ")
                 print(g.BFS(start, end))
 
-            case others:
-                print("Opção inválida")
+            case 7:
+                main()
+                break
+
+            case other:
+                print("\nOpção inválida!\n")
 
 
 def main():
