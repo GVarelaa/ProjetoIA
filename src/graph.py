@@ -1,4 +1,6 @@
-import math
+import networkx as nx
+import matplotlib.pyplot as plt
+
 from queue import Queue
 
 from node import Node
@@ -31,7 +33,7 @@ class Graph:
             if node.get_pos() == pos:
                 return node
 
-    def add_edge(self, node1, node2, weight):
+    def add_edge(self, node1, node2, cost):
         if node1 not in self.nodes:
             self.nodes.append(node1)
             self.graph[node1] = set()
@@ -40,86 +42,104 @@ class Graph:
             self.nodes.append(node2)
             self.graph[node2] = set()
 
-        self.graph[node1].add((node2, weight))
+        self.graph[node1].add((node2, cost))
 
     def get_arc_cost(self, node1, node2):
-        if (node1 == node2):
-            return 0
+        total = 0
 
-        custoT = math.inf
-        set = self.graph[node1]
+        adjs = self.graph[node1] #lista de arestas para aquele nodo
+        for (node, cost) in adjs:
+            if node == node2:
+                total = cost
 
-        for (name, weight) in set:
-            if (name == node2):
-                custoT = weight
+        return total
 
-        return custoT
-
-    def calcula_custo(self, caminho):
-        custo = 0
+    def calc_path_cost(self, path):
+        total = 0
         i = 0
+        while i < len(path)-1:
+             total += self.get_arc_cost(path[i], path[i+1])
+             i += 1
+        return total
 
-        while i + 1 < len(caminho):
-            custo = custo + self.get_arc_cost(caminho[i], caminho[i + 1])
-            i = i + 1
-
-        return custo
-
-    def procura_DFS(self, start, end, path=[], visited=set()):
+    def DFS(self, start, end, path=[], visited=set()):
         path.append(start)
         visited.add(start)
 
         if start == end:
-            # calcular o custo do caminho função calcula custo
-            custoT = self.calcula_custo(path)
-            return (path, custoT)
+            total_cost = self.calc_path_cost(path)
+            print()
+            return (path, total_cost)
 
-        for (adjacente, peso) in self.graph[start]:
-            if adjacente not in visited:
-                resultado = self.procura_DFS(adjacente, end, path, visited)
-                if resultado is not None:
-                    return resultado
+        for (adj, cost) in self.graph[start]:
+            if adj not in visited:
+                ret = self.DFS(adj, end, path, visited)
+                if ret is not None:
+                    return ret
 
-        path.pop()  # se nao encontra, remover o que está no caminho
+        path.pop() #se nao encontrar, remover o que está no caminho
         return None
 
-
-    def procura_BFS(self, start, end):
-        #definir nodos visitados para evitar ciclos
+    def BFS(self, start, end):
         visited = set()
         q = Queue()
 
-        #adicionar o nodo inicial à fila e aos visitados
         q.put(start)
         visited.add(start)
 
-        #garantir que o start node nao tem pais...
-        parent = dict()
-        parent[start] = None
+        #garantir que o start node nao tem pais
+        parents = dict()
+        parents[start] = None
 
         path_found = False
-        while not q.empty() and path_found == False:
-            nodo_atual = q.get()
-            #nodo_name = nodo_atual.getName();
-            if nodo_atual == end:
+        while not q.empty() and not path_found:
+            node = q.get()
+
+            if node == end:
                 path_found = True
+                print()
             else:
-                for (adj, peso) in self.m_graph[nodo_atual]:
+                for (adj, cost) in self.graph[node]:
                     if adj not in visited:
                         q.put(adj)
-                        parent[adj] = nodo_atual
+                        parents[adj] = node
                         visited.add(adj)
 
         #reconstruir o caminho
         path = []
         if path_found:
             path.append(end)
-            while parent[end] is not None:
-                path.append(parent[end])
-                end = parent[end]
+            while parents[end] is not None:
+                path.append(parents[end])
+                end = parents[end]
             path.reverse()
-            #funçao calcula custo caminho
-            custo = self.calcula_custo(path)
 
-        return (path, custo)
+            total_cost = self.calc_path_cost(path)
+            return (path, total_cost)
 
+    def print_edges(self):
+        l = ""
+        for node in self.graph.keys():
+            for (adj, cost) in self.graph[node]:
+                l = l + str(node) + " -> " + str(adj) + " cost:" + str(cost) + "\n"
+        return l
+
+    def draw(self):
+        verts = self.nodes
+        g = nx.Graph()
+
+        #Converter para o formato usado pela biblioteca networkx
+        for node in verts:
+            g.add_node(str(node))
+            for (adj, cost) in self.graph[node]:
+                l = (node, adj)
+                g.add_edge(str(node), str(adj), cost=cost)
+
+        #desenhar o grafo
+        pos = nx.spring_layout(g)
+        nx.draw_networkx(g, pos, with_labels=True, font_weight='bold')
+        labels = nx.get_edge_attributes(g, 'cost')
+        nx.draw_networkx_edge_labels(g, pos, edge_labels=labels)
+
+        plt.draw()
+        plt.show()

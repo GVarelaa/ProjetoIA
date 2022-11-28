@@ -3,74 +3,89 @@ from race import Race
 from graph import Graph
 from node import Node
 
+
+def menu_build_graph():
+    race = None
+
+    print("=========================")
+    print("1... Construir grafo")
+    print("0... Sair")
+    print("=========================")
+
+    opt = -1
+    while opt != 0:
+        opt = int(input("Introduza a sua opção: "))
+
+        match opt:
+            case 1:
+                path = input("Indique a diretoria do circuito: ")
+                matrix = parser(path)[0]
+                race = Race(matrix, Graph())
+                race.build_graph(Node(3, 4, 0, 0, False, False, (0, 0)), [])
+                print("\nCircuito carregado com sucesso!\n")
+                break
+            case 0:
+                break
+
+            case other:
+                print("Opção inválida")
+                break
+
+    return race
+
+def menu(g):
+    opt = -1
+    while opt != 0:
+        print("=========================")
+        print("1... Imprimir grafo")
+        print("2... Imprimir nodos")
+        print("3... Imprimir arestas")
+        print("4... Desenhar grafo")
+        print("5... DFS")
+        print("6... BFS")
+        print("7... Voltar")
+        print("0... Sair")
+        print("=========================")
+
+        opt = int(input("Introduza a sua opção: "))
+
+        match opt:
+            case 0:
+                break
+
+            case 1:
+                print(g)
+
+            case 2:
+                print(g.graph.keys())
+
+            case 3:
+                print(g.print_edges())
+
+            case 4:
+                g.draw()
+
+            case 5:
+                start = input("Nodo inicial: ")
+                end = input("Nodo final: ")
+                print(g.DFS(start, end, [], set()))
+
+            case 6:
+                start = input("Nodo inicial: ")
+                end = input("Nodo final: ")
+                print(g.BFS(start, end))
+
+            case others:
+                print("Opção inválida")
+
+
 def main():
-    saida = -1
-    while saida != 0:
-        print("1-Construir grafo")
-        print("0-Sair")
+    race = menu_build_graph()
 
-        saida = int(input("introduza a sua opcao-> "))
-
-        if saida == 0:
-            print("Saindo....")
-        elif saida == 1:
-            print("Indique a diretoria do circuito:")
-            diretoria = input()
-
-            matrix = parser(diretoria)[0]
-            race = Race(matrix, Graph())
-            race.build_graph(Node(1, 1, 0, 0, False, False, (0, 0)), [])
-            break
-        else:
-            print("Opção inválida...")
-            l = input("prima enter para continuar")
-
-    #cosntrução de menu
-    saida = -1
-    while saida != 0:
+    if race is not None:
         g = race.graph
+        menu(g)
 
-        print("1-Imprimir Grafo")
-        print("2-Desenhar Grafo")
-        print("3-Imprimir  nodos de Grafo")
-        print("4-Imprimir arestas de Grafo")
-        print("5-DFS")
-        print("6-BFS")
-        print("0-Sair")
-
-        saida = int(input("introduza a sua opcao-> "))
-        if saida == 0:
-            print("saindo.......")
-        elif saida == 1:
-            #Escrever o grafo como string
-            print(g)
-            l=input("prima enter para continuar")
-        elif saida == 2:
-            #Desenhar o grafo de forma gráfica
-            g.desenha()
-        elif saida == 3:
-            #Imprimir as chaves do dicionario que representa o grafo
-            print(g.graph.keys())
-            l = input("prima enter para continuar")
-        elif saida == 4:
-            #imprimir todas as arestas do grafo
-            print(g.imprime_aresta())
-            l = input("prima enter para continuar")
-        elif saida == 5:
-            #Efetuar  pesquisa de caminho entre nodo inicial e final com DFS
-            inicio=input("Nodo inicial->")
-            fim = input("Nodo final->")
-            print(g.procura_DFS( inicio, fim, path=[], visited=set()))
-            l = input("prima enter para continuar")
-        elif saida == 5:
-            #Efetuar  pesquisa de caminho entre nodo inicial e final com DFS
-            inicio=input("Nodo inicial->")
-            fim = input("Nodo final->")
-            print(g.procura_BFS( inicio, fim))
-            l = input("prima enter para continuar")
-        else:
-            print("Opção inválida...")
-            l = input("prima enter para continuar")
 
 if __name__ == "__main__":
     main()
