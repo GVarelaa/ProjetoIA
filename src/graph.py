@@ -67,10 +67,10 @@ class Graph:
         path.append(start)
         visited.add(start)
 
-        if start == end:
-            total_cost = self.calc_path_cost(path)
-            print()
-            return (path, total_cost)
+        for state in end:
+            if state.pos == start.pos:
+                total_cost = self.calc_path_cost(path)
+                return (path, total_cost)
 
         for (adj, cost) in self.graph[start]:
             if adj not in visited:

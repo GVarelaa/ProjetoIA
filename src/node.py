@@ -1,7 +1,7 @@
 class Node:
-    def __init__(self, x, y, vel_x, vel_y, is_final_state, crashed, last_acc):
-        self.pos = (x, y)
-        self.vel = (vel_x, vel_y)
+    def __init__(self, pos, vel, is_final_state, crashed, last_acc):
+        self.pos = pos
+        self.vel = vel
         self.is_final_state = is_final_state
         self.crashed = crashed
         self.last_acc = last_acc

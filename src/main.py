@@ -19,9 +19,9 @@ def menu_build_graph():
         match opt:
             case 1:
                 path = input("Indique a diretoria do circuito: ")
-                (matrix, start, end) = parser(path)[0]
+                (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
-                race.build_graph(Node(3, 4, 0, 0, False, False, (0, 0)), [])
+                race.build_graph()
                 print("\nCircuito carregado com sucesso!\n")
                 break
             case 0:
@@ -34,7 +34,7 @@ def menu_build_graph():
     return race
 
 
-def menu(g):
+def menu(race):
     opt = -1
     while opt != 0:
         print("=========================")
@@ -55,26 +55,22 @@ def menu(g):
                 break
 
             case 1:
-                print(g)
+                print(race.graph)
 
             case 2:
-                print(g.graph.keys())
+                print(race.graph.keys())
 
             case 3:
-                print(g.print_edges())
+                print(race.graph.print_edges())
 
             case 4:
-                g.draw()
+                race.graph.draw()
 
             case 5:
-                start = input("Nodo inicial: ")
-                end = input("Nodo final: ")
-                print(g.DFS(start, end, [], set()))
+                print(race.DFS_solution())
 
             case 6:
-                start = input("Nodo inicial: ")
-                end = input("Nodo final: ")
-                print(g.BFS(start, end))
+                print(race.BFS_solution())
 
             case 7:
                 main()
@@ -88,8 +84,7 @@ def main():
     race = menu_build_graph()
 
     if race is not None:
-        g = race.graph
-        menu(g)
+        menu(race)
 
 
 if __name__ == "__main__":
