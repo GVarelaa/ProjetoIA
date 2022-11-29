@@ -21,6 +21,9 @@ class Race:
 
     def next_state(self, state, accel_pair):
         disp = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
+
+        if disp == (1, -1) and state.pos == (3.5,4.5):
+            print('ola')
         (new_position, action) = position_calculator.calculateStopPosition(state.pos, disp, self.matrix)
 
         new_vel = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
@@ -35,6 +38,7 @@ class Race:
         is_finished = False
         if disp == position_calculator.DispResult.FINISH:
             is_finished = True
+
 
         return Node(new_position, new_vel, is_finished, is_crashed, accel_pair)
 

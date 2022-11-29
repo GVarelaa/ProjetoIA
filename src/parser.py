@@ -22,7 +22,7 @@ def parser(file_path):
                 elems[x] = "-"
 
             elif char == "F":
-                finish.append((x, y_max - y - 1))
+                finish.append((x+0.5, y_max - y - 1+0.5))
 
             x += 1
 

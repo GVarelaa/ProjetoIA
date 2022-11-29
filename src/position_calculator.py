@@ -119,7 +119,7 @@ def calculateDispResult(borderPosition, displ, map):
         objSecondPoint = getMapObject(secondPoint, map)
         objThirdPoint = getMapObject(thirdPoint, map)
 
-        if objFirstPoint == 'X' or objSecondPoint == 'X':
+        if objFirstPoint == 'X' or objSecondPoint == 'X' or objThirdPoint == 'X':
             return DispResult.CRASH
         elif objThirdPoint == 'F':
             return DispResult.FINISH
