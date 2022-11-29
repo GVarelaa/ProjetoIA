@@ -31,7 +31,7 @@ def parser(file_path):
         y += 1
 
     f.close()
-
-    matrix = list(zip(*matrix[::-1]))
-    print(start)
+    start = (start[0] + 0.5, start[1] + 0.5)
+    #matrix = list(zip(*matrix[::-1]))
+    #print(start)
     return (matrix, start, finish)

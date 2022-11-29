@@ -1,7 +1,10 @@
+import math
+from enum import Enum
+
 from node import Node
 from parser import parser
 from graph import Graph
-
+import position_calculator
 
 class Race:
     def __init__(self, matrix, start, end):
@@ -17,70 +20,24 @@ class Race:
         return str(self.matrix) + str(self.graph)
 
     def next_state(self, state, accel_pair):
-        # Given an initial state, returns a resulting state
-        # According to the choices of accelerations (acX, acY)
-        # And to the matrix (map) of the circuit
+        disp = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
+        (new_position, action) = position_calculator.calculateStopPosition(state.pos, disp, self.matrix)
 
-        for end in self.end:
-            if state.pos == end.pos:
-                return
+        new_vel = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
 
-        # displacements
-        disp_x = state.vel[0] + accel_pair[0]
-        disp_y = state.vel[1] + accel_pair[1]
+        if action == position_calculator.DispResult.CRASH:
+            new_vel = (0,0)
 
-        curr_pos_x = state.pos[0]
-        curr_pos_y = state.pos[1]
+        is_crashed = False
+        if disp == position_calculator.DispResult.CRASH:
+            is_cashed = True
 
-        curr_vel_x = state.vel[0]
-        curr_vel_y = state.vel[1]
+        is_finished = False
+        if disp == position_calculator.DispResult.FINISH:
+            is_finished = True
 
-        # Values if there are no obstacles in the way
-        new_pos_x = curr_pos_x + disp_x
-        new_pos_y = curr_pos_y + disp_y
-        new_vel_x = curr_vel_x + accel_pair[0]
-        new_vel_y = curr_vel_y + accel_pair[1]
-        crashed = False
+        return Node(new_position, new_vel, is_finished, is_crashed, accel_pair)
 
-        # Deslocamento horizontal
-        for i in range(1, abs(disp_x) + 1):
-            inc = -1
-            mult = 1
-
-            if disp_x < 0:
-                mult = -1
-
-            if self.matrix[curr_pos_x + i * mult][curr_pos_y] == 'F':
-                return Node((curr_pos_x + i * mult, curr_pos_y), (new_vel_x, new_vel_y), True, False, accel_pair)
-
-            if self.matrix[curr_pos_x + i * mult][curr_pos_y] == 'X':
-                crashed = True
-                new_vel_x = new_vel_y = 0
-                new_pos_x = curr_pos_x + i * mult + inc * mult
-
-                break
-
-        # Deslocamento vertical
-        for j in range(1, abs(disp_y) + 1):
-            inc = -1
-            mult = 1
-
-            if disp_y < 0:
-                mult = -1
-
-            if self.matrix[new_pos_x][curr_pos_y + j * mult] == 'F':
-                return Node((curr_pos_x, curr_pos_y + j * mult), (new_vel_x, new_vel_y), True, False, accel_pair)
-
-            if self.matrix[new_pos_x][curr_pos_y + j * mult] == 'X':
-                crashed = True
-                new_vel_y = new_vel_x = 0
-                new_pos_y = curr_pos_y + j * mult + inc * mult
-
-                break
-
-        new_state = Node((new_pos_x, new_pos_y), (new_vel_x, new_vel_y), False, crashed, accel_pair)
-        #print(new_state)
-        return new_state
 
     def expand_state(self, state):
         nodes = list()
