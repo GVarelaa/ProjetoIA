@@ -41,6 +41,11 @@ class Race:
 
     def expand_state(self, state):
         nodes = list()
+
+        for end in self.end:
+            if state.pos == end.pos:
+                return nodes
+
         n1 = self.next_state(state, (1, 1))
         if n1:
             nodes.append(n1)
