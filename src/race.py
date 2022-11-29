@@ -31,7 +31,7 @@ class Race:
 
         is_crashed = False
         if action == position_calculator.DispResult.CRASH:
-            is_cashed = True
+            is_crashed = True
 
         is_finished = False
         if action == position_calculator.DispResult.FINISH:
