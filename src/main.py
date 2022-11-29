@@ -18,7 +18,7 @@ def menu_build_graph():
 
         match opt:
             case 1:
-                path = "../circuits/circuito1.txt" #input("Indique a diretoria do circuito: ")
+                path = input("Indique a diretoria do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
                 race.build_graph()
