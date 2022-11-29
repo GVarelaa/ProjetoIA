@@ -4,9 +4,11 @@ from graph import Graph
 
 
 class Race:
-    def __init__(self, matrix, graph):
+    def __init__(self, matrix, start, end):
         self.matrix = matrix
-        self.graph = graph
+        self.graph = Graph()
+        self.start = start
+        self.end = end
 
     def __str__(self):
         return str(self.matrix) + str(self.graph)
@@ -88,20 +90,24 @@ class Race:
 
         return nodes
 
-    def build_graph(self, initial_state, states_processed):
-        adjs = list()
-        adjs = self.expand_state(initial_state)  # estados possiveis
+    def build_graph(self):
+        states = []
+        initial_node = Node()
+        states.append(self.start)
 
-        states_processed.append(initial_state)
+        visited = []
+        visited.append(self.start)
 
-        for node in adjs:
-            if node.crashed:
-                self.graph.add_edge(initial_state, node, 25)
-            else:
-                self.graph.add_edge(initial_state, node, 1)
+        while states != []:
+            state = states.pop()
+            expansion = self.expand_state(state)
 
-            if not node.is_final_state and node not in states_processed:
-                self.build_graph(node, states_processed)
+            for e in expansion:
+                if e.crashed:
+                    self.graph.add_edge(state, e, 25)
+                else:
+                    self.graph.add_edge(state, e, 1)
 
-            states_processed.append(node)
-
+                if e not in visited:
+                    states.append(e)
+                    visited.append(e)

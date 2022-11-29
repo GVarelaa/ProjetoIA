@@ -19,8 +19,8 @@ def menu_build_graph():
         match opt:
             case 1:
                 path = input("Indique a diretoria do circuito: ")
-                matrix = parser(path)[0]
-                race = Race(matrix, Graph())
+                (matrix, start, end) = parser(path)[0]
+                race = Race(matrix, start, end)
                 race.build_graph(Node(3, 4, 0, 0, False, False, (0, 0)), [])
                 print("\nCircuito carregado com sucesso!\n")
                 break

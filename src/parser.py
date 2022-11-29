@@ -33,5 +33,5 @@ def parser(file_path):
     f.close()
 
     matrix = list(zip(*matrix[::-1]))
-
+    print(start)
     return (matrix, start, finish)
