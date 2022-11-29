@@ -123,25 +123,19 @@ class Race:
         return nodes
 
     def build_graph(self):
-        i = 0
-        states = []
-        states.append(self.start)
+        states = [self.start]
 
-        visited = []
-        visited.append(self.start)
+        visited = [self.start]
 
-        while states != []:
+        while states:
             state = states.pop()
             expansion = self.expand_state(state)
 
             for e in expansion:
-                i+=1
                 if e.crashed:
                     self.graph.add_edge(state, e, 25)
                 else:
                     self.graph.add_edge(state, e, 1)
-
-                print(i)
 
                 if e not in visited:
                     states.append(e)

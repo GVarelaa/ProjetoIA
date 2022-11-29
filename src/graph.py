@@ -78,7 +78,7 @@ class Graph:
                 if ret is not None:
                     return ret
 
-        path.pop() #se nao encontrar, remover o que está no caminho
+        path.pop() # se nao encontrar, remover o que está no caminho
         return None
 
     def BFS(self, start, end):
@@ -96,10 +96,12 @@ class Graph:
         while not q.empty() and not path_found:
             node = q.get()
 
-            if node == end:
-                path_found = True
-                print()
-            else:
+            for state in end:
+                if node.pos == state.pos:
+                    path_found = True
+                    final_node = node
+
+            if not path_found:
                 for (adj, cost) in self.graph[node]:
                     if adj not in visited:
                         q.put(adj)
@@ -109,10 +111,10 @@ class Graph:
         #reconstruir o caminho
         path = []
         if path_found:
-            path.append(end)
-            while parents[end] is not None:
-                path.append(parents[end])
-                end = parents[end]
+            path.append(final_node)
+            while parents[final_node] is not None:
+                path.append(parents[final_node])
+                final_node = parents[final_node]
             path.reverse()
 
             total_cost = self.calc_path_cost(path)
