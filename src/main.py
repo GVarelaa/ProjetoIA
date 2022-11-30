@@ -18,7 +18,7 @@ def menu_build_graph():
 
         match opt:
             case 1:
-                path = input("Indique a diretoria do circuito: ")
+                path = input("Indique a diretoria do ficheiro do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
                 race.build_graph()
@@ -55,10 +55,12 @@ def menu(race):
                 break
 
             case 1:
+                print()
                 print(race.graph)
 
             case 2:
-                print(race.graph.keys())
+                print()
+                print(race.graph.print_nodes())
 
             case 3:
                 print(race.graph.print_edges())
@@ -73,6 +75,7 @@ def menu(race):
                 print(race.BFS_solution())
 
             case 7:
+                print()
                 main()
                 break
 

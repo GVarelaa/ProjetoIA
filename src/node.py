@@ -5,10 +5,10 @@ class Node:
         self.crashed = crashed
 
     def __str__(self):
-        return "pos=" + str(self.pos) + " velocity=" + str(self.vel) + " " + str(self.crashed) + "\n"
+        return "pos=" + str(self.pos) + " velocity=" + str(self.vel) + " " + str(self.crashed)
 
     def __repr__(self):
-        return "pos=" + str(self.pos) + " velocity=" + str(self.vel) + " " + " " + str(self.crashed) + "\n"
+        return "pos=" + str(self.pos) + " velocity=" + str(self.vel) + " " + str(self.crashed)
 
     def __eq__(self, other):
         return self.pos == other.pos and self.vel == other.vel and self.crashed == other.crashed

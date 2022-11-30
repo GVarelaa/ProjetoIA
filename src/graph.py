@@ -16,15 +16,19 @@ class Graph:
         string = ""
         for key in self.graph.keys():
             string = string + str(key) + ": \n"
-            for node in self.graph[key]:
-                string += "     " + str(node) + "\n"
+
+            for edge in self.graph[key]:
+                string += "     " + str(edge) + "\n"
 
         return string
 
     def __repr__(self):
         string = ""
         for key in self.graph.keys():
-            string = string + "Nodo " + str(key) + ": " + str(self.graph[key]) + "\n"
+            string = string + str(key) + ": \n"
+
+            for edge in self.graph[key]:
+                string += "     " + str(edge) + "\n"
 
         return string
 
@@ -100,7 +104,6 @@ class Graph:
             for state in end:
                 if node.pos == state.pos:
                     path_found = True
-                    final_node = node
 
             if not path_found:
                 for (adj, cost) in self.graph[node]:
@@ -112,21 +115,31 @@ class Graph:
         # reconstruir o caminho
         path = []
         if path_found:
-            path.append(final_node)
-            while parents[final_node] is not None:
-                path.append(parents[final_node])
-                final_node = parents[final_node]
+            path.append(node)
+            while parents[node] is not None:
+                path.append(parents[node])
+                node = parents[node]
             path.reverse()
 
             total_cost = self.calc_path_cost(path)
             return path, total_cost
 
+    def print_nodes(self):
+        nodes = ""
+
+        for node in self.nodes:
+            nodes += str(node) + "\n"
+
+        return nodes
+
     def print_edges(self):
-        l = ""
+        edges = ""
+
         for node in self.graph.keys():
             for (adj, cost) in self.graph[node]:
-                l = l + str(node) + " -> " + str(adj) + " cost:" + str(cost) + "\n"
-        return l
+                edges += str(node) + "   ->   " + str(adj) + "    cost:" + str(cost) + "\n"
+
+        return edges
 
     def count_edges(self):
         counter = 0
