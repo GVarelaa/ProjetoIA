@@ -8,14 +8,14 @@ class DispResult(Enum):
     FINISH = 3
 
 
-def isInt(num):
+def is_int(num):
     return math.floor(num) == num
 
 
 # Example: nextInt(3) = 4
 #          nextInt(2.5) = 3
-def nextInt(num):
-    if isInt(num):
+def next_int(num):
+    if is_int(num):
         return num + 1
     else:
         return math.ceil(num)
@@ -23,155 +23,155 @@ def nextInt(num):
 
 # Example: lastInt(3) = 2
 #          nextInt(2.5) = 2
-def lastInt(num):
-    if isInt(num):
+def last_int(num):
+    if is_int(num):
         return num - 1
     else:
         return math.floor(num)
 
 
-def calculateNextBorderPosition(currentPos, disp):
+def calculate_next_border_position(current_pos, disp):
     if disp[1] == 0:  # Horizontal displacement
         if disp[0] < 0:
-            return (lastInt(currentPos[0]), currentPos[1])
+            return last_int(current_pos[0]), current_pos[1]
         elif disp[0] > 0:
-            return (nextInt(currentPos[0]), currentPos[1])
+            return next_int(current_pos[0]), current_pos[1]
 
     elif disp[0] == 0:  # Vertical displacement
         if disp[1] < 0:
-            return (currentPos[0], lastInt(currentPos[1]))
+            return current_pos[0], last_int(current_pos[1])
         elif disp[1] > 0:
-            return (currentPos[0], nextInt(currentPos[1]))
+            return current_pos[0], next_int(current_pos[1])
 
     grad = disp[1] / disp[0]  # Gradient
 
     # Calculate next X value
-    if (disp[0] < 0):  # To the left
-        nextValueHoriz = lastInt(currentPos[0])
+    if disp[0] < 0:  # To the left
+        next_value_horiz = last_int(current_pos[0])
     else:  # To the right
-        nextValueHoriz = nextInt(currentPos[0])
+        next_value_horiz = next_int(current_pos[0])
 
-    inc = nextValueHoriz - currentPos[0]
+    inc = next_value_horiz - current_pos[0]
 
-    auxPos = (currentPos[0] + inc, currentPos[1] + grad * inc)  # Calculate f(nextValueHoriz)
+    aux_pos = (current_pos[0] + inc, current_pos[1] + grad * inc)  # Calculate f(next_value_horiz)
 
     # Upward disp
-    if (disp[1] > 0 and auxPos[1] > nextInt(
-            currentPos[1])):  # If f(nextValueHoriz) is greater than upper limit of square
-        x = (nextInt(currentPos[1]) - currentPos[1] + currentPos[0] * grad) / grad  # Formula: x = (y-b+a*m)/m
-        return (x, nextInt(currentPos[1]))
+    if disp[1] > 0 and aux_pos[1] > next_int(current_pos[1]):  # If f(next_value_horiz) is greater than upper limit of square
+        x = (next_int(current_pos[1]) - current_pos[1] + current_pos[0] * grad) / grad  # Formula: x = (y-b+a*m)/m
+        return x, next_int(current_pos[1])
 
     # Downward disp
-    elif (disp[1] < 0 and auxPos[1] < lastInt(
-            currentPos[1])):  # If f(nextValueHoriz) is less than upper limit of square
-        x = (lastInt(currentPos[1]) - currentPos[1] + currentPos[0] * grad) / grad  # Formula: x = (y-b+a*m)/m
-        return (x, lastInt(currentPos[1]))
+    elif disp[1] < 0 and aux_pos[1] < last_int(current_pos[1]):  # If f(next_value_horiz) is less than upper limit of square
+        x = (last_int(current_pos[1]) - current_pos[1] + current_pos[0] * grad) / grad  # Formula: x = (y-b+a*m)/m
+        return x, last_int(current_pos[1])
 
     else:
-        return auxPos
+        return aux_pos
 
 
 # Get the object in that map position
-def getMapObject(position, map):
-    mapPosition = (math.floor(position[0]), math.floor(position[1]))
-    matrixLine = len(map) - mapPosition[1] - 1
-    matrixColumn = mapPosition[0]
-    return map[matrixLine][matrixColumn]
+def get_map_object(position, map):
+    map_position = (math.floor(position[0]), math.floor(position[1]))
+    matrix_line = len(map) - map_position[1] - 1
+    matrix_column = map_position[0]
+    return map[matrix_line][matrix_column]
 
 
-# Get middle position of the next square, given borderPosition and displacement
-def getMiddlePosition(borderPosition, displ):
-    if isInt(borderPosition[1]):  # Case (float, int)
+# Get middle position of the next square, given border_position and displacement
+def get_middle_position(border_position, displ):
+    if is_int(border_position[1]):  # Case (float, int)
         if displ[0] == 0:  # Vertical motion
-            return (borderPosition[0], borderPosition[1] + displ[1] / (abs(displ[1]) * 2))
+            return border_position[0], border_position[1] + displ[1] / (abs(displ[1]) * 2)
         else:
-            return (math.floor(borderPosition[0]) + 0.5, borderPosition[1] + (displ[1] / (abs(displ[1]) * 2)))
+            return math.floor(border_position[0]) + 0.5, border_position[1] + (displ[1] / (abs(displ[1]) * 2))
     else:  # Case (int, float)
         if displ[1] == 0:  # Horizontal motion
-            return (borderPosition[0] + displ[0] / (abs(displ[0]) * 2), borderPosition[1])
+            return border_position[0] + displ[0] / (abs(displ[0]) * 2), border_position[1]
         else:
-            return (borderPosition[0] + (displ[0] / (abs(displ[0]) * 2)), math.floor(borderPosition[1]) + 0.5)
+            return border_position[0] + (displ[0] / (abs(displ[0]) * 2)), math.floor(border_position[1]) + 0.5
 
 
-def calculateDispResult(borderPosition, displ, map):
-    if isInt(borderPosition[0]) and isInt(borderPosition[1]):  # Esquina
+def calculate_disp_result(border_position, displ, map):
+    if is_int(border_position[0]) and is_int(border_position[1]):  # Esquina
         if displ[0] < 0 and displ[1] < 0:  # esquerda baixo
-            firstPoint = (borderPosition[0] - 0.5, borderPosition[1] + 0.5)  # Can block displacement
-            secondPoint = (borderPosition[0] + 0.5, borderPosition[1] - 0.5)  # Can block displacement
-            thirdPoint = (borderPosition[0] - 0.5, borderPosition[1] - 0.5)  # Next position block
+            first_point = (border_position[0] - 0.5, border_position[1] + 0.5)  # Can block displacement
+            second_point = (border_position[0] + 0.5, border_position[1] - 0.5)  # Can block displacement
+            third_point = (border_position[0] - 0.5, border_position[1] - 0.5)  # Next position block
 
         if displ[0] < 0 and displ[1] > 0:  # esquerda cima
-            firstPoint = (borderPosition[0] - 0.5, borderPosition[1] - 0.5)
-            secondPoint = (borderPosition[0] + 0.5, borderPosition[1] + 0.5)
-            thirdPoint = (borderPosition[0] - 0.5, borderPosition[1] + 0.5)
+            first_point = (border_position[0] - 0.5, border_position[1] - 0.5)
+            second_point = (border_position[0] + 0.5, border_position[1] + 0.5)
+            third_point = (border_position[0] - 0.5, border_position[1] + 0.5)
 
         if displ[0] > 0 and displ[1] < 0:  # direita baixo
-            firstPoint = (borderPosition[0] + 0.5, borderPosition[1] + 0.5)
-            secondPoint = (borderPosition[0] - 0.5, borderPosition[1] - 0.5)
-            thirdPoint = (borderPosition[0] + 0.5, borderPosition[1] - 0.5)
+            first_point = (border_position[0] + 0.5, border_position[1] + 0.5)
+            second_point = (border_position[0] - 0.5, border_position[1] - 0.5)
+            third_point = (border_position[0] + 0.5, border_position[1] - 0.5)
 
         if displ[0] > 0 and displ[1] > 0:  # direita cima
-            firstPoint = (borderPosition[0] - 0.5, borderPosition[1] + 0.5)
-            secondPoint = (borderPosition[0] + 0.5, borderPosition[1] - 0.5)
-            thirdPoint = (borderPosition[0] + 0.5, borderPosition[1] + 0.5)
+            first_point = (border_position[0] - 0.5, border_position[1] + 0.5)
+            second_point = (border_position[0] + 0.5, border_position[1] - 0.5)
+            third_point = (border_position[0] + 0.5, border_position[1] + 0.5)
 
-        objFirstPoint = getMapObject(firstPoint, map)
-        objSecondPoint = getMapObject(secondPoint, map)
-        objThirdPoint = getMapObject(thirdPoint, map)
+        obj_first_point = get_map_object(first_point, map)
+        obj_second_point = get_map_object(second_point, map)
+        obj_third_point = get_map_object(third_point, map)
 
-        if objFirstPoint == 'X' or objSecondPoint == 'X' or objThirdPoint == 'X':
+        if obj_first_point == 'X' or obj_second_point == 'X' or obj_third_point == 'X':
             return DispResult.CRASH
-        elif objThirdPoint == 'F':
+        elif obj_third_point == 'F':
             return DispResult.FINISH
         else:
             return DispResult.ADVANCE
 
     # Case (int, float) or (float, int)
-    middlePosition = getMiddlePosition(borderPosition, displ)
+    middle_position = get_middle_position(border_position, displ)
 
     # Get object inside the square
-    objInSquare = getMapObject(middlePosition, map)
+    obj_in_square = get_map_object(middle_position, map)
 
-    if objInSquare == 'X':
+    if obj_in_square == 'X':
         return DispResult.CRASH
-    elif objInSquare == 'F':
+    elif obj_in_square == 'F':
         return DispResult.FINISH
     else:
         return DispResult.ADVANCE
 
 
-def calculateStopPosition(currentPos, disp, map):
+def calculate_stop_position(current_pos, disp, map):
     # Partindo da posição, até chegar à posição final, procura a próxima interseção com uma fronteira
-    if disp == (0,0):
-        return (currentPos, DispResult.ADVANCE)
+    if disp == (0, 0):
+        return current_pos, DispResult.ADVANCE
+
     i = 0
+
     while i < abs(disp[0]) + abs(disp[1]):
-        currentPos = calculateNextBorderPosition(currentPos, disp)  # Calculate position when leaving the square
-        displacementResult = calculateDispResult(currentPos, disp,
-                                                 map)  # Calculate object in next Square or Squares
+        current_pos = calculate_next_border_position(current_pos, disp)  # Calculate position when leaving the square
+        displacement_result = calculate_disp_result(current_pos, disp, map)  # Calculate object in next Square or Squares
 
-        if isInt(currentPos[0]) and isInt(currentPos[1]) and displacementResult == DispResult.CRASH:
-            finalPosition = (
-                currentPos[0] - (disp[0] / abs(disp[0])) * 0.5, currentPos[1] - (disp[1] / abs(disp[1])) * 0.5)
-            return (finalPosition, displacementResult)
+        if is_int(current_pos[0]) and is_int(current_pos[1]) and displacement_result == DispResult.CRASH:
+            final_position = (
+                current_pos[0] - (disp[0] / abs(disp[0])) * 0.5, current_pos[1] - (disp[1] / abs(disp[1])) * 0.5)
+            return final_position, displacement_result
 
-        if isInt(currentPos[0]) and isInt(currentPos[1]) and displacementResult == DispResult.FINISH:
-            finalPosition = (
-                currentPos[0] + (disp[0] / abs(disp[0])) * 0.5, currentPos[1] + (disp[1] / abs(disp[1])) * 0.5)
-            return (finalPosition, displacementResult)
+        if is_int(current_pos[0]) and is_int(current_pos[1]) and displacement_result == DispResult.FINISH:
+            final_position = (
+                current_pos[0] + (disp[0] / abs(disp[0])) * 0.5, current_pos[1] + (disp[1] / abs(disp[1])) * 0.5)
+            return final_position, displacement_result
 
-        if (displacementResult == DispResult.CRASH):
-            finalPosition = getMiddlePosition(currentPos, (-1 * disp[0], -1 * disp[1]))
-            return (finalPosition, displacementResult)
+        if displacement_result == DispResult.CRASH:
+            final_position = get_middle_position(current_pos, (-1 * disp[0], -1 * disp[1]))
+            return final_position, displacement_result
 
-        if (displacementResult == DispResult.FINISH):
-            finalPosition = getMiddlePosition(currentPos, disp)
-            return (finalPosition, displacementResult)
+        if displacement_result == DispResult.FINISH:
+            final_position = get_middle_position(current_pos, disp)
+            return final_position, displacement_result
 
-        if isInt(currentPos[0]) and isInt(currentPos[1]):
+        if is_int(current_pos[0]) and is_int(current_pos[1]):
             i += 1
+
         i += 1
 
-    finalPosition = getMiddlePosition(currentPos, disp)
-    displacementResult = DispResult.ADVANCE
-    return (finalPosition, displacementResult)
+    final_position = get_middle_position(current_pos, disp)
+    displacement_result = DispResult.ADVANCE
+    return final_position, displacement_result

@@ -18,11 +18,11 @@ def parser(file_path):
         x = 0
         for char in elems:
             if char == "P":
-                start = (x, y_max - y - 1)
+                start = (x + 0.5, y_max - y - 0.5)
                 elems[x] = "-"
 
             elif char == "F":
-                finish.append((x+0.5, y_max - y - 1+0.5))
+                finish.append((x + 0.5, y_max - y - 0.5))
 
             x += 1
 
@@ -31,7 +31,5 @@ def parser(file_path):
         y += 1
 
     f.close()
-    start = (start[0] + 0.5, start[1] + 0.5)
-    #matrix = list(zip(*matrix[::-1]))
-    #print(start)
-    return (matrix, start, finish)
+
+    return matrix, start, finish

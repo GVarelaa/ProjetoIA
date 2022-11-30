@@ -1,17 +1,16 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 import scipy as sp
-
 from queue import Queue
-
 from node import Node
 
+
 class Graph:
-    #construtor de classe
+    # construtor de classe
     def __init__(self):
-        self.nodes = []     # lista com os nodos do grafo
-        self.graph = {}     # dicionario do grafo
-        self.h = {}         # dicionario com heurisiticas
+        self.nodes = []  # lista com os nodos do grafo
+        self.graph = {}  # dicionario do grafo
+        self.h = {}  # dicionario com heuristicas
 
     def __str__(self):
         string = ""
@@ -48,7 +47,7 @@ class Graph:
     def get_arc_cost(self, node1, node2):
         total = 0
 
-        adjs = self.graph[node1] #lista de arestas para aquele nodo
+        adjs = self.graph[node1]  # lista de arestas para aquele nodo
         for (node, cost) in adjs:
             if node == node2:
                 total = cost
@@ -58,9 +57,11 @@ class Graph:
     def calc_path_cost(self, path):
         total = 0
         i = 0
-        while i < len(path)-1:
-             total += self.get_arc_cost(path[i], path[i+1])
-             i += 1
+
+        while i < len(path) - 1:
+            total += self.get_arc_cost(path[i], path[i + 1])
+            i += 1
+
         return total
 
     def DFS(self, start, end, path=[], visited=set()):
@@ -70,7 +71,7 @@ class Graph:
         for state in end:
             if state.pos == start.pos:
                 total_cost = self.calc_path_cost(path)
-                return (path, total_cost)
+                return path, total_cost
 
         for (adj, cost) in self.graph[start]:
             if adj not in visited:
@@ -78,7 +79,7 @@ class Graph:
                 if ret is not None:
                     return ret
 
-        path.pop() # se nao encontrar, remover o que está no caminho
+        path.pop()  # se nao encontrar, remover o que está no caminho
         return None
 
     def BFS(self, start, end):
@@ -88,7 +89,7 @@ class Graph:
         q.put(start)
         visited.add(start)
 
-        #garantir que o start node nao tem pais
+        # garantir que o start node nao tem pais
         parents = dict()
         parents[start] = None
 
@@ -108,7 +109,7 @@ class Graph:
                         parents[adj] = node
                         visited.add(adj)
 
-        #reconstruir o caminho
+        # reconstruir o caminho
         path = []
         if path_found:
             path.append(final_node)
@@ -118,7 +119,7 @@ class Graph:
             path.reverse()
 
             total_cost = self.calc_path_cost(path)
-            return (path, total_cost)
+            return path, total_cost
 
     def print_edges(self):
         l = ""
@@ -127,18 +128,26 @@ class Graph:
                 l = l + str(node) + " -> " + str(adj) + " cost:" + str(cost) + "\n"
         return l
 
+    def count_edges(self):
+        counter = 0
+        for node in self.graph.keys():
+            for (adj, cost) in self.graph[node]:
+                counter += 1
+
+        return counter
+
     def draw(self):
         verts = self.nodes
         g = nx.Graph()
 
-        #Converter para o formato usado pela biblioteca networkx
+        # Converter para o formato usado pela biblioteca networkx
         for node in verts:
             g.add_node(str(node))
             for (adj, cost) in self.graph[node]:
                 l = (node, adj)
                 g.add_edge(str(node), str(adj), cost=cost)
 
-        #desenhar o grafo
+        # desenhar o grafo
         pos = nx.spring_layout(g)
         nx.draw_networkx(g, pos, with_labels=True, font_weight='bold')
         labels = nx.get_edge_attributes(g, 'cost')
