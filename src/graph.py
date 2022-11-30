@@ -124,6 +124,15 @@ class Graph:
             total_cost = self.calc_path_cost(path)
             return path, total_cost
 
+    @staticmethod
+    def print_path(path):
+        ret = ""
+
+        for node in path:
+            ret += str(node) + "\n"
+
+        return ret
+
     def print_nodes(self):
         nodes = ""
 

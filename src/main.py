@@ -69,10 +69,16 @@ def menu(race):
                 race.graph.draw()
 
             case 5:
-                print(race.DFS_solution())
+                print()
+                (path, cost) = race.DFS_solution()
+                print(Graph.print_path(path))
+                print(f"Custo: {cost}\n")
 
             case 6:
-                print(race.BFS_solution())
+                print()
+                (path, cost) = race.BFS_solution()
+                print(Graph.print_path(path))
+                print(f"Custo: {cost}\n")
 
             case 7:
                 print()
