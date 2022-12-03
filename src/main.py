@@ -14,11 +14,12 @@ def menu_build_graph():
 
     opt = -1
     while opt != 0:
-        opt = int(input("Introduza a sua opção: "))
+        opt = 1 # int(input("Introduza a sua opção: "))
 
         match opt:
             case 1:
-                path = input("Indique a diretoria do ficheiro do circuito: ")
+                path = "../circuits/circuito.txt"
+                # path = input("Indique a diretoria do ficheiro do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
                 race.build_graph()
@@ -51,7 +52,9 @@ def menu(race):
         print("0... Sair")
         print("=========================")
 
+
         opt = int(input("Introduza a sua opção: "))
+
 
         match opt:
             case 0:
@@ -76,8 +79,12 @@ def menu(race):
                 race.graph.draw()
 
             case 6:
-                print()
-                (path, cost) = race.DFS_solution()
+                choice = input("Modo debug? 1 - Sim, 0 - Não\n")
+                if choice == '1':
+                    debug = True
+                else:
+                    debug = False
+                (path, cost) = race.DFS_solution(debug)
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 

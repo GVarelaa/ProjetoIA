@@ -5,6 +5,7 @@ from node import Node
 from parser import parser
 from graph import Graph
 import position_calculator
+from copy import deepcopy
 
 
 class Race:
@@ -84,8 +85,8 @@ class Race:
                     states.append(e)
                     visited.append(e)
 
-    def DFS_solution(self):
-        res = self.graph.DFS(self.start, self.end, path=[], visited=set())
+    def DFS_solution(self, debug):
+        res = self.graph.DFS(self.start, self.end, deepcopy(self.matrix), debug, path=[], visited=set())
         return res
 
     def BFS_solution(self):
