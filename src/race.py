@@ -91,12 +91,18 @@ class Race:
 
     def BFS_solution(self):
         res = self.graph.BFS(self.start, self.end)
+        path, cost = res
+        self.graph.print_result(deepcopy(self.matrix), path)
         return res
 
     def a_star_solution(self):
         res = self.graph.a_star(self.start, self.end)
+        path, cost = res
+        self.graph.print_result(deepcopy(self.matrix), res)
         return res
 
     def greedy_solution(self):
         res = self.graph.greedy(self.start, self.end)
+        path, cost = res
+        self.graph.print_result(deepcopy(self.matrix), res)
         return res

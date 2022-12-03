@@ -149,6 +149,12 @@ class Graph:
 
         plt.draw()
         plt.show()
+    def print_result(self, matrix, path):
+        for node in path:
+            matrix[node.get_pos][node.get_pos]='O'
+
+        print_mat(matrix)
+
 
     def DFS(self, start, end, matrix, debug, path=[], visited=set()):
         path.append(start)
