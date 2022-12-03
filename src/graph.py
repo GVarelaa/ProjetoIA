@@ -48,6 +48,16 @@ class Graph:
 
         self.graph[node1].add((node2, cost))
 
+    def add_heuristica(self, node, value):
+        if node in self.nodes:
+            self.h[node] = value
+
+    def get_neighbours(self, node):
+        lista = []
+        for (adj, peso) in self.graph[node]:
+            lista.append((adj, peso))
+        return lista
+
     def get_arc_cost(self, node1, node2):
         total = 0
 
@@ -67,63 +77,6 @@ class Graph:
             i += 1
 
         return total
-
-    def DFS(self, start, end, path=[], visited=set()):
-        path.append(start)
-        visited.add(start)
-
-        for state in end:
-            if state.pos == start.pos:
-                total_cost = self.calc_path_cost(path)
-                return path, total_cost
-
-        for (adj, cost) in self.graph[start]:
-            if adj not in visited:
-                ret = self.DFS(adj, end, path, visited)
-                if ret is not None:
-                    return ret
-
-        path.pop()  # se nao encontrar, remover o que está no caminho
-        return None
-
-    def BFS(self, start, end):
-        visited = set()
-        q = Queue()
-
-        q.put(start)
-        visited.add(start)
-
-        # garantir que o start node nao tem pais
-        parents = dict()
-        parents[start] = None
-
-        path_found = False
-        while not q.empty() and not path_found:
-            node = q.get()
-
-            for state in end:
-                if node.pos == state.pos:
-                    path_found = True
-
-            if not path_found:
-                for (adj, cost) in self.graph[node]:
-                    if adj not in visited:
-                        q.put(adj)
-                        parents[adj] = node
-                        visited.add(adj)
-
-        # reconstruir o caminho
-        path = []
-        if path_found:
-            path.append(node)
-            while parents[node] is not None:
-                path.append(parents[node])
-                node = parents[node]
-            path.reverse()
-
-            total_cost = self.calc_path_cost(path)
-            return path, total_cost
-
     @staticmethod
     def print_path(path):
         ret = ""
@@ -177,3 +130,174 @@ class Graph:
 
         plt.draw()
         plt.show()
+
+        def DFS(self, start, end, path=[], visited=set()):
+            path.append(start)
+            visited.add(start)
+
+            for state in end:
+                if state.pos == start.pos:
+                    total_cost = self.calc_path_cost(path)
+                    return path, total_cost
+
+            for (adj, cost) in self.graph[start]:
+                if adj not in visited:
+                    ret = self.DFS(adj, end, path, visited)
+                    if ret is not None:
+                        return ret
+
+            path.pop()  # se nao encontrar, remover o que está no caminho
+            return None
+
+        def BFS(self, start, end):
+            visited = set()
+            q = Queue()
+
+            q.put(start)
+            visited.add(start)
+
+            # garantir que o start node nao tem pais
+            parents = dict()
+            parents[start] = None
+
+            path_found = False
+            while not q.empty() and not path_found:
+                node = q.get()
+
+                for state in end:
+                    if node.pos == state.pos:
+                        path_found = True
+
+                if not path_found:
+                    for (adj, cost) in self.graph[node]:
+                        if adj not in visited:
+                            q.put(adj)
+                            parents[adj] = node
+                            visited.add(adj)
+
+            # reconstruir o caminho
+            path = []
+            if path_found:
+                path.append(node)
+                while parents[node] is not None:
+                    path.append(parents[node])
+                    node = parents[node]
+                path.reverse()
+
+                total_cost = self.calc_path_cost(path)
+                return path, total_cost
+
+        def greedy(self, start, end):
+            # open_list é uma lista de nodos visitados, mas com vizinhos
+            # que ainda não foram todos visitados, começa com o  start
+            # closed_list é uma lista de nodos visitados
+            # e todos os seus vizinhos também já o foram
+            open_list = set([start])
+            closed_list = set([])
+
+            # parents é um dicionário que mantém o antecessor de um nodo
+            # começa com start
+            parents = {}
+            parents[start] = start
+
+            while len(open_list) > 0:
+                n = None
+
+                # encontraf nodo com a menor heuristica
+                for v in open_list:
+                    if n == None or self.h[v] < self.h[n]:
+                        n = v
+
+                if n == None:
+                    print('Path does not exist!')
+                    return None
+
+                # se o nodo corrente é o destino
+                # reconstruir o caminho a partir desse nodo até ao start
+                # seguindo o antecessor
+                if n == end:
+                    reconst_path = []
+
+                    while parents[n] != n:
+                        reconst_path.append(n)
+                        n = parents[n]
+
+                    reconst_path.append(start)
+
+                    reconst_path.reverse()
+
+                    return (reconst_path, self.calcula_custo(reconst_path))
+
+                # para todos os vizinhos  do nodo corrente
+                for (m, weight) in self.get_neighbours(n):
+                    # Se o nodo corrente nao esta na open nem na closed list
+                    # adiciona-lo à open_list e marcar o antecessor
+                    if m not in open_list and m not in closed_list:
+                        open_list.add(m)
+                        parents[m] = n
+
+                # remover n da open_list e adiciona-lo à closed_list
+                # porque todos os seus vizinhos foram inspecionados
+                open_list.remove(n)
+                closed_list.add(n)
+
+            print('Path does not exist!')
+            return None
+
+        def star(self, start, end):
+            # open_list é uma lista de nodos visitados, mas com vizinhos que ainda nao foram todos visitados(começa com start)
+            # closed_list é uma lista de nodos visitados e todos os seus vizinhos já o foram
+            custo_acumulado = dict()
+            custo_acumulado[start] = 0
+
+            open_list = set()
+            close_list = set()
+
+            open_list.add(start)
+
+            parents = {}
+            parents[start] = start
+
+            i = 1
+
+            while len(open_list) > 0:
+                n = None
+
+                for v in open_list:
+                    if n == None or (custo_acumulado[parents[v]] + self.get_arc_cost(v, parents[v]) + self.h[v]) < (
+                            custo_acumulado[parents[n]] + self.get_arc_cost(n, parents[n]) + self.h[n]):
+                        n = v
+
+                # print(f"it {i} : {n}") # ver iteraçoes
+                i += 1
+
+                if n == None:
+                    print("Path doesnt exist")
+                    return None
+
+                if n == end:
+                    reconst_path = []
+
+                    while parents[n] != n:
+                        reconst_path.append(n)
+                        n = parents[n]
+
+                    reconst_path.append(start)
+
+                    reconst_path.reverse()
+
+                    return (reconst_path, self.calcula_custo(reconst_path))
+
+                custo_acumulado[n] = custo_acumulado[parents[n]] + self.get_arc_cost(n, parents[n])
+
+                for (m, weight) in self.get_neighbours(n):
+                    if m not in open_list and m not in close_list:
+                        open_list.add(m)
+                        parents[m] = n
+
+                open_list.remove(n)
+                close_list.add(n)
+
+            print("Path doesnt exist")
+            return None
+

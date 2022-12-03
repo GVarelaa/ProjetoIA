@@ -67,6 +67,8 @@ class Race:
                 else:
                     self.graph.add_edge(state, e, 1)
 
+                self.graph.add_heuristica(state, position_calculator.calculate_shorter_distance(state.pos, self.end))
+
                 if e not in visited:
                     states.append(e)
                     visited.append(e)

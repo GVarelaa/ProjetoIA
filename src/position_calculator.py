@@ -30,6 +30,17 @@ def last_int(num):
         return math.floor(num)
 
 
+def calculate_shorter_distance(curr_pos, pos_list):
+    distance = math.inf
+
+    for pos in pos_list:
+        temp = math.dist(curr_pos, pos)
+        if temp < distance:
+            distance = temp
+
+    return distance
+
+
 def calculate_next_border_position(current_pos, disp):
     if disp[1] == 0:  # Horizontal displacement
         if disp[0] < 0:
