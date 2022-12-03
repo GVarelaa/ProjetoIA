@@ -51,6 +51,17 @@ class Race:
 
         return nodes
 
+    @staticmethod
+    def calculate_shorter_distance(curr_state, pos_list):
+        distance = math.inf
+
+        for final_state in pos_list:
+            temp = math.dist(curr_state.pos, final_state.pos)
+            if temp < distance:
+                distance = temp
+
+        return distance
+
     def build_graph(self):
         states = [self.start]
 
@@ -67,7 +78,7 @@ class Race:
                 else:
                     self.graph.add_edge(state, e, 1)
 
-                self.graph.add_heuristica(state, position_calculator.calculate_shorter_distance(state.pos, self.end))
+                self.graph.add_heuristica(state, Race.calculate_shorter_distance(state, self.end))
 
                 if e not in visited:
                     states.append(e)
@@ -79,4 +90,12 @@ class Race:
 
     def BFS_solution(self):
         res = self.graph.BFS(self.start, self.end)
+        return res
+
+    def star_solution(self):
+        res = self.graph.star(self.start, self.end)
+        return res
+
+    def greedy_solution(self):
+        res = self.graph.greedy(self.start, self.end)
         return res

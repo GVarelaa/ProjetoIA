@@ -41,10 +41,13 @@ def menu(race):
         print("1... Imprimir grafo")
         print("2... Imprimir nodos")
         print("3... Imprimir arestas")
-        print("4... Desenhar grafo")
-        print("5... DFS")
-        print("6... BFS")
-        print("7... Voltar")
+        print("4... Imprimir heurísticas")
+        print("5... Desenhar grafo")
+        print("6... DFS")
+        print("7... BFS")
+        print("8... A*")
+        print("9... Greedy")
+        print("10... Voltar")
         print("0... Sair")
         print("=========================")
 
@@ -66,21 +69,37 @@ def menu(race):
                 print(race.graph.print_edges())
 
             case 4:
-                race.graph.draw()
+                print()
+                print(race.graph.print_heuristic())
 
             case 5:
+                race.graph.draw()
+
+            case 6:
                 print()
                 (path, cost) = race.DFS_solution()
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 
-            case 6:
+            case 7:
                 print()
                 (path, cost) = race.BFS_solution()
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 
-            case 7:
+            case 8:
+                print()
+                (path, cost) = race.star_solution()
+                print(Graph.print_path(path))
+                print(f"Custo: {cost}\n")
+
+            case 9:
+                print()
+                (path, cost) = race.greedy_solution()
+                print(Graph.print_path(path))
+                print(f"Custo: {cost}\n")
+
+            case 10:
                 print()
                 main()
                 break
