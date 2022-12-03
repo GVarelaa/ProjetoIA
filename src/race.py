@@ -71,14 +71,14 @@ class Race:
             state = states.pop()
             expansion = self.expand_state(state)
 
+            self.graph.add_heuristica(state, Race.calculate_shorter_distance(state, self.end))
+
             for e in expansion:
                 if e.crashed:
                     e.crashed = False
                     self.graph.add_edge(state, e, 25)
                 else:
                     self.graph.add_edge(state, e, 1)
-
-                self.graph.add_heuristica(state, Race.calculate_shorter_distance(state, self.end))
 
                 if e not in visited:
                     states.append(e)

@@ -228,7 +228,7 @@ class Graph:
                 return None
 
             for state in end:
-                if state.pos == start.pos:
+                if state.pos == n.pos:
                     reconst_path = []
 
                     while parents[n] != n:
@@ -239,7 +239,7 @@ class Graph:
 
                     reconst_path.reverse()
 
-                    return (reconst_path, self.calcula_custo(reconst_path))
+                    return (reconst_path, self.calc_path_cost(reconst_path))
 
             custo_acumulado[n] = custo_acumulado[parents[n]] + self.get_arc_cost(n, parents[n])
 
@@ -285,7 +285,7 @@ class Graph:
 
 
             for state in end:
-                if state.pos == start.pos:
+                if state.pos == n.pos:
                     reconst_path = []
 
                     while parents[n] != n:
@@ -296,7 +296,7 @@ class Graph:
 
                     reconst_path.reverse()
 
-                    return (reconst_path, self.calcula_custo(reconst_path))
+                    return (reconst_path, self.calc_path_cost(reconst_path))
 
             # para todos os vizinhos  do nodo corrente
             for (m, weight) in self.get_neighbours(n):
