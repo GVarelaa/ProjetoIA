@@ -48,7 +48,7 @@ class Graph:
 
         self.graph[node1].add((node2, cost))
 
-    def add_heuristica(self, node, value):
+    def add_heuristic(self, node, value):
         if node in self.nodes:
             self.h[node] = value
 
@@ -104,13 +104,13 @@ class Graph:
         return edges
 
 
-    def print_heuristic(self):
-        heuristic = ""
+    def print_heuristics(self):
+        heuristics = ""
 
         for key in self.h.keys():
-            heuristic += str(key) + " | " + str(self.h[key]) + "\n"
+            heuristics += str(key) + " | " + str(self.h[key]) + "\n"
 
-        return heuristic
+        return heuristics
 
     def count_edges(self):
         counter = 0
@@ -196,37 +196,27 @@ class Graph:
             total_cost = self.calc_path_cost(path)
             return path, total_cost
 
-    def star(self, start, end):
-        # open_list é uma lista de nodos visitados, mas com vizinhos que ainda nao foram todos visitados(começa com start)
-        # closed_list é uma lista de nodos visitados e todos os seus vizinhos já o foram
-        custo_acumulado = dict()
-        custo_acumulado[start] = 0
+    def a_star(self, start, end):
+        open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
+        closed_list = set()  # nodos visitados
 
-        open_list = set()
-        close_list = set()
+        # dicionário que mantém o antecessor de um nodo - começa com start
+        parents = {start: start}
 
-        open_list.add(start)
-
-        parents = {}
-        parents[start] = start
-
-        i = 1
+        accmd_costs = dict()  # guardar custos acumulados
+        accmd_costs[start] = 0
 
         while len(open_list) > 0:
-            n = None
+            n = next(iter(open_list))
 
+            # encontra nodo com a menor heuristica
             for v in open_list:
-                if n is None or (custo_acumulado[parents[v]] + self.get_arc_cost(v, parents[v]) + self.h[v]) < (
-                        custo_acumulado[parents[n]] + self.get_arc_cost(n, parents[n]) + self.h[n]):
+                if (accmd_costs[parents[v]] + self.get_arc_cost(v, parents[v]) + self.h[v]) < \
+                   (accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n]) + self.h[n]):
                     n = v
 
-            # print(f"it {i} : {n}") # ver iteraçoes
-            i += 1
-
-            if n is None:
-                print("Path doesnt exist")
-                return None
-
+            # se o nodo corrente é o destino
+            # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
             for state in end:
                 if state.pos == n.pos:
                     reconst_path = []
@@ -241,49 +231,39 @@ class Graph:
 
                     return (reconst_path, self.calc_path_cost(reconst_path))
 
-            custo_acumulado[n] = custo_acumulado[parents[n]] + self.get_arc_cost(n, parents[n])
+            accmd_costs[n] = accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n])
 
-            for (m, weight) in self.get_neighbours(n):
-                if m not in open_list and m not in close_list:
-                    open_list.add(m)
-                    parents[m] = n
+            for (adj, cost) in self.get_neighbours(n):
+                # Se o nodo corrente nao esta na open nem na closed list
+                # adiciona-lo à open_list e marcar o antecessor
+                if adj not in open_list and adj not in closed_list:
+                    open_list.add(adj)
+                    parents[adj] = n
 
+            # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
-            close_list.add(n)
+            closed_list.add(n)
 
         print("Path doesnt exist")
         return None
 
     def greedy(self, start, end):
-        # open_list é uma lista de nodos visitados, mas com vizinhos
-        # que ainda não foram todos visitados, começa com o  start
-        # closed_list é uma lista de nodos visitados
-        # e todos os seus vizinhos também já o foram
-        open_list = set([start])
-        closed_list = set([])
+        open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
+        closed_list = set([])  # #visitados
 
-        # parents é um dicionário que mantém o antecessor de um nodo
-        # começa com start
-        parents = {}
-        parents[start] = start
+        # dicionário que mantém o antecessor de um nodo - começa com start
+        parents = {start: start}
 
         while len(open_list) > 0:
-            n = None
+            n = next(iter(open_list))
 
-            # encontraf nodo com a menor heuristica
+            # encontra nodo com a menor heuristica
             for v in open_list:
-                if n is None or self.h[v] < self.h[n]:
+                if self.h[v] < self.h[n]:
                     n = v
 
-            if n is None:
-                print('Path does not exist!')
-                return None
-
             # se o nodo corrente é o destino
-            # reconstruir o caminho a partir desse nodo até ao start
-            # seguindo o antecessor
-
-
+            # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
             for state in end:
                 if state.pos == n.pos:
                     reconst_path = []
@@ -299,15 +279,14 @@ class Graph:
                     return (reconst_path, self.calc_path_cost(reconst_path))
 
             # para todos os vizinhos  do nodo corrente
-            for (m, weight) in self.get_neighbours(n):
+            for (adj, cost) in self.get_neighbours(n):
                 # Se o nodo corrente nao esta na open nem na closed list
                 # adiciona-lo à open_list e marcar o antecessor
-                if m not in open_list and m not in closed_list:
-                    open_list.add(m)
-                    parents[m] = n
+                if adj not in open_list and adj not in closed_list:
+                    open_list.add(adj)
+                    parents[adj] = n
 
-            # remover n da open_list e adiciona-lo à closed_list
-            # porque todos os seus vizinhos foram inspecionados
+            # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
             closed_list.add(n)
 

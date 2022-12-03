@@ -70,7 +70,7 @@ def menu(race):
 
             case 4:
                 print()
-                print(race.graph.print_heuristic())
+                print(race.graph.print_heuristics())
 
             case 5:
                 race.graph.draw()
@@ -89,7 +89,7 @@ def menu(race):
 
             case 8:
                 print()
-                (path, cost) = race.star_solution()
+                (path, cost) = race.a_star_solution()
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 

@@ -71,7 +71,7 @@ class Race:
             state = states.pop()
             expansion = self.expand_state(state)
 
-            self.graph.add_heuristica(state, Race.calculate_shorter_distance(state, self.end))
+            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end))
 
             for e in expansion:
                 if e.crashed:
@@ -92,8 +92,8 @@ class Race:
         res = self.graph.BFS(self.start, self.end)
         return res
 
-    def star_solution(self):
-        res = self.graph.star(self.start, self.end)
+    def a_star_solution(self):
+        res = self.graph.a_star(self.start, self.end)
         return res
 
     def greedy_solution(self):
