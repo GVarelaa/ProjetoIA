@@ -2,6 +2,7 @@ from parser import parser
 from race import Race
 from graph import Graph
 from node import Node
+import drawer
 
 
 def menu_build_graph():
@@ -49,6 +50,7 @@ def menu(race):
         print("8... A*")
         print("9... Greedy")
         print("10... Voltar")
+        print("11... Desenhar circuito")
         print("0... Sair")
         print("=========================")
 
@@ -109,6 +111,10 @@ def menu(race):
             case 10:
                 print()
                 main()
+                break
+
+            case 11:
+                drawer.draw_circuit(race.matrix)
                 break
 
             case other:
