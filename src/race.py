@@ -111,3 +111,8 @@ class Race:
 
     def multiplayer(self):
         paths, costs = self.graph.multiplayer(self.start, self.end)
+
+    @staticmethod
+    def utility_value(node, final_nodes):
+        dist_to_obj = Race.calculate_shorter_distance(node, final_nodes)
+        # TODO
