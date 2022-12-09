@@ -14,15 +14,21 @@ def menu_build_graph():
     print("=========================")
 
     opt = -1
+    multi_player = False
     while opt != 0:
         opt = 1 # int(input("Introduza a sua opção: "))
 
         match opt:
             case 1:
-                path = "../circuits/circuito.txt"
+                path = "../circuits/circuito2.txt"
                 # path = input("Indique a diretoria do ficheiro do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
+                if len(start) == 1:
+                    print("Um jogador")
+                else:
+                    print(str(len(start)) + " jogadores!")
+                    multi_player = True
                 race.build_graph()
                 print("\nCircuito carregado com sucesso!\n")
                 break
@@ -33,7 +39,7 @@ def menu_build_graph():
                 print("\nOpção inválida!\n")
                 break
 
-    return race
+    return race, multi_player
 
 
 def menu(race):
@@ -122,10 +128,14 @@ def menu(race):
 
 
 def main():
-    race = menu_build_graph()
+    race, multi_player  = menu_build_graph()
 
     if race is not None:
-        menu(race)
+        if multi_player is True:
+            race.multiplayer()
+        else:
+            menu(race)
+
 
 
 if __name__ == "__main__":

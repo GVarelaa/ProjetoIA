@@ -3,7 +3,7 @@ def parser(file_path):
 
     f = open(file_path, "r")
 
-    start = None
+    start = list()
     finish = list()
 
     h = open(file_path, "r")
@@ -18,7 +18,7 @@ def parser(file_path):
         x = 0
         for char in elems:
             if char == "P":
-                start = (x + 0.5, y_max - y - 0.5)
+                start.append((x + 0.5, y_max - y - 0.5))
                 elems[x] = "-"
 
             elif char == "F":

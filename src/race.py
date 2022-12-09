@@ -9,10 +9,12 @@ from copy import deepcopy
 
 
 class Race:
-    def __init__(self, matrix, start, end):
+    def __init__(self, matrix, startPos, end):
         self.matrix = matrix
         self.graph = Graph()
-        self.start = Node(start, (0, 0), False)
+        self.start = list()
+        for pos in startPos:
+            self.start.append(Node(pos, (0,0), False))
         self.end = list()
 
         for pos in end:
@@ -64,9 +66,9 @@ class Race:
         return distance
 
     def build_graph(self):
-        states = [self.start]
+        states = deepcopy(self.start)
 
-        visited = [self.start]
+        visited = deepcopy(self.start)
 
         while states:
             state = states.pop()
@@ -106,3 +108,6 @@ class Race:
         path, cost = res
         self.graph.print_result(deepcopy(self.matrix), res)
         return res
+
+    def multiplayer(self):
+        paths, costs = self.graph.multiplayer(self.start, self.end)
