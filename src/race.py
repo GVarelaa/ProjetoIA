@@ -23,10 +23,10 @@ class Race:
     def __str__(self):
         return str(self.matrix) + str(self.graph)
 
-    def next_state(self, state, accel_pair):
+    def next_state(self, state, accel_pair, mat):
         disp = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
 
-        (new_position, action) = position_calculator.calculate_stop_position(state.pos, disp, self.matrix)
+        (new_position, action) = position_calculator.calculate_stop_position(state.pos, disp, mat)
 
         new_vel = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
 
@@ -39,7 +39,7 @@ class Race:
 
         return Node(new_position, new_vel, is_crashed)
 
-    def expand_state(self, state):
+    def expand_state(self, state, mat):
         nodes = list()
         found = False
         accelerations = [(1, 1), (1, -1), (1, 0), (-1, 1), (-1, -1), (0, -1), (-1, 0), (0,0), (0,1)]
@@ -50,7 +50,7 @@ class Race:
 
         if not found:
             for accel in accelerations:
-                nodes.append(self.next_state(state, accel))
+                nodes.append((self.next_state(state, accel, mat), accel))
 
         return nodes
 
@@ -72,12 +72,12 @@ class Race:
 
         while states:
             state = states.pop()
-            expansion = self.expand_state(state)
+            expansion = self.expand_state(state, self.matrix)
 
             self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end), "distance")  # distância às posiçoes finais
             self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2), "velocity")  # velocidade atual
 
-            for e in expansion:
+            for (e,accel) in expansion:
                 if e.crashed:
                     e.crashed = False
                     self.graph.add_edge(state, e, 25)
@@ -111,9 +111,75 @@ class Race:
         return res
 
     def multiplayer(self):
-        paths, costs = self.graph.multiplayer(self.start, self.end)
+        # paths ,costs
+        players_states = deepcopy(self.start)
+        paths_found = list()    # Se já chegou ao fim da pista
+        parents = list()
+        #for state in players_states:
+            #paths_found.append(False)
+            #parents.append(dict())
+        paths_found = [False]
+        players_states = [self.start[0]]
+        print(players_states)
+        while not all_true(paths_found):
+            for i in range(len(players_states)):
+                paths_found[i], players_states[i] = self.play(players_states[i], parents, self.matrix)
 
-    @staticmethod
-    def utility_value(node, final_nodes):
-        dist_to_obj = Race.calculate_shorter_distance(node, final_nodes)
-        # TODO
+            # Joga jogador 1
+            # Joga jogador 2
+            # ...
+
+        return ([], [])
+
+    def play(self, state, parents, mat):
+        next_pos = self.expand_state(state, mat)
+        max_pos = next_pos[0]
+        max = utility_value(next_pos[0][0], self.end)
+
+        for i in range(len(next_pos)):
+            ut_value = utility_value(next_pos[i][0], self.end)
+            if ut_value > max:
+                max = ut_value
+                max_pos = next_pos[i]
+
+        update_mat(state.pos, max_pos[0].pos, mat)
+        print_mat(mat)
+        if max == math.inf:
+            return True, max_pos[0]
+        else:
+            return False, max_pos[0]
+
+def update_mat(begin, end, mat):
+    mat_begin_row = len(mat) - math.floor(begin[1]) - 1
+    mat_begin_collumn = math.floor(begin[0])
+    mat_end_row = len(mat) - math.floor(end[1]) - 1
+    mat_end_collumn = math.floor(end[0])
+
+    mat[mat_begin_row][mat_begin_collumn] = '-'
+    mat[mat_end_row][mat_end_collumn] = 'P'
+
+
+
+def all_true(list):
+    flag = True
+    for bool in list:
+        if bool == False:
+            return False
+    return flag
+
+def utility_value(node, final_nodes):
+    dist_to_obj = Race.calculate_shorter_distance(node, final_nodes)
+    if dist_to_obj == 0:
+        return math.inf
+    else:
+        return -dist_to_obj + node.vel[0]**2 + node.vel[1]**2
+    # TODO
+
+def print_mat(mat):
+    string = ""
+    for i in range(len(mat)):
+        for j in range(len(mat[i])):
+            string += str(mat[i][j])
+        string += "\n"
+
+    print(string)

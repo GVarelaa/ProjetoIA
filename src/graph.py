@@ -344,25 +344,3 @@ class Graph:
         print('Path does not exist!')
         return None
 
-    def multiplayer(self, start, end):
-        players_positions = deepcopy(start)
-        paths_found = list()
-        for pos in start:
-            paths_found.append(False)
-
-        #while not all_true(paths_found):
-            # Joga jogador 1
-            # Joga jogador 2
-            # ...
-
-        return ([], [])
-
-
-def all_true(list):
-    flag = True
-    for bool in list:
-        if bool == False:
-            return False
-    return flag
-
-print(all_true([True, False]))

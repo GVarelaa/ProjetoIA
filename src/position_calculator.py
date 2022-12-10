@@ -116,7 +116,7 @@ def calculate_disp_result(border_position, displ, map):
         obj_second_point = get_map_object(second_point, map)
         obj_third_point = get_map_object(third_point, map)
 
-        if obj_first_point == 'X' or obj_second_point == 'X' or obj_third_point == 'X':
+        if obj_first_point == 'X' or obj_second_point == 'X' or obj_third_point == 'X' or obj_first_point == 'P' or obj_second_point == 'P' or obj_third_point == 'P':
             return DispResult.CRASH
         elif obj_third_point == 'F':
             return DispResult.FINISH
@@ -129,7 +129,7 @@ def calculate_disp_result(border_position, displ, map):
     # Get object inside the square
     obj_in_square = get_map_object(middle_position, map)
 
-    if obj_in_square == 'X':
+    if obj_in_square == 'P' or obj_in_square == 'X':
         return DispResult.CRASH
     elif obj_in_square == 'F':
         return DispResult.FINISH
