@@ -4,7 +4,6 @@ from graph import Graph
 from node import Node
 import drawer
 
-
 def menu_build_graph():
     race = None
 
@@ -16,12 +15,11 @@ def menu_build_graph():
     opt = -1
     multi_player = False
     while opt != 0:
-        opt = 1 # int(input("Introduza a sua opção: "))
+        opt = int(input("Introduza a sua opção: "))
 
         match opt:
             case 1:
-                path = "../circuits/circuito2.txt"
-                # path = input("Indique a diretoria do ficheiro do circuito: ")
+                path = input("Indique a diretoria do ficheiro do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
                 if len(start) == 1:
@@ -103,14 +101,50 @@ def menu(race):
                 print(f"Custo: {cost}\n")
 
             case 8:
-                print()
-                (path, cost) = race.a_star_solution()
+                choice = -1
+                type = ""
+
+                while choice != "distance" and choice != "velocity":
+                    print("==== Heurística ====")
+                    print("1 - Distância")
+                    print("2 - Velocidade")
+                    print("====================")
+
+                    choice = int(input())
+
+                    match choice:
+                        case 1:
+                            choice = "distance"
+                        case 2:
+                            choice = "velocity"
+                        case other:
+                            print("\nOpção inválida!\n")
+
+                (path, cost) = race.a_star_solution(choice)
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 
             case 9:
-                print()
-                (path, cost) = race.greedy_solution()
+                choice = -1
+                type = ""
+
+                while choice != "distance" and choice != "velocity":
+                    print("==== Heurística ====")
+                    print("1 - Distância")
+                    print("2 - Velocidade")
+                    print("====================")
+
+                    choice = int(input())
+
+                    match choice:
+                        case 1:
+                            choice = "distance"
+                        case 2:
+                            choice = "velocity"
+                        case other:
+                            print("\nOpção inválida!\n")
+
+                (path, cost) = race.greedy_solution(choice)
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 

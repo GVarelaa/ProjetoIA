@@ -74,7 +74,8 @@ class Race:
             state = states.pop()
             expansion = self.expand_state(state)
 
-            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end))
+            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end), "distance")  # distância às posiçoes finais
+            self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2), "velocity")  # velocidade atual
 
             for e in expansion:
                 if e.crashed:
@@ -97,14 +98,14 @@ class Race:
         self.graph.print_result(deepcopy(self.matrix), path)
         return res
 
-    def a_star_solution(self):
-        res = self.graph.a_star(self.start, self.end)
+    def a_star_solution(self, type):
+        res = self.graph.a_star(self.start, self.end, type)
         path, cost = res
         self.graph.print_result(deepcopy(self.matrix), res)
         return res
 
-    def greedy_solution(self):
-        res = self.graph.greedy(self.start, self.end)
+    def greedy_solution(self, type):
+        res = self.graph.greedy(self.start, self.end, type)
         path, cost = res
         self.graph.print_result(deepcopy(self.matrix), res)
         return res

@@ -21,7 +21,8 @@ class Graph:
     def __init__(self):
         self.nodes = []  # lista com os nodos do grafo
         self.graph = {}  # dicionario do grafo
-        self.h = {}  # dicionario com heuristicas
+        self.h1 = {}  # heurística da distância até a posição final
+        self.h2 = {}  # heurística da velocidade
 
     def __str__(self):
         string = ""
@@ -59,9 +60,15 @@ class Graph:
 
         self.graph[node1].add((node2, cost))
 
-    def add_heuristic(self, node, value):
+    def add_heuristic(self, node, value, type):
+        if type == "distance":
+            heuristic = self.h1
+        elif type == "velocity":
+            heuristic = self.h2
+
         if node in self.nodes:
-            self.h[node] = value
+            heuristic[node] = value
+
 
     def get_neighbours(self, node):
         lista = []
@@ -115,11 +122,16 @@ class Graph:
         return edges
 
 
-    def print_heuristics(self):
+    def print_heuristics(self, type):
+        if type == "distance":
+            heuristic = self.h1
+        elif type == "velocity":
+            heuristic = self.h2
+
         heuristics = ""
 
-        for key in self.h.keys():
-            heuristics += str(key) + " | " + str(self.h[key]) + "\n"
+        for key in heuristic.keys():
+            heuristics += str(key) + " | " + str(heuristic[key]) + "\n"
 
         return heuristics
 
@@ -222,7 +234,13 @@ class Graph:
             total_cost = self.calc_path_cost(path)
             return path, total_cost
 
-    def a_star(self, start, end):
+    def a_star(self, start, end, type):
+        start = start[0]  # mudar
+        if type == "distance":
+            heuristic = self.h1
+        elif type == "velocity":
+            heuristic = self.h2
+
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set()  # nodos visitados
 
@@ -237,8 +255,8 @@ class Graph:
 
             # encontra nodo com a menor heuristica
             for v in open_list:
-                if (accmd_costs[parents[v]] + self.get_arc_cost(v, parents[v]) + self.h[v]) < \
-                   (accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n]) + self.h[n]):
+                if (accmd_costs[parents[v]] + self.get_arc_cost(v, parents[v]) + heuristic[v]) < \
+                   (accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n]) + heuristic[n]):
                     n = v
 
             # se o nodo corrente é o destino
@@ -274,6 +292,13 @@ class Graph:
         return None
 
     def greedy(self, start, end):
+        start = start[0] # mudar
+        if type == "distance":
+            heuristic = self.h1
+        elif type == "velocity":
+            heuristic = self.h2
+
+
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set([])  # #visitados
 
@@ -285,7 +310,7 @@ class Graph:
 
             # encontra nodo com a menor heuristica
             for v in open_list:
-                if self.h[v] < self.h[n]:
+                if heuristic[v] < heuristic[n]:
                     n = v
 
             # se o nodo corrente é o destino
@@ -325,7 +350,7 @@ class Graph:
         for pos in start:
             paths_found.append(False)
 
-        while not all_true(paths_found):
+        #while not all_true(paths_found):
             # Joga jogador 1
             # Joga jogador 2
             # ...
