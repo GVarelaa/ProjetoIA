@@ -166,6 +166,39 @@ class Race:
         else:
             return False, max_pos[0]
 
+    def mini_max(self, depth, player, player_states, playerIndex, mat):
+        if player == 1: # Max is playing
+            next_states = self.expand_state(player_states[playerIndex], mat)
+            max_utility = -math.inf
+            for state in next_states:
+                if depth == 0:
+                    utility = utility_value(state[0], self.end)
+                else:
+                    st_copy = deepcopy(player_states) # Copy of the states
+                    st_copy[playerIndex] = state # Updating player state
+                    mat_copy = deepcopy(mat)
+                    update_mat(player_states[playerIndex].pos, state[0].pos)
+                    utility = self.mini_max(depth-1, 0, st_copy, (playerIndex+1)%len(player_states), mat)
+                if utility > max_utility:
+                    max_utility = utility
+                    next_state = state
+            optimal_utility = max_utility
+        elif player == 0: # Min is playing
+            next_states = None
+            min_utility = math.inf
+            for state in next_states:
+                st_copy = deepcopy(player_states)  # Copy of the states
+                st_copy[playerIndex] = state  # Updating player state
+                mat_copy = deepcopy(mat)
+                update_mat(player_states[playerIndex].pos, state[0].pos)
+                utility = self.mini_max(depth - 1, 0, st_copy, (playerIndex + 1) % len(player_states), mat)
+                if utility < min_utility:
+                    min_utility = utility
+                    next_state = state
+                optimal_utility = min_utility
+
+        return optimal_utility
+
 def update_mat(begin, end, mat):
     mat_begin_row = len(mat) - math.floor(begin[1]) - 1
     mat_begin_collumn = math.floor(begin[0])
