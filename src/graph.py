@@ -94,12 +94,14 @@ class Graph:
 
     @staticmethod
     def print_path(path):
-        ret = ""
+        counter = 1
+        res = ""
 
         for node in path:
-            ret += str(node) + "\n"
+            res += "Node " + str(counter) + " : " + str(node) + "\n"
+            counter += 1
 
-        return ret
+        print(res)
 
     def print_nodes(self):
         nodes = ""
@@ -107,7 +109,7 @@ class Graph:
         for node in self.nodes:
             nodes += str(node) + "\n"
 
-        return nodes
+        print(nodes)
 
     def print_edges(self):
         edges = ""
@@ -116,7 +118,7 @@ class Graph:
             for (adj, cost) in self.graph[node]:
                 edges += str(node) + "   ->   " + str(adj) + "    cost:" + str(cost) + "\n"
 
-        return edges
+        print(edges)
 
     def print_heuristics(self, type):
         if type == "distance":
@@ -129,7 +131,7 @@ class Graph:
         for key in heuristic.keys():
             heuristics += str(key) + " | " + str(heuristic[key]) + "\n"
 
-        return heuristics
+        print(heuristics)
 
     def count_edges(self):
         counter = 0
@@ -158,17 +160,6 @@ class Graph:
 
         plt.draw()
         plt.show()
-
-    @staticmethod
-    def print_result(matrix, path):
-        y_max = len(matrix)
-
-        for node in path:
-            pos_x = node.pos[0] - 0.5
-            pos_y = y_max - node.pos[1] - 0.5
-            matrix[int(pos_y)][int(pos_x)] = 'O'
-
-        print_mat(matrix)
 
     def DFS(self, start, end, matrix, debug, path=[], visited=set()):
         path.append(start)
@@ -291,7 +282,7 @@ class Graph:
         print("Path doesnt exist")
         return None
 
-    def greedy(self, start, end):
+    def greedy(self, start, end, type):
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":

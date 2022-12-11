@@ -41,6 +41,17 @@ class Race:
 
         return Node(new_position, new_vel, is_crashed)
 
+    def print_result(self, path):
+        matrix = deepcopy(self.matrix)
+        y_max = len(matrix)
+
+        for node in path:
+            pos_x = node.pos[0] - 0.5
+            pos_y = y_max - node.pos[1] - 0.5
+            matrix[int(pos_y)][int(pos_x)] = 'O'
+
+        print_mat(matrix)
+
     def expand_state(self, state, mat):
         nodes = list()
         found = False
@@ -104,12 +115,10 @@ class Race:
 
     def a_star_solution(self, type):
         path, cost = self.graph.a_star(self.start[0], self.end, type)
-        self.graph.print_result(deepcopy(self.matrix), path)
         return path, cost
 
     def greedy_solution(self, type):
         path, cost = self.graph.greedy(self.start[0], self.end, type)
-        self.graph.print_result(deepcopy(self.matrix), path)
         return path, cost
 
     def multiplayer(self):
