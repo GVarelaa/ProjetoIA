@@ -1,8 +1,8 @@
 from parser import parser
 from race import Race
 from graph import Graph
-from node import Node
 import drawer
+
 
 def menu_build_graph():
     race = None
@@ -15,11 +15,11 @@ def menu_build_graph():
     opt = -1
     multi_player = False
     while opt != 0:
-        opt = int(input("Introduza a sua opção: "))
+        opt = 1  # int(input("Introduza a sua opção: "))
 
         match opt:
             case 1:
-                path = input("Indique a diretoria do ficheiro do circuito: ")
+                path = "../circuits/circuito.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
                 if len(start) == 1:
@@ -42,6 +42,7 @@ def menu_build_graph():
 
 def menu(race):
     opt = -1
+
     while opt != 0:
         print("=========================")
         print("1... Imprimir grafo")
@@ -49,18 +50,16 @@ def menu(race):
         print("3... Imprimir arestas")
         print("4... Imprimir heurísticas")
         print("5... Desenhar grafo")
-        print("6... DFS")
-        print("7... BFS")
-        print("8... A*")
-        print("9... Greedy")
-        print("10... Voltar")
-        print("11... Desenhar circuito")
+        print("6... Desenhar circuito")
+        print("7... DFS")
+        print("8... BFS")
+        print("9... A*")
+        print("10... Greedy")
+        print("11... Voltar")
         print("0... Sair")
         print("=========================")
 
-
         opt = int(input("Introduza a sua opção: "))
-
 
         match opt:
             case 0:
@@ -85,76 +84,39 @@ def menu(race):
                 race.graph.draw()
 
             case 6:
-                choice = input("Modo debug? 1 - Sim, 0 - Não\n")
-                if choice == '1':
-                    debug = True
-                else:
-                    debug = False
+                drawer.draw_circuit(race.matrix)
+                break
+
+            case 7:
+                print()
+                debug = menu_debug(race)
                 (path, cost) = race.DFS_solution(debug)
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 
-            case 7:
+            case 8:
                 print()
                 (path, cost) = race.BFS_solution()
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 
-            case 8:
-                choice = -1
-                type = ""
-
-                while choice != "distance" and choice != "velocity":
-                    print("==== Heurística ====")
-                    print("1 - Distância")
-                    print("2 - Velocidade")
-                    print("====================")
-
-                    choice = int(input())
-
-                    match choice:
-                        case 1:
-                            choice = "distance"
-                        case 2:
-                            choice = "velocity"
-                        case other:
-                            print("\nOpção inválida!\n")
-
-                (path, cost) = race.a_star_solution(choice)
-                print(Graph.print_path(path))
-                print(f"Custo: {cost}\n")
-
             case 9:
-                choice = -1
-                type = ""
-
-                while choice != "distance" and choice != "velocity":
-                    print("==== Heurística ====")
-                    print("1 - Distância")
-                    print("2 - Velocidade")
-                    print("====================")
-
-                    choice = int(input())
-
-                    match choice:
-                        case 1:
-                            choice = "distance"
-                        case 2:
-                            choice = "velocity"
-                        case other:
-                            print("\nOpção inválida!\n")
-
-                (path, cost) = race.greedy_solution(choice)
+                print()
+                choice = menu_heuristic(race)
+                (path, cost) = race.a_star_solution(choice)
                 print(Graph.print_path(path))
                 print(f"Custo: {cost}\n")
 
             case 10:
                 print()
-                main()
-                break
+                choice = menu_heuristic(race)
+                (path, cost) = race.greedy_solution(choice)
+                print(Graph.print_path(path))
+                print(f"Custo: {cost}\n")
 
             case 11:
-                drawer.draw_circuit(race.matrix)
+                print()
+                main()
                 break
 
             case other:
@@ -162,7 +124,7 @@ def menu(race):
 
 
 def main():
-    race, multi_player  = menu_build_graph()
+    race, multi_player = menu_build_graph()
 
     if race is not None:
         if multi_player is True:
@@ -170,6 +132,63 @@ def main():
         else:
             menu(race)
 
+
+def menu_debug(race):
+    opt = -1
+    debug = False
+
+    while opt not in {0, 1, 2}:
+        print("=====================")
+        print("Escolha de Modo")
+        print("1... Debug")
+        print("2... Normal")
+        print("0... Voltar")
+        print("=====================")
+
+        opt = int(input("Introduza a sua opção: "))
+
+        match opt:
+            case 0:
+                print()
+                menu(race)
+                break
+            case 1:
+                debug = True
+            case 2:
+                break
+            case other:
+                print("\nOpção inválida!\n")
+
+    return debug
+
+
+def menu_heuristic(race):
+    opt = -1
+    choice = ""
+
+    while opt not in {0, 1, 2}:
+        print("=====================")
+        print("Escolha de Heurística")
+        print("1... Distância")
+        print("2... Velocidade")
+        print("0... Voltar")
+        print("=====================")
+
+        opt = int(input("Introduza a sua opção: "))
+
+        match opt:
+            case 0:
+                print()
+                menu(race)
+                break
+            case 1:
+                choice = "distance"
+            case 2:
+                choice = "velocity"
+            case other:
+                print("\nOpção inválida!\n")
+
+    return choice
 
 
 if __name__ == "__main__":

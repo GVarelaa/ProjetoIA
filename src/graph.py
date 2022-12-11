@@ -1,11 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import scipy as sp
 from queue import Queue
-from node import Node
-import time
 from copy import deepcopy
-
 
 
 def print_mat(mat):
@@ -15,6 +11,7 @@ def print_mat(mat):
             string = string + str(c) + " "
         string += "\n"
     print(string)
+
 
 class Graph:
     # construtor de classe
@@ -69,7 +66,6 @@ class Graph:
         if node in self.nodes:
             heuristic[node] = value
 
-
     def get_neighbours(self, node):
         lista = []
         for (adj, peso) in self.graph[node]:
@@ -95,6 +91,7 @@ class Graph:
             i += 1
 
         return total
+
     @staticmethod
     def print_path(path):
         ret = ""
@@ -120,7 +117,6 @@ class Graph:
                 edges += str(node) + "   ->   " + str(adj) + "    cost:" + str(cost) + "\n"
 
         return edges
-
 
     def print_heuristics(self, type):
         if type == "distance":
@@ -162,12 +158,13 @@ class Graph:
 
         plt.draw()
         plt.show()
-    def print_result(self, matrix, path):
+
+    @staticmethod
+    def print_result(matrix, path):
         for node in path:
-            matrix[node.get_pos][node.get_pos]='O'
+            matrix[node.get_pos][node.get_pos] = 'O'
 
         print_mat(matrix)
-
 
     def DFS(self, start, end, matrix, debug, path=[], visited=set()):
         path.append(start)
@@ -186,7 +183,7 @@ class Graph:
                 if debug:
                     print(adj.pos)
                     copy = deepcopy(matrix)
-                    copy[len(matrix) - int(adj.pos[1]+0.5)][int(adj.pos[0]-0.5)] = 'O'
+                    copy[len(matrix) - int(adj.pos[1] + 0.5)][int(adj.pos[0] - 0.5)] = 'O'
                     print_mat(copy)
                     input()
                 ret = self.DFS(adj, end, matrix, debug, path, visited)
@@ -256,7 +253,7 @@ class Graph:
             # encontra nodo com a menor heuristica
             for v in open_list:
                 if (accmd_costs[parents[v]] + self.get_arc_cost(v, parents[v]) + heuristic[v]) < \
-                   (accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n]) + heuristic[n]):
+                        (accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n]) + heuristic[n]):
                     n = v
 
             # se o nodo corrente é o destino
@@ -273,7 +270,7 @@ class Graph:
 
                     reconst_path.reverse()
 
-                    return (reconst_path, self.calc_path_cost(reconst_path))
+                    return reconst_path, self.calc_path_cost(reconst_path)
 
             accmd_costs[n] = accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n])
 
@@ -292,12 +289,11 @@ class Graph:
         return None
 
     def greedy(self, start, end):
-        start = start[0] # mudar
+        start = start[0]  # mudar
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
             heuristic = self.h2
-
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set([])  # #visitados
@@ -327,7 +323,7 @@ class Graph:
 
                     reconst_path.reverse()
 
-                    return (reconst_path, self.calc_path_cost(reconst_path))
+                    return reconst_path, self.calc_path_cost(reconst_path)
 
             # para todos os vizinhos  do nodo corrente
             for (adj, cost) in self.get_neighbours(n):
@@ -343,4 +339,3 @@ class Graph:
 
         print('Path does not exist!')
         return None
-

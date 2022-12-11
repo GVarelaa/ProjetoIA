@@ -9,13 +9,14 @@ from copy import deepcopy
 
 
 class Race:
-    def __init__(self, matrix, startPos, end):
+    def __init__(self, matrix, start, end):
         self.matrix = matrix
         self.graph = Graph()
         self.start = list()
-        for pos in startPos:
-            self.start.append(Node(pos, (0,0), False))
         self.end = list()
+
+        for pos in start:
+            self.start.append(Node(pos, (0, 0), False))
 
         for pos in end:
             self.end.append(Node(pos, (-1, -1), False))
@@ -23,7 +24,8 @@ class Race:
     def __str__(self):
         return str(self.matrix) + str(self.graph)
 
-    def next_state(self, state, accel_pair, mat):
+    @staticmethod
+    def next_state(state, accel_pair, mat):
         disp = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
 
         (new_position, action) = position_calculator.calculate_stop_position(state.pos, disp, mat)
@@ -199,6 +201,7 @@ class Race:
 
         return optimal_utility
 
+
 def update_mat(begin, end, mat):
     mat_begin_row = len(mat) - math.floor(begin[1]) - 1
     mat_begin_collumn = math.floor(begin[0])
@@ -209,13 +212,13 @@ def update_mat(begin, end, mat):
     mat[mat_end_row][mat_end_collumn] = 'P'
 
 
-
 def all_true(list):
     flag = True
     for bool in list:
         if bool == False:
             return False
     return flag
+
 
 def utility_value(node, final_nodes):
     dist_to_obj = Race.calculate_shorter_distance(node, final_nodes)
@@ -224,6 +227,7 @@ def utility_value(node, final_nodes):
     else:
         return -dist_to_obj + node.vel[0]**2 + node.vel[1]**2
     # TODO
+
 
 def print_mat(mat):
     string = ""
