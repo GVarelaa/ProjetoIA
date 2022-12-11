@@ -89,23 +89,23 @@ class Race:
                     visited.append(e)
 
     def DFS_solution(self, debug):
-        res = self.graph.DFS(self.start, self.end, deepcopy(self.matrix), debug, path=[], visited=set())
+        res = self.graph.DFS(self.start[0], self.end, deepcopy(self.matrix), debug, path=[], visited=set())
         return res
 
     def BFS_solution(self):
-        res = self.graph.BFS(self.start, self.end)
+        res = self.graph.BFS(self.start[0], self.end)
         path, cost = res
         self.graph.print_result(deepcopy(self.matrix), path)
         return res
 
     def a_star_solution(self, type):
-        res = self.graph.a_star(self.start, self.end, type)
+        res = self.graph.a_star(self.start[0], self.end, type)
         path, cost = res
         self.graph.print_result(deepcopy(self.matrix), res)
         return res
 
     def greedy_solution(self, type):
-        res = self.graph.greedy(self.start, self.end, type)
+        res = self.graph.greedy(self.start[0], self.end, type)
         path, cost = res
         self.graph.print_result(deepcopy(self.matrix), res)
         return res
