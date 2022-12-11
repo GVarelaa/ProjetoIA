@@ -103,16 +103,14 @@ class Race:
         return res
 
     def a_star_solution(self, type):
-        res = self.graph.a_star(self.start[0], self.end, type)
-        path, cost = res
-        self.graph.print_result(deepcopy(self.matrix), res)
-        return res
+        path, cost = self.graph.a_star(self.start[0], self.end, type)
+        self.graph.print_result(deepcopy(self.matrix), path)
+        return path, cost
 
     def greedy_solution(self, type):
-        res = self.graph.greedy(self.start[0], self.end, type)
-        path, cost = res
-        self.graph.print_result(deepcopy(self.matrix), res)
-        return res
+        path, cost = self.graph.greedy(self.start[0], self.end, type)
+        self.graph.print_result(deepcopy(self.matrix), path)
+        return path, cost
 
     def multiplayer(self):
         # paths ,costs
