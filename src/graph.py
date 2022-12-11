@@ -232,7 +232,6 @@ class Graph:
             return path, total_cost
 
     def a_star(self, start, end, type):
-        start = start[0]  # mudar
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
@@ -289,7 +288,6 @@ class Graph:
         return None
 
     def greedy(self, start, end):
-        start = start[0]  # mudar
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":

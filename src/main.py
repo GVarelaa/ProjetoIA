@@ -78,7 +78,8 @@ def menu(race):
 
             case 4:
                 print()
-                print(race.graph.print_heuristics())
+                choice = menu_heuristic(race)
+                print(race.graph.print_heuristics(choice))
 
             case 5:
                 race.graph.draw()
