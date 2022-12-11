@@ -68,16 +68,13 @@ class Race:
         return distance
 
     def build_graph(self):
+        print(self.end)
         states = deepcopy(self.start)
-
         visited = deepcopy(self.start)
 
         while states:
             state = states.pop()
             expansion = self.expand_state(state, self.matrix)
-
-            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end), "distance")  # distância às posiçoes finais
-            self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2), "velocity")  # velocidade atual
 
             for (e,accel) in expansion:
                 if e.crashed:
@@ -89,6 +86,11 @@ class Race:
                 if e not in visited:
                     states.append(e)
                     visited.append(e)
+
+            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end),
+                                     "distance")  # distância às posiçoes finais
+            self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2),
+                                     "velocity")  # velocidade atual
 
     def DFS_solution(self, debug):
         res = self.graph.DFS(self.start[0], self.end, deepcopy(self.matrix), debug, path=[], visited=set())
