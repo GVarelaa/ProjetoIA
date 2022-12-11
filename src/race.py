@@ -115,20 +115,36 @@ class Race:
         players_states = deepcopy(self.start)
         paths_found = list()    # Se já chegou ao fim da pista
         parents = list()
-        #for state in players_states:
-            #paths_found.append(False)
-            #parents.append(dict())
-        paths_found = [False]
-        players_states = [self.start[0]]
+        for state in players_states:
+            paths_found.append(False)
+            dic = dict()
+            dic[state] = None
+            parents.append(dic)
         print(players_states)
+
         while not all_true(paths_found):
             for i in range(len(players_states)):
-                paths_found[i], players_states[i] = self.play(players_states[i], parents, self.matrix)
+                if paths_found[i] == False:
+                    paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix)
+                    if paths_found[i] == True:
+                        mat_row = len(self.matrix) - math.floor(players_states[i].pos[1]) - 1
+                        mat_collumn = math.floor(players_states[i].pos[0])
+                        self.matrix[mat_row][mat_collumn] = 'F'
 
             # Joga jogador 1
             # Joga jogador 2
             # ...
-
+        i=0
+        for p in parents:
+            path = []
+            node = players_states[i]
+            path.append(node)
+            while p[node] is not None:
+                path.append(p[node])
+                node = p[node]
+            path.reverse()
+            print(path)
+            i+=1
         return ([], [])
 
     def play(self, state, parents, mat):
@@ -143,6 +159,7 @@ class Race:
                 max_pos = next_pos[i]
 
         update_mat(state.pos, max_pos[0].pos, mat)
+        parents[max_pos[0]] = state
         print_mat(mat)
         if max == math.inf:
             return True, max_pos[0]
@@ -179,7 +196,7 @@ def print_mat(mat):
     string = ""
     for i in range(len(mat)):
         for j in range(len(mat[i])):
-            string += str(mat[i][j])
+            string += str(mat[i][j]) + " "
         string += "\n"
 
     print(string)

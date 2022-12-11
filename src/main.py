@@ -15,11 +15,11 @@ def menu_build_graph():
     opt = -1
     multi_player = False
     while opt != 0:
-        opt = int(input("Introduza a sua opção: "))
+        opt = 1#int(input("Introduza a sua opção: "))
 
         match opt:
             case 1:
-                path = input("Indique a diretoria do ficheiro do circuito: ")
+                path = "../circuits/circuito.txt" #input("Indique a diretoria do ficheiro do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
                 if len(start) == 1:
