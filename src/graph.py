@@ -161,8 +161,12 @@ class Graph:
 
     @staticmethod
     def print_result(matrix, path):
+        y_max = len(matrix)
+
         for node in path:
-            matrix[node.get_pos][node.get_pos] = 'O'
+            pos_x = node.pos[0] - 0.5
+            pos_y = y_max - node.pos[1] - 0.5
+            matrix[int(pos_y)][int(pos_x)] = 'O'
 
         print_mat(matrix)
 
