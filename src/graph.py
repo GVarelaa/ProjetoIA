@@ -222,6 +222,7 @@ class Graph:
             return path, total_cost, all_visited
 
     def a_star(self, start, end, type):
+        i=0
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
@@ -237,6 +238,7 @@ class Graph:
         accmd_costs[start] = 0
 
         while len(open_list) > 0:
+            i+=1
             n = next(iter(open_list))
 
             # encontra nodo com a menor heuristica
@@ -258,7 +260,7 @@ class Graph:
                     reconst_path.append(start)
 
                     reconst_path.reverse()
-
+                    print(i)
                     return reconst_path, self.calc_path_cost(reconst_path)
 
             accmd_costs[n] = accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n])

@@ -53,7 +53,7 @@ def draw_displacement(pos, disp, ax):
 
 
 def draw_frame(plt, pos):
-    plt.scatter(pos[0], pos[1], color='red')
+    plt.scatter(pos[0], pos[1], color='black')
     return plt
 
 
@@ -82,7 +82,7 @@ def create_frames(circuit, positions):
 def create_gif(circuit, positions):
     frames = create_frames(circuit, positions)
 
-    imageio.mimsave('../img/gif.gif', frames, fps=5, loop=5)
+    imageio.mimsave('../img/gif.gif', frames, fps=10, loop=1)
     #print_gif()
 
 

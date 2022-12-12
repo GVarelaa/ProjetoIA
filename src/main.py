@@ -98,9 +98,11 @@ def menu(race):
 
             case 8:
                 print()
+                debug = menu_debug(race)
                 path, cost, all_visited = race.BFS_solution()
 
-                drawer.create_gif(race.matrix, all_visited)
+                if debug:
+                    drawer.create_gif(race.matrix, all_visited)
 
                 race.print_result(path)
                 Graph.print_path(path, cost)
@@ -108,21 +110,27 @@ def menu(race):
 
             case 9:
                 print()
+                debug = menu_debug(race)
                 choice = menu_heuristic(race)
                 path, cost = race.a_star_solution(choice)
 
-                race.print_result(path)
+                if debug:
+                    drawer.create_gif(race.matrix, all_visited)
+                    drawer.draw_path(race.matrix, path)
+
                 Graph.print_path(path, cost)
-                drawer.draw_path(race.matrix, path)
 
             case 10:
                 print()
+                debug = menu_debug(race)
                 choice = menu_heuristic(race)
                 path, cost = race.greedy_solution(choice)
 
-                race.print_result(path)
+                if debug:
+                    drawer.create_gif(race.matrix, all_visited)
+                    drawer.draw_path(race.matrix, path)
+
                 Graph.print_path(path, cost)
-                drawer.draw_path(race.matrix, path)
 
             case 11:
                 print()
