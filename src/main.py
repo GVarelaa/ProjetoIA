@@ -85,12 +85,7 @@ def menu(race):
                 race.graph.draw()
 
             case 6:
-                time=[1]
-                for t in time:
-                    drawer.create_frame(t, race.matrix)
-
-                drawer.create_gif(time)
-                drawer.print_gif()
+                drawer.draw_path(race.matrix, [])
 
             case 7:
                 print()
@@ -116,6 +111,7 @@ def menu(race):
                 race.print_result(path)
 
                 Graph.print_path(path)
+                drawer.draw_path(race.matrix, path)
                 print(f"Custo: {cost}\n")
 
             case 10:
