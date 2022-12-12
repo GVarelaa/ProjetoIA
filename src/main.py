@@ -19,7 +19,7 @@ def menu_build_graph():
 
         match opt:
             case 1:
-                path = "../circuits/circuito.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
+                path = "../circuits/tone.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
                 (matrix, start, end) = parser(path)
                 race = Race(matrix, start, end)
                 if len(start) == 1:
@@ -90,10 +90,11 @@ def menu(race):
             case 7:
                 print()
                 debug = menu_debug(race)
-                (path, cost) = race.DFS_solution(debug)
+                path, cost = race.DFS_solution(debug)
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                race.print_result(path)
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
             case 8:
                 print()
@@ -101,27 +102,27 @@ def menu(race):
 
                 drawer.create_gif(race.matrix, all_visited)
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                race.print_result(path)
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
             case 9:
                 print()
                 choice = menu_heuristic(race)
                 path, cost = race.a_star_solution(choice)
-                race.print_result(path)
 
-                Graph.print_path(path)
+                race.print_result(path)
+                Graph.print_path(path, cost)
                 drawer.draw_path(race.matrix, path)
-                print(f"Custo: {cost}\n")
 
             case 10:
                 print()
                 choice = menu_heuristic(race)
                 path, cost = race.greedy_solution(choice)
-                race.print_result(path)
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                race.print_result(path)
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
             case 11:
                 print()

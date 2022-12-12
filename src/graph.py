@@ -163,12 +163,9 @@ class Graph:
         plt.draw()
         plt.show()
 
-    def DFS(self, start, end, matrix, debug, path=[], visited=set()):
+    def DFS(self, start, end, path=[], visited=set()):
         path.append(start)
         visited.add(start)
-
-        if debug:
-            print(start)
 
         for state in end:
             if state.pos == start.pos:
@@ -177,13 +174,7 @@ class Graph:
 
         for (adj, cost) in self.graph[start]:
             if adj not in visited:
-                if debug:
-                    print(adj.pos)
-                    copy = deepcopy(matrix)
-                    copy[len(matrix) - int(adj.pos[1] + 0.5)][int(adj.pos[0] - 0.5)] = 'O'
-                    print_mat(copy)
-                    input()
-                ret = self.DFS(adj, end, matrix, debug, path, visited)
+                ret = self.DFS(adj, end, path, visited)
                 if ret is not None:
                     return ret
 

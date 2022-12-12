@@ -104,7 +104,7 @@ class Race:
                                      "velocity")  # velocidade atual
 
     def DFS_solution(self, debug):
-        res = self.graph.DFS(self.start[0], self.end, deepcopy(self.matrix), debug, path=[], visited=set())
+        res = self.graph.DFS(self.start[0], self.end, path=[], visited=set())
         return res
 
     def BFS_solution(self):
