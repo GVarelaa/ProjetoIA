@@ -78,14 +78,22 @@ class Race:
 
         return distance
 
-    def build_graph(self):
-        print(self.end)
-        states = deepcopy(self.start)
-        visited = deepcopy(self.start)
+    def build_graph(self, mat=None, initial_state=None, end=None):
+        if mat is None:
+            mat = self.matrix
+
+        if initial_state is None:
+            start = self.initial_state
+
+        if end is None:
+            end = self.end
+
+        states = deepcopy(start)
+        visited = deepcopy(start)
 
         while states:
             state = states.pop()
-            expansion = self.expand_state(state, self.matrix)
+            expansion = self.expand_state(state, mat)
 
             for (e,accel) in expansion:
                 if e.crashed:
@@ -98,7 +106,7 @@ class Race:
                     states.append(e)
                     visited.append(e)
 
-            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end),
+            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, end),
                                      "distance")  # distância às posiçoes finais
             self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2),
                                      "velocity")  # velocidade atual
@@ -136,7 +144,7 @@ class Race:
         while not all_true(paths_found):
             for i in range(len(players_states)):
                 if paths_found[i] == False:
-                    paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix)
+                    paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix, 0) # 0 - DFS, 1 - BFS, 2 - Greedy, 3 - Astar, 4 - Função de utilidade
                     if paths_found[i] == True:
                         mat_row = len(self.matrix) - math.floor(players_states[i].pos[1]) - 1
                         mat_collumn = math.floor(players_states[i].pos[0])
@@ -158,10 +166,27 @@ class Race:
             i+=1
         return ([], [])
 
-    def play(self, state, parents, mat):
+    def play(self, state, parents, mat, alg):
+        graph = self.build_graph(mat, state, self.end)
+        path = list()
+        match alg:
+            case 0:
+                (path, cost) = self.BFS_solution(0)
+                return path[1]
+
+            case 1:
+                return path[1]
+            case 2:
+                return path[1]
+            case 3:
+                return path[1]
+            case 4:
+                return path[1]
+        """
         next_pos = self.expand_state(state, mat)
         max_pos = next_pos[0]
         max = utility_value(next_pos[0][0], self.end)
+
 
         for i in range(len(next_pos)):
             ut_value = utility_value(next_pos[i][0], self.end)
@@ -176,7 +201,9 @@ class Race:
             return True, max_pos[0]
         else:
             return False, max_pos[0]
+        """
 
+    """
     def mini_max(self, depth, player, player_states, playerIndex, mat):
         if player == 1: # Max is playing
             next_states = self.expand_state(player_states[playerIndex], mat)
@@ -209,7 +236,7 @@ class Race:
                 optimal_utility = min_utility
 
         return optimal_utility
-
+    """
 
 def update_mat(begin, end, mat):
     mat_begin_row = len(mat) - math.floor(begin[1]) - 1

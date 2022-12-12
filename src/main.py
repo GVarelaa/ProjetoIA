@@ -91,7 +91,7 @@ def menu(race):
                 print()
                 debug = menu_debug(race)
                 (path, cost) = race.DFS_solution(debug)
-
+                print(path)
                 Graph.print_path(path)
                 print(f"Custo: {cost}\n")
 
