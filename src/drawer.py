@@ -37,6 +37,6 @@ def calculate_displacement(pos1, pos2):
 
 
 def draw_displacement(pos, disp, ax):
-    ax.arrow(pos[0], pos[1], disp[0], disp[1], width=0.03, head_width=0.15, head_length=0.1, color='green')
+    ax.arrow(pos[0], pos[1], disp[0], disp[1], width=0.03, head_width=0, head_length=0, color='green')
 
 
