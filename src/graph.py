@@ -240,13 +240,14 @@ class Graph:
 
         while len(open_list) > 0:
             n = next(iter(open_list))
-            all_visited.append(n.pos)
 
             # encontra nodo com a menor heuristica
             for v in open_list:
                 if (accmd_costs[parents[v]] + self.get_arc_cost(v, parents[v]) + heuristic[v]) < \
                         (accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n]) + heuristic[n]):
                     n = v
+
+            all_visited.append(n.pos)
 
             # se o nodo corrente é o destino
             # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
@@ -294,12 +295,13 @@ class Graph:
 
         while len(open_list) > 0:
             n = next(iter(open_list))
-            all_visited.append(n.pos)
 
             # encontra nodo com a menor heuristica
             for v in open_list:
                 if heuristic[v] < heuristic[n]:
                     n = v
+
+            all_visited.append(n.pos)
 
             # se o nodo corrente é o destino
             # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
