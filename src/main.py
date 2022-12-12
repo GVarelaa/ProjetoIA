@@ -85,8 +85,7 @@ def menu(race):
                 race.graph.draw()
 
             case 6:
-                drawer.draw_circuit(race.matrix)
-                break
+                drawer.draw_circuit(race.matrix, [])
 
             case 7:
                 print()
@@ -110,6 +109,8 @@ def menu(race):
                 race.print_result(path)
 
                 Graph.print_path(path)
+                drawer.draw_circuit(race.matrix, path)
+
                 print(f"Custo: {cost}\n")
 
             case 10:
