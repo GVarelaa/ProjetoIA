@@ -99,7 +99,6 @@ def menu(race):
                     drawer.create_gif(race.matrix, all_visited, "dfs_debug")
 
                 print()
-                race.print_result(path)
                 Graph.print_path(path, cost)
                 drawer.draw_path(race.matrix, path)
 
