@@ -14,6 +14,7 @@ class Race:
         self.graph = Graph()
         self.start = list()
         self.end = list()
+        self.player_algorithms = dict()
 
         for pos in start:
             self.start.append(Node(pos, (0, 0), False))
@@ -83,13 +84,13 @@ class Race:
             mat = self.matrix
 
         if initial_state is None:
-            start = self.initial_state
+            initial_state = self.start
 
         if end is None:
             end = self.end
 
-        states = deepcopy(start)
-        visited = deepcopy(start)
+        states = deepcopy(initial_state)
+        visited = deepcopy(initial_state)
 
         while states:
             state = states.pop()
@@ -111,23 +112,21 @@ class Race:
             self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2),
                                      "velocity")  # velocidade atual
 
-    def DFS_solution(self, debug):
-        res = self.graph.DFS(self.start[0], self.end, deepcopy(self.matrix), debug, path=[], visited=set())
-        return res
+    def DFS_solution(self):
+        path, cost, all_visited = self.graph.DFS(self.start[0], self.end, path=[], visited=set(), all_visited=[])
+        return path, cost, all_visited
 
     def BFS_solution(self):
-        res = self.graph.BFS(self.start[0], self.end)
-        path, cost = res
-        self.graph.print_result(deepcopy(self.matrix), path)
-        return res
+        path, cost, all_visited = self.graph.BFS(self.start[0], self.end)
+        return path, cost, all_visited
 
     def a_star_solution(self, type):
-        path, cost = self.graph.a_star(self.start[0], self.end, type)
-        return path, cost
+        path, cost, all_visited = self.graph.a_star(self.start[0], self.end, type)
+        return path, cost, all_visited
 
     def greedy_solution(self, type):
-        path, cost = self.graph.greedy(self.start[0], self.end, type)
-        return path, cost
+        path, cost, all_visited = self.graph.greedy(self.start[0], self.end, type)
+        return path, cost, all_visited
 
     def multiplayer(self):
         # paths ,costs
@@ -139,12 +138,16 @@ class Race:
             dic = dict()
             dic[state] = None
             parents.append(dic)
-        print(players_states)
+
+        initial_positions = list()
+        for i in range(len(players_states)):
+            initial_positions.insert(i, players_states[i])
+
 
         while not all_true(paths_found):
             for i in range(len(players_states)):
                 if paths_found[i] == False:
-                    paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix, 0) # 0 - DFS, 1 - BFS, 2 - Greedy, 3 - Astar, 4 - Função de utilidade
+                    paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix, self.player_algorithms[initial_positions[i]]) # 1 - DFS, 2 - BFS, 3 - Greedy, 4 - Astar, 5 - Função de utilidade
                     if paths_found[i] == True:
                         mat_row = len(self.matrix) - math.floor(players_states[i].pos[1]) - 1
                         mat_collumn = math.floor(players_states[i].pos[0])
@@ -167,21 +170,30 @@ class Race:
         return ([], [])
 
     def play(self, state, parents, mat, alg):
-        graph = self.build_graph(mat, state, self.end)
+        self.build_graph(mat, [state], self.end)
         path = list()
         match alg:
-            case 0:
-                (path, cost) = self.BFS_solution(0)
-                return path[1]
+            case '1':
+                (path, cost, all_visited) = self.graph.DFS(state, self.end)
+            case '2':
+                (path, cost, all_visited) = self.graph.BFS(state, self.end)
+            case '3':
+                (path, cost, all_visited) = self.greedy_solution("distance")
+            case '4':
+                (path, cost, all_visited) = self.a_star_solution("distance")
+            case '5':
+                return
 
-            case 1:
-                return path[1]
-            case 2:
-                return path[1]
-            case 3:
-                return path[1]
-            case 4:
-                return path[1]
+        path_found = False
+        if path[1] in self.end:
+            path_found = True
+
+
+        update_mat(state.pos, path[1].pos, mat)
+        print_mat(mat)
+        a = input()
+        return (path_found, path[1])
+
         """
         next_pos = self.expand_state(state, mat)
         max_pos = next_pos[0]
@@ -250,10 +262,12 @@ def update_mat(begin, end, mat):
 
 def all_true(list):
     flag = True
+
     for bool in list:
-        if bool == False:
+        if not bool:
             return False
-    return flag
+
+    return True
 
 
 def utility_value(node, final_nodes):

@@ -19,7 +19,7 @@ def parser(file_path):
         for char in elems:
             if char == "P":
                 start.append((x + 0.5, y_max - y - 0.5))
-                elems[x] = "-"
+                # elems[x] = "-"
 
             elif char == "F":
                 finish.append((x + 0.5, y_max - y - 0.5))

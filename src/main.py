@@ -1,3 +1,4 @@
+import os
 from parser import parser
 from race import Race
 from graph import Graph
@@ -24,6 +25,7 @@ def menu_build_graph():
                 race = Race(matrix, start, end)
                 if len(start) == 1:
                     print("Um jogador")
+
                 else:
                     print(str(len(start)) + " jogadores!")
                     multi_player = True
@@ -63,7 +65,9 @@ def menu(race):
 
         match opt:
             case 0:
-                break
+                img_dir = "../img"
+                for f in os.listdir(img_dir):
+                    os.remove(os.path.join(img_dir, f))
 
             case 1:
                 print()
@@ -85,42 +89,59 @@ def menu(race):
                 race.graph.draw()
 
             case 6:
-                drawer.draw_circuit(race.matrix, [])
+                drawer.draw_path(race.matrix, [])
 
             case 7:
                 print()
                 debug = menu_debug(race)
-                (path, cost) = race.DFS_solution(debug)
-                print(path)
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                path, cost, all_visited = race.DFS_solution()
+
+                if debug:
+                    drawer.create_gif(race.matrix, all_visited, "dfs_debug")
+
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
             case 8:
                 print()
-                (path, cost) = race.BFS_solution()
+                debug = menu_debug(race)
+                path, cost, all_visited = race.BFS_solution()
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                if debug:
+                    drawer.create_gif(race.matrix, all_visited, "bfs_debug")
+
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
             case 9:
                 print()
+                debug = menu_debug(race)
+                print()
                 choice = menu_heuristic(race)
-                path, cost = race.a_star_solution(choice)
-                race.print_result(path)
+                path, cost, all_visited = race.a_star_solution(choice)
 
-                Graph.print_path(path)
-                drawer.draw_circuit(race.matrix, path)
+                if debug:
+                    drawer.create_gif(race.matrix, all_visited, "astar_debug")
 
-                print(f"Custo: {cost}\n")
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
             case 10:
                 print()
+                debug = menu_debug(race)
+                print()
                 choice = menu_heuristic(race)
-                path, cost = race.greedy_solution(choice)
-                race.print_result(path)
+                path, cost, all_visited = race.greedy_solution(choice)
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                if debug:
+                    drawer.create_gif(race.matrix, all_visited, "greedy_debug")
+
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
             case 11:
                 print()
@@ -136,6 +157,7 @@ def main():
 
     if race is not None:
         if multi_player is True:
+            menu_multiplayer(race)
             race.multiplayer()
         else:
             menu(race)
@@ -198,8 +220,22 @@ def menu_heuristic(race):
 
     return choice
 
+def menu_multiplayer(race):
+    print("=====================")
+    print("Escolha dos algoritmos de cada jogador")
+    print("=====================")
+
+
+    for state in race.start:
+        print(state)
+        print("1... DFS")
+        print("2... BFS")
+        print("3... Greedy")
+        print("4... Astar")
+
+        opt = input()
+
+        race.player_algorithms[state] = opt
 
 if __name__ == "__main__":
     main()
-
-
