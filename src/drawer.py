@@ -1,5 +1,3 @@
-import os
-
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import imageio
@@ -79,17 +77,17 @@ def create_frames(circuit, positions):
     return frames
 
 
-def create_gif(circuit, positions):
+def create_gif(circuit, positions, name):
     frames = create_frames(circuit, positions)
 
-    imageio.mimsave('../img/gif.gif', frames, fps=10, loop=1)
-    print_gif()
+    imageio.mimsave(f'../img/{name}.gif', frames, fps=10, loop=1)
+    print_gif(name)
 
 
-def print_gif():
+def print_gif(name):
     if platform.system() == 'Darwin':  # macOS
-        subprocess.call(('open', "../img/gif.gif"))
+        subprocess.call(('open', f"../img/{name}.gif"))
     elif platform.system() == 'Windows':  # Windows
-        os.startfile("../img/gif.gif")
+        os.startfile(f"../img/{name}.gif")
     else:  # linux variants
-        subprocess.call(('xdg-open', "../img/gif.gif"))
+        subprocess.call(('xdg-open', f"../img/{name}.gif"))
