@@ -108,10 +108,8 @@ class Race:
         return res
 
     def BFS_solution(self):
-        res = self.graph.BFS(self.start[0], self.end)
-        path, cost = res
-        self.graph.print_result(deepcopy(self.matrix), path)
-        return res
+        path, cost, all_visited = self.graph.BFS(self.start[0], self.end)
+        return path, cost, all_visited
 
     def a_star_solution(self, type):
         path, cost = self.graph.a_star(self.start[0], self.end, type)
@@ -223,9 +221,11 @@ def update_mat(begin, end, mat):
 
 def all_true(list):
     flag = True
-    for bool in list:
-        if bool == False:
-            return False
+
+    for bool in list and flag:
+        if not bool:
+            flag = False
+
     return flag
 
 

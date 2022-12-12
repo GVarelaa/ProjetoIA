@@ -85,8 +85,12 @@ def menu(race):
                 race.graph.draw()
 
             case 6:
-                drawer.draw_circuit(race.matrix)
-                break
+                time=[1]
+                for t in time:
+                    drawer.create_frame(t, race.matrix)
+
+                drawer.create_gif(time)
+                drawer.print_gif()
 
             case 7:
                 print()
@@ -98,7 +102,9 @@ def menu(race):
 
             case 8:
                 print()
-                (path, cost) = race.BFS_solution()
+                path, cost, all_visited = race.BFS_solution()
+
+                drawer.create_gif(race.matrix, all_visited)
 
                 Graph.print_path(path)
                 print(f"Custo: {cost}\n")

@@ -2,6 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from queue import Queue
 from copy import deepcopy
+import drawer
 
 
 def print_mat(mat):
@@ -189,6 +190,7 @@ class Graph:
         return None
 
     def BFS(self, start, end):
+        all_visited = list()  #debug
         visited = set()
         q = Queue()
 
@@ -202,6 +204,7 @@ class Graph:
         path_found = False
         while not q.empty() and not path_found:
             node = q.get()
+            all_visited.append(node.pos)
 
             for state in end:
                 if node.pos == state.pos:
@@ -224,7 +227,7 @@ class Graph:
             path.reverse()
 
             total_cost = self.calc_path_cost(path)
-            return path, total_cost
+            return path, total_cost, all_visited
 
     def a_star(self, start, end, type):
         if type == "distance":
