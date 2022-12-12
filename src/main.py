@@ -1,3 +1,4 @@
+import os
 from parser import parser
 from race import Race
 from graph import Graph
@@ -63,7 +64,9 @@ def menu(race):
 
         match opt:
             case 0:
-                break
+                img_dir = "../img"
+                for f in os.listdir(img_dir):
+                    os.remove(os.path.join(img_dir, f))
 
             case 1:
                 print()
@@ -93,8 +96,9 @@ def menu(race):
                 path, cost, all_visited = race.DFS_solution()
 
                 if debug:
-                    drawer.create_gif(race.matrix, all_visited)
+                    drawer.create_gif(race.matrix, all_visited, "dfs_debug")
 
+                print()
                 race.print_result(path)
                 Graph.print_path(path, cost)
                 drawer.draw_path(race.matrix, path)
@@ -105,32 +109,37 @@ def menu(race):
                 path, cost, all_visited = race.BFS_solution()
 
                 if debug:
-                    drawer.create_gif(race.matrix, all_visited)
+                    drawer.create_gif(race.matrix, all_visited, "bfs_debug")
 
+                print()
                 Graph.print_path(path, cost)
                 drawer.draw_path(race.matrix, path)
 
             case 9:
                 print()
                 debug = menu_debug(race)
+                print()
                 choice = menu_heuristic(race)
                 path, cost, all_visited = race.a_star_solution(choice)
 
                 if debug:
-                    drawer.create_gif(race.matrix, all_visited)
+                    drawer.create_gif(race.matrix, all_visited, "astar_debug")
 
+                print()
                 Graph.print_path(path, cost)
                 drawer.draw_path(race.matrix, path)
 
             case 10:
                 print()
                 debug = menu_debug(race)
+                print()
                 choice = menu_heuristic(race)
                 path, cost, all_visited = race.greedy_solution(choice)
 
                 if debug:
-                    drawer.create_gif(race.matrix, all_visited)
+                    drawer.create_gif(race.matrix, all_visited, "greedy_debug")
 
+                print()
                 Graph.print_path(path, cost)
                 drawer.draw_path(race.matrix, path)
 
