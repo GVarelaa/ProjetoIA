@@ -105,13 +105,11 @@ class Race:
 
     def DFS_solution(self, debug):
         res = self.graph.DFS(self.start[0], self.end, deepcopy(self.matrix), debug, path=[], visited=set())
-        return res
+        return path, cost
 
     def BFS_solution(self):
-        res = self.graph.BFS(self.start[0], self.end)
-        path, cost = res
-        self.graph.print_result(deepcopy(self.matrix), path)
-        return res
+        path, cost = self.graph.BFS(self.start[0], self.end)
+        return path, cost
 
     def a_star_solution(self, type):
         path, cost = self.graph.a_star(self.start[0], self.end, type)

@@ -90,37 +90,37 @@ def menu(race):
             case 7:
                 print()
                 debug = menu_debug(race)
-                (path, cost) = race.DFS_solution(debug)
+                path, cost = race.DFS_solution(debug)
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                race.print_result(path)
+                Graph.print_path(path, cost)
+                drawer.draw_circuit(race.matrix, path)
 
             case 8:
                 print()
-                (path, cost) = race.BFS_solution()
+                path, cost = race.BFS_solution()
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                race.print_result(path)
+                Graph.print_path(path, cost)
+                drawer.draw_circuit(race.matrix, path)
 
             case 9:
                 print()
                 choice = menu_heuristic(race)
                 path, cost = race.a_star_solution(choice)
+
                 race.print_result(path)
-
-                Graph.print_path(path)
+                Graph.print_path(path, cost)
                 drawer.draw_circuit(race.matrix, path)
-
-                print(f"Custo: {cost}\n")
 
             case 10:
                 print()
                 choice = menu_heuristic(race)
                 path, cost = race.greedy_solution(choice)
-                race.print_result(path)
 
-                Graph.print_path(path)
-                print(f"Custo: {cost}\n")
+                race.print_result(path)
+                Graph.print_path(path, cost)
+                drawer.draw_circuit(race.matrix, path)
 
             case 11:
                 print()

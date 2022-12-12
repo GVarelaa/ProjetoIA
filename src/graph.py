@@ -93,7 +93,7 @@ class Graph:
         return total
 
     @staticmethod
-    def print_path(path):
+    def print_path(path, cost):
         counter = 1
         res = ""
 
@@ -102,6 +102,7 @@ class Graph:
             counter += 1
 
         print(res)
+        print(f"Custo: {cost}\n")
 
     def print_nodes(self):
         nodes = ""
