@@ -22,8 +22,6 @@ def draw_circuit(circuit):
             if circuit[i][j] == 'F':
                 ax.add_patch(Rectangle((j, len(circuit) - i - 1), 1, 1, facecolor='red'))
 
-    plt.grid()
-
     return plt, ax
 
 
@@ -32,10 +30,12 @@ def draw_path(circuit, path):
 
     if len(path) > 0:
         initial_node = path[0]
+        plt.scatter(initial_node.pos[0], initial_node.pos[1], color='green')
 
     for node in path:
         disp = calculate_displacement(initial_node.pos, node.pos)
         draw_displacement(initial_node.pos, disp, ax)
+        plt.scatter(node.pos[0], node.pos[1], color='green')
 
         initial_node = node
 

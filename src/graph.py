@@ -163,16 +163,17 @@ class Graph:
         plt.draw()
         plt.show()
 
-    def DFS(self, start, end, path=[], visited=set()):
+    def DFS(self, start, end, path=[], visited=set(), all_visited=[]):
         path.append(start)
         visited.add(start)
+        all_visited.append(start.pos)
 
         for state in end:
             if state.pos == start.pos:
                 total_cost = self.calc_path_cost(path)
-                return path, total_cost
+                return path, total_cost, all_visited
 
-        for (adj, cost) in self.graph[start]:
+        for adj, cost in self.graph[start]:
             if adj not in visited:
                 ret = self.DFS(adj, end, path, visited)
                 if ret is not None:
@@ -222,7 +223,6 @@ class Graph:
             return path, total_cost, all_visited
 
     def a_star(self, start, end, type):
-        i=0
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
@@ -230,6 +230,7 @@ class Graph:
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set()  # nodos visitados
+        all_visited = [start.pos]
 
         # dicionário que mantém o antecessor de um nodo - começa com start
         parents = {start: start}
@@ -238,8 +239,8 @@ class Graph:
         accmd_costs[start] = 0
 
         while len(open_list) > 0:
-            i+=1
             n = next(iter(open_list))
+            all_visited.append(n.pos)
 
             # encontra nodo com a menor heuristica
             for v in open_list:
@@ -260,8 +261,7 @@ class Graph:
                     reconst_path.append(start)
 
                     reconst_path.reverse()
-                    print(i)
-                    return reconst_path, self.calc_path_cost(reconst_path)
+                    return reconst_path, self.calc_path_cost(reconst_path), all_visited
 
             accmd_costs[n] = accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n])
 
@@ -287,12 +287,14 @@ class Graph:
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set([])  # #visitados
+        all_visited = [start.pos]
 
         # dicionário que mantém o antecessor de um nodo - começa com start
         parents = {start: start}
 
         while len(open_list) > 0:
             n = next(iter(open_list))
+            all_visited.append(n.pos)
 
             # encontra nodo com a menor heuristica
             for v in open_list:
@@ -313,7 +315,7 @@ class Graph:
 
                     reconst_path.reverse()
 
-                    return reconst_path, self.calc_path_cost(reconst_path)
+                    return reconst_path, self.calc_path_cost(reconst_path), all_visited
 
             # para todos os vizinhos  do nodo corrente
             for (adj, cost) in self.get_neighbours(n):

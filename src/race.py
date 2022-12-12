@@ -103,21 +103,21 @@ class Race:
             self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2),
                                      "velocity")  # velocidade atual
 
-    def DFS_solution(self, debug):
-        res = self.graph.DFS(self.start[0], self.end, path=[], visited=set())
-        return res
+    def DFS_solution(self):
+        path, cost, all_visited = self.graph.DFS(self.start[0], self.end, path=[], visited=set(), all_visited=[])
+        return path, cost, all_visited
 
     def BFS_solution(self):
         path, cost, all_visited = self.graph.BFS(self.start[0], self.end)
         return path, cost, all_visited
 
     def a_star_solution(self, type):
-        path, cost = self.graph.a_star(self.start[0], self.end, type)
-        return path, cost
+        path, cost, all_visited = self.graph.a_star(self.start[0], self.end, type)
+        return path, cost, all_visited
 
     def greedy_solution(self, type):
-        path, cost = self.graph.greedy(self.start[0], self.end, type)
-        return path, cost
+        path, cost, all_visited = self.graph.greedy(self.start[0], self.end, type)
+        return path, cost, all_visited
 
     def multiplayer(self):
         # paths ,costs
