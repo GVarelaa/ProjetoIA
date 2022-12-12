@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import imageio
-from PIL import Image
+import subprocess, os, platform
 
 
 def draw_circuit(circuit):
@@ -83,12 +83,13 @@ def create_gif(circuit, positions):
     frames = create_frames(circuit, positions)
 
     imageio.mimsave('../img/gif.gif', frames, fps=10, loop=1)
-    #print_gif()
+    print_gif()
 
 
-#nao funciona
 def print_gif():
-    gif = Image.open('../img/gif.gif')
-    gif.show()
-
-
+    if platform.system() == 'Darwin':  # macOS
+        subprocess.call(('open', "../img/gif.gif"))
+    elif platform.system() == 'Windows':  # Windows
+        os.startfile("../img/gif.gif")
+    else:  # linux variants
+        subprocess.call(('xdg-open', "../img/gif.gif"))
