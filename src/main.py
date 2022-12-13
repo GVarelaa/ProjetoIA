@@ -54,7 +54,7 @@ def menu_choose_player(race):
     player = int(input("Introduza o número do jogador: "))
 
     if player not in players:
-        print("O jogador introduzido não existe!")
+        print("\nO jogador introduzido não existe!\n")
         menu_choose_player(race)
 
     return race.start[player]
@@ -242,11 +242,11 @@ def menu_multiplayer(race):
 
             opt = int(input("Introduza a sua opção: "))
             if opt not in {1, 2, 3, 4}:
-                print("\nOpção inválida")
+                print("\nOpção inválida!")
 
             print()
 
-        race.player_algorithms[state] = str(opt)
+        race.player_algorithms[state] = opt
 
 
 def menu(race):
