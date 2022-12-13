@@ -86,13 +86,13 @@ class Race:
             mat = self.matrix
 
         if initial_state is None:
-            initial_state = self.start
+            initial_state = self.start[0]
 
         if end is None:
             end = self.end
 
-        states = deepcopy(initial_state)
-        visited = deepcopy(initial_state)
+        states = [deepcopy(initial_state)]
+        visited = [deepcopy(initial_state)]
 
         while states:
             state = states.pop()
@@ -114,20 +114,20 @@ class Race:
             self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2),
                                      "velocity")  # velocidade atual
 
-    def DFS_solution(self):
-        path, cost, all_visited = self.graph.DFS(self.start[0], self.end, path=[], visited=set(), all_visited=[])
+    def DFS_solution(self, initial_state):
+        path, cost, all_visited = self.graph.DFS(initial_state, self.end, path=[], visited=set(), all_visited=[])
         return path, cost, all_visited
 
-    def BFS_solution(self):
-        path, cost, all_visited = self.graph.BFS(self.start[0], self.end)
+    def BFS_solution(self, initial_state):
+        path, cost, all_visited = self.graph.BFS(initial_state, self.end)
         return path, cost, all_visited
 
-    def a_star_solution(self, type):
-        path, cost, all_visited = self.graph.a_star(self.start[0], self.end, type)
+    def a_star_solution(self, initial_state, type):
+        path, cost, all_visited = self.graph.a_star(initial_state, self.end, type)
         return path, cost, all_visited
 
-    def greedy_solution(self, type):
-        path, cost, all_visited = self.graph.greedy(self.start[0], self.end, type)
+    def greedy_solution(self, initial_state, type):
+        path, cost, all_visited = self.graph.greedy(initial_state, self.end, type)
         return path, cost, all_visited
 
     def multiplayer(self):

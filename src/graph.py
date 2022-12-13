@@ -166,7 +166,7 @@ class Graph:
     def DFS(self, start, end, path=[], visited=set(), all_visited=[]):
         path.append(start)
         visited.add(start)
-        all_visited.append(start.pos)
+        all_visited.append(start.pos)  # debug
 
         for state in end:
             if state.pos == start.pos:
@@ -183,12 +183,11 @@ class Graph:
         return None
 
     def BFS(self, start, end):
-        all_visited = list()  #debug
+        pos_visited = [start]  # debug
         visited = set()
         q = Queue()
 
         q.put(start)
-        visited.add(start)
 
         # garantir que o start node nao tem pais
         parents = dict()
@@ -197,7 +196,7 @@ class Graph:
         path_found = False
         while not q.empty() and not path_found:
             node = q.get()
-            all_visited.append(node.pos)
+            pos_visited.append(node.pos)  # debug
 
             for state in end:
                 if node.pos == state.pos:
@@ -220,7 +219,56 @@ class Graph:
             path.reverse()
 
             total_cost = self.calc_path_cost(path)
-            return path, total_cost, all_visited
+            return path, total_cost, pos_visited
+
+    def greedy(self, start, end, type):
+        if type == "distance":
+            heuristic = self.h1
+        elif type == "velocity":
+            heuristic = self.h2
+
+        open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
+        closed_list = set()  # nodos visitados
+        parents = {start: start}  # mantém o antecessor de um nodo
+
+        pos_visited = [start.pos]  # debug
+
+        while len(open_list) > 0:
+            n = None
+
+            # encontra nodo com a menor heuristica
+            for node in open_list:
+                if n is None or (heuristic[node] < heuristic[n]):
+                    n = node
+
+            pos_visited.append(n.pos)  # debug
+
+            # se o nodo corrente é o destino
+            # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
+            for state in end:
+                if state.pos == n.pos:
+                    reconst_path = []
+
+                    while parents[n] != n:
+                        reconst_path.append(n)
+                        n = parents[n]
+
+                    reconst_path.append(start)
+                    reconst_path.reverse()
+
+                    return reconst_path, self.calc_path_cost(reconst_path), pos_visited
+
+            # para todos os vizinhos do nodo corrente
+            for (adj, cost) in self.graph[n]:
+                if adj not in open_list and adj not in closed_list:
+                    open_list.add(adj)
+                    parents[adj] = n
+
+            # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
+            open_list.remove(n)
+            closed_list.add(n)
+
+        return None
 
     def a_star(self, start, end, type):
         if type == "distance":
@@ -230,24 +278,20 @@ class Graph:
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set()  # nodos visitados
-        all_visited = [start.pos]
+        parents = {start: start}  # mantém o antecessor de um nodo
+        costs = {start: 0}
 
-        # dicionário que mantém o antecessor de um nodo - começa com start
-        parents = {start: start}
-
-        accmd_costs = dict()  # guardar custos acumulados
-        accmd_costs[start] = 0
+        pos_visited = [start.pos]  # debug
 
         while len(open_list) > 0:
-            n = next(iter(open_list))
+            n = None
 
             # encontra nodo com a menor heuristica
-            for v in open_list:
-                if (accmd_costs[parents[v]] + self.get_arc_cost(v, parents[v]) + heuristic[v]) < \
-                        (accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n]) + heuristic[n]):
-                    n = v
+            for node in open_list:
+                if n is None or (heuristic[node] + costs[node]) < (heuristic[n] + costs[n]):
+                    n = node
 
-            all_visited.append(n.pos)
+            pos_visited.append(n.pos)  # debug
 
             # se o nodo corrente é o destino
             # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
@@ -260,76 +304,18 @@ class Graph:
                         n = parents[n]
 
                     reconst_path.append(start)
-
                     reconst_path.reverse()
-                    return reconst_path, self.calc_path_cost(reconst_path), all_visited
 
-            accmd_costs[n] = accmd_costs[parents[n]] + self.get_arc_cost(n, parents[n])
+                    return reconst_path, self.calc_path_cost(reconst_path), pos_visited
 
-            for (adj, cost) in self.get_neighbours(n):
-                # Se o nodo corrente nao esta na open nem na closed list
-                # adiciona-lo à open_list e marcar o antecessor
+            for adj, cost in self.graph[n]:
                 if adj not in open_list and adj not in closed_list:
                     open_list.add(adj)
                     parents[adj] = n
+                    costs[adj] = costs[n] + cost
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
             closed_list.add(n)
 
-        print("Path doesnt exist")
-        return None
-
-    def greedy(self, start, end, type):
-        if type == "distance":
-            heuristic = self.h1
-        elif type == "velocity":
-            heuristic = self.h2
-
-        open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
-        closed_list = set([])  # #visitados
-        all_visited = [start.pos]
-
-        # dicionário que mantém o antecessor de um nodo - começa com start
-        parents = {start: start}
-
-        while len(open_list) > 0:
-            n = next(iter(open_list))
-
-            # encontra nodo com a menor heuristica
-            for v in open_list:
-                if heuristic[v] < heuristic[n]:
-                    n = v
-
-            all_visited.append(n.pos)
-
-            # se o nodo corrente é o destino
-            # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
-            for state in end:
-                if state.pos == n.pos:
-                    reconst_path = []
-
-                    while parents[n] != n:
-                        reconst_path.append(n)
-                        n = parents[n]
-
-                    reconst_path.append(start)
-
-                    reconst_path.reverse()
-
-                    return reconst_path, self.calc_path_cost(reconst_path), all_visited
-
-            # para todos os vizinhos  do nodo corrente
-            for (adj, cost) in self.get_neighbours(n):
-                # Se o nodo corrente nao esta na open nem na closed list
-                # adiciona-lo à open_list e marcar o antecessor
-                if adj not in open_list and adj not in closed_list:
-                    open_list.add(adj)
-                    parents[adj] = n
-
-            # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
-            open_list.remove(n)
-            closed_list.add(n)
-
-        print('Path does not exist!')
         return None
