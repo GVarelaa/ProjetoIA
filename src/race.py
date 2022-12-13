@@ -6,6 +6,7 @@ from parser import parser
 from graph import Graph
 import position_calculator
 from copy import deepcopy
+import drawer
 
 
 class Race:
@@ -143,15 +144,21 @@ class Race:
         for i in range(len(players_states)):
             initial_positions.insert(i, players_states[i])
 
+        plt, ax = drawer.draw_circuit(self.matrix)
+        plt.show()
+        #plt.show()
 
         while not all_true(paths_found):
             for i in range(len(players_states)):
                 if paths_found[i] == False:
                     paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix, self.player_algorithms[initial_positions[i]]) # 1 - DFS, 2 - BFS, 3 - Greedy, 4 - Astar, 5 - Função de utilidade
+                    last_pos = parents[i][players_states[i]]
+                    drawer.draw_displacement(last_pos.pos, drawer.calculate_displacement(last_pos.pos, players_states[i].pos), ax)
                     if paths_found[i] == True:
                         mat_row = len(self.matrix) - math.floor(players_states[i].pos[1]) - 1
                         mat_collumn = math.floor(players_states[i].pos[0])
                         self.matrix[mat_row][mat_collumn] = 'F'
+
 
             # Joga jogador 1
             # Joga jogador 2
@@ -174,20 +181,21 @@ class Race:
         path = list()
         match alg:
             case '1':
-                (path, cost, all_visited) = self.graph.DFS(state, self.end)
+                (path, cost, all_visited) = self.graph.DFS(state, self.end, [], set(), [])
             case '2':
                 (path, cost, all_visited) = self.graph.BFS(state, self.end)
             case '3':
-                (path, cost, all_visited) = self.greedy_solution("distance")
+                (path, cost, all_visited) = self.graph.greedy(state, self.end,"distance")
             case '4':
-                (path, cost, all_visited) = self.a_star_solution("distance")
+                (path, cost, all_visited) = self.graph.a_star(state, self.end, "distance")
             case '5':
                 return
 
         path_found = False
-        if path[1] in self.end:
-            path_found = True
-
+        for end_state in self.end:
+            if path[1].pos == end_state.pos:
+                path_found = True
+        parents[path[1]] = state
 
         update_mat(state.pos, path[1].pos, mat)
         print_mat(mat)

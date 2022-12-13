@@ -23,6 +23,7 @@ def draw_circuit(circuit):
     return plt, ax
 
 
+
 def draw_path(circuit, path):
     plt, ax = draw_circuit(circuit)
 
