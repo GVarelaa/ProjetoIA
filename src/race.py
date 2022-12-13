@@ -85,13 +85,13 @@ class Race:
             mat = self.matrix
 
         if initial_state is None:
-            initial_state = self.start
+            initial_state = self.start[0]
 
         if end is None:
             end = self.end
 
-        states = deepcopy(initial_state)
-        visited = deepcopy(initial_state)
+        states = [deepcopy(initial_state)]
+        visited = [deepcopy(initial_state)]
 
         while states:
             state = states.pop()

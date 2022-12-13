@@ -5,7 +5,7 @@ from graph import Graph
 import drawer
 
 
-def menu_build_graph():
+def menu_setup_race():
     race = None
     multiplayer = False
 
@@ -22,7 +22,7 @@ def menu_build_graph():
 
         case 1:
             path = "../circuits/circuito.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
-            (matrix, start, end) = parser(path)
+            matrix, start, end = parser(path)
             race = Race(matrix, start, end)
 
             if len(start) == 1:
@@ -32,7 +32,6 @@ def menu_build_graph():
                 print("Multiplayer ativo com" + str(len(start)) + " jogadores!")
                 multiplayer = True
 
-            race.build_graph()
             print("\nCircuito carregado com sucesso!\n")
 
         case other:
@@ -45,13 +44,25 @@ def set_players_algorithms(race, opt):
     for state in race.start:
         race.player_algorithms[state] = opt
 
-
-def menu_algorithms(race, multiplayer):
-    opt = -1
+def menu_choose_player(race):
+    print("=========================================================")
+    print("Qual dos jogadores pretende escolher como estado inicial:")
     i = 0
+    for player in race.start:
+        print(f"Jogador {i} : ", end="")
+        print(player)
+        i += 1
+    print("=========================================================")
 
-    while opt not in {0, 1, 2, 3, 4} and i < len(race.start):
-            opt = menu_algorithms_print(race, multiplayer, i)
+    player = int(input("Introduza o número do jogador: "))
+
+    return race.start[player]
+
+def menu_algorithms(race):
+    opt = -1
+
+    while opt not in {0, 1, 2, 3, 4}:
+            opt = menu_algorithms_print(race)
 
             match opt:
                 case 0:
@@ -59,11 +70,13 @@ def menu_algorithms(race, multiplayer):
                     menu(race)
                     break
                 case 1:
-                    if multiplayer:
-                        set_players_algorithms(race, opt)
+                    print()
+                    initial_state = menu_choose_player(race)
 
                     print()
                     debug = menu_mode(race)
+
+                    race.build_graph(initial_state=initial_state)
                     path, cost, all_visited = race.DFS_solution()
 
                     print()
@@ -75,11 +88,13 @@ def menu_algorithms(race, multiplayer):
                         drawer.create_gif(race.matrix, all_visited, "dfs_debug")
 
                 case 2:
-                    if multiplayer:
-                        set_players_algorithms(race, opt)
+                    print()
+                    initial_state = menu_choose_player(race)
 
                     print()
                     debug = menu_mode(race)
+
+                    race.build_graph(initial_state=initial_state)
                     path, cost, all_visited = race.BFS_solution()
 
                     print()
@@ -92,13 +107,16 @@ def menu_algorithms(race, multiplayer):
                         print("GIF gerado com sucesso!\n")
 
                 case 3:
-                    if multiplayer:
-                        set_players_algorithms(race, opt)
+                    print()
+                    initial_state = menu_choose_player(race)
 
                     print()
                     debug = menu_mode(race)
+
                     print()
                     choice = menu_heuristic(race)
+
+                    race.build_graph(initial_state=initial_state)
                     path, cost, all_visited = race.a_star_solution(choice)
 
                     print()
@@ -111,13 +129,16 @@ def menu_algorithms(race, multiplayer):
                         print("GIF gerado com sucesso!\n")
 
                 case 4:
-                    if multiplayer:
-                        set_players_algorithms(race, opt)
+                    print()
+                    initial_state = menu_choose_player(race)
 
                     print()
                     debug = menu_mode(race)
+
                     print()
                     choice = menu_heuristic(race)
+
+                    race.build_graph(initial_state=initial_state)
                     path, cost, all_visited = race.greedy_solution(choice)
 
                     print()
@@ -132,15 +153,11 @@ def menu_algorithms(race, multiplayer):
                 case other:
                     print("\nOpção inválida!\n")
 
-            i += 1
 
 
-def menu_algorithms_print(race, multiplayer, i):
+def menu_algorithms_print(race):
     print("=====================")
-    if multiplayer:
-        print(f"Escolha de Algoritmo (Jogador {i})")
-    else:
-        print("Escolha de Algoritmo")
+    print("Escolha de Algoritmo")
     print("1.. DFS")
     print("2.. BFS")
     print("3.. A*")
@@ -257,7 +274,7 @@ def menu(race, multiplayer):
 
             case 7:
                 print()
-                menu_algorithms(race, multiplayer)
+                menu_algorithms(race)
 
             case 8:
                 print()
@@ -269,7 +286,7 @@ def menu(race, multiplayer):
 
 
 def main():
-    race, multiplayer = menu_build_graph()
+    race, multiplayer = menu_setup_race()
 
     if race is not None:
         if multiplayer:

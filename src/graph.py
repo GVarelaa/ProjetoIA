@@ -163,15 +163,15 @@ class Graph:
         plt.draw()
         plt.show()
 
-    def DFS(self, start, end, path=[], visited=set(), pos_visited=[]):
+    def DFS(self, start, end, path=[], visited=set(), all_visited=[]):
         path.append(start)
         visited.add(start)
-        pos_visited.append(start.pos)  # debug
+        all_visited.append(start.pos)  # debug
 
         for state in end:
             if state.pos == start.pos:
                 total_cost = self.calc_path_cost(path)
-                return path, total_cost, pos_visited
+                return path, total_cost, all_visited
 
         for adj, cost in self.graph[start]:
             if adj not in visited:
@@ -312,7 +312,7 @@ class Graph:
                 if adj not in open_list and adj not in closed_list:
                     open_list.add(adj)
                     parents[adj] = n
-                    costs[adj] = cost[n] + cost
+                    costs[adj] = costs[n] + cost
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
