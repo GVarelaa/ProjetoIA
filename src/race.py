@@ -179,7 +179,7 @@ class Race:
         return ([], [])
 
     def play(self, state, parents, mat, alg):
-        self.build_graph(mat, [state], self.end)
+        self.build_graph(mat, state, self.end)
         path = list()
         match alg:
             case '1':
