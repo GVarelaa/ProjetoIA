@@ -204,62 +204,6 @@ class Race:
         #a = input()
         return (path_found, path[1])
 
-        """
-        next_pos = self.expand_state(state, mat)
-        max_pos = next_pos[0]
-        max = utility_value(next_pos[0][0], self.end)
-
-
-        for i in range(len(next_pos)):
-            ut_value = utility_value(next_pos[i][0], self.end)
-            if ut_value > max:
-                max = ut_value
-                max_pos = next_pos[i]
-
-        update_mat(state.pos, max_pos[0].pos, mat)
-        parents[max_pos[0]] = state
-        print_mat(mat)
-        if max == math.inf:
-            return True, max_pos[0]
-        else:
-            return False, max_pos[0]
-        """
-
-    """
-    def mini_max(self, depth, player, player_states, playerIndex, mat):
-        if player == 1: # Max is playing
-            next_states = self.expand_state(player_states[playerIndex], mat)
-            max_utility = -math.inf
-            for state in next_states:
-                if depth == 0:
-                    utility = utility_value(state[0], self.end)
-                else:
-                    st_copy = deepcopy(player_states) # Copy of the states
-                    st_copy[playerIndex] = state # Updating player state
-                    mat_copy = deepcopy(mat)
-                    update_mat(player_states[playerIndex].pos, state[0].pos)
-                    utility = self.mini_max(depth-1, 0, st_copy, (playerIndex+1)%len(player_states), mat)
-                if utility > max_utility:
-                    max_utility = utility
-                    next_state = state
-            optimal_utility = max_utility
-        elif player == 0: # Min is playing
-            next_states = None
-            min_utility = math.inf
-            for state in next_states:
-                st_copy = deepcopy(player_states)  # Copy of the states
-                st_copy[playerIndex] = state  # Updating player state
-                mat_copy = deepcopy(mat)
-                update_mat(player_states[playerIndex].pos, state[0].pos)
-                utility = self.mini_max(depth - 1, 0, st_copy, (playerIndex + 1) % len(player_states), mat)
-                if utility < min_utility:
-                    min_utility = utility
-                    next_state = state
-                optimal_utility = min_utility
-
-        return optimal_utility
-    """
-
 def update_mat(begin, end, mat):
     mat_begin_row = len(mat) - math.floor(begin[1]) - 1
     mat_begin_collumn = math.floor(begin[0])
