@@ -7,7 +7,6 @@ import drawer
 
 def menu_setup_race():
     race = None
-    multiplayer = False
 
     print("=========================")
     print("1... Construir grafo")
@@ -25,19 +24,12 @@ def menu_setup_race():
             matrix, start, end = parser(path)
             race = Race(matrix, start, end)
 
-            if len(start) == 1:
-                print("Singleplayer ativo!")
-
-            else:
-                print("Multiplayer ativo com" + str(len(start)) + " jogadores!")
-                multiplayer = True
-
             print("\nCircuito carregado com sucesso!\n")
 
         case other:
             print("\nOpção inválida!\n")
 
-    return race, multiplayer
+    return race
 
 
 def set_players_algorithms(race, opt):
@@ -77,7 +69,7 @@ def menu_algorithms(race):
                     debug = menu_mode(race)
 
                     race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.DFS_solution()
+                    path, cost, all_visited = race.DFS_solution(initial_state)
 
                     print()
                     Graph.print_path(path, cost)
@@ -95,7 +87,7 @@ def menu_algorithms(race):
                     debug = menu_mode(race)
 
                     race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.BFS_solution()
+                    path, cost, all_visited = race.BFS_solution(initial_state)
 
                     print()
                     Graph.print_path(path, cost)
@@ -117,7 +109,7 @@ def menu_algorithms(race):
                     choice = menu_heuristic(race)
 
                     race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.a_star_solution(choice)
+                    path, cost, all_visited = race.a_star_solution(initial_state, choice)
 
                     print()
                     Graph.print_path(path, cost)
@@ -139,7 +131,7 @@ def menu_algorithms(race):
                     choice = menu_heuristic(race)
 
                     race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.greedy_solution(choice)
+                    path, cost, all_visited = race.greedy_solution(initial_state, choice)
 
                     print()
                     Graph.print_path(path, cost)
@@ -226,7 +218,24 @@ def menu_heuristic(race):
     return choice
 
 
-def menu(race, multiplayer):
+def menu_multiplayer(race):
+    print("=====================")
+    print("Escolha dos algoritmos de cada jogador")
+    print("=====================")
+
+
+    for state in race.start:
+        print(state)
+        print("1... DFS")
+        print("2... BFS")
+        print("3... Greedy")
+        print("4... Astar")
+
+        opt = input()
+
+        race.player_algorithms[state] = opt
+
+def menu(race):
     opt = -1
 
     while opt != 0:
@@ -238,7 +247,8 @@ def menu(race, multiplayer):
         print("5... Desenhar grafo")
         print("6... Desenhar circuito")
         print("7... Algoritmos de procura")
-        print("8... Voltar")
+        print("8... Multiplayer")
+        print("9... Voltar")
         print("0... Sair")
         print("==========================")
 
@@ -277,6 +287,13 @@ def menu(race, multiplayer):
                 menu_algorithms(race)
 
             case 8:
+                if len(race.start) < 2:
+                    print("Jogadores insuficientes para iniciar o modo multiplayer!")
+                else:
+                    menu_multiplayer(race)
+                    race.multiplayer()
+
+            case 9:
                 print()
                 main()
                 break
@@ -286,13 +303,9 @@ def menu(race, multiplayer):
 
 
 def main():
-    race, multiplayer = menu_setup_race()
+    race = menu_setup_race()
 
-    if race is not None:
-        if multiplayer:
-            race.multiplayer()
-
-        menu(race, multiplayer)
+    menu(race)
 
 
 if __name__ == "__main__":
