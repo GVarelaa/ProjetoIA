@@ -92,3 +92,9 @@ def print_gif(name):
         os.startfile(f"../img/{name}.gif")
     else:  # linux variants
         subprocess.call(('xdg-open', f"../img/{name}.gif"))
+
+
+def clean_dir():
+    img_dir = "../img"
+    for f in os.listdir(img_dir):
+        os.remove(os.path.join(img_dir, f))

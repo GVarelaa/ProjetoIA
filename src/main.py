@@ -36,11 +36,16 @@ def set_players_algorithms(race, opt):
     for state in race.start:
         race.player_algorithms[state] = opt
 
+
 def menu_choose_player(race):
     print("=========================================================")
     print("Qual dos jogadores pretende escolher como estado inicial:")
+
     i = 0
+    players = []
+
     for player in race.start:
+        players.append(i)
         print(f"Jogador {i} : ", end="")
         print(player)
         i += 1
@@ -48,116 +53,117 @@ def menu_choose_player(race):
 
     player = int(input("Introduza o número do jogador: "))
 
+    if player not in players:
+        print("O jogador introduzido não existe!")
+        menu_choose_player(race)
+
     return race.start[player]
+
 
 def menu_algorithms(race):
     opt = -1
 
     while opt not in {0, 1, 2, 3, 4}:
-            opt = menu_algorithms_print(race)
+        print("=====================")
+        print("Escolha de Algoritmo")
+        print("1... DFS")
+        print("2... BFS")
+        print("3... Greedy")
+        print("4... A*")
+        print("0... Voltar")
+        print("=====================")
 
-            match opt:
-                case 0:
-                    print()
-                    menu(race)
-                    break
-                case 1:
-                    print()
-                    initial_state = menu_choose_player(race)
+        opt = int(input("Introduza a sua opção: "))
 
-                    print()
-                    debug = menu_mode(race)
+        match opt:
+            case 0:
+                print()
+                menu(race)
+                break
+            case 1:
+                print()
+                initial_state = menu_choose_player(race)
 
-                    race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.DFS_solution(initial_state)
+                print()
+                debug = menu_mode(race)
 
-                    print()
-                    Graph.print_path(path, cost)
-                    drawer.draw_path(race.matrix, path)
+                race.build_graph(initial_state=initial_state)
+                path, cost, all_visited = race.DFS_solution(initial_state)
 
-                    if debug:
-                        print("DEBUG MODE : A gerar GIF com iterações...\n")
-                        drawer.create_gif(race.matrix, all_visited, "dfs_debug")
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
-                case 2:
-                    print()
-                    initial_state = menu_choose_player(race)
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, all_visited, "dfs_debug")
+                    print("GIF gerado com sucesso!\n")
 
-                    print()
-                    debug = menu_mode(race)
+            case 2:
+                print()
+                initial_state = menu_choose_player(race)
 
-                    race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.BFS_solution(initial_state)
+                print()
+                debug = menu_mode(race)
 
-                    print()
-                    Graph.print_path(path, cost)
-                    drawer.draw_path(race.matrix, path)
+                race.build_graph(initial_state=initial_state)
+                path, cost, all_visited = race.BFS_solution(initial_state)
 
-                    if debug:
-                        print("\nA gerar GIF com iterações...\n")
-                        drawer.create_gif(race.matrix, all_visited, "bfs_debug")
-                        print("GIF gerado com sucesso!\n")
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
-                case 3:
-                    print()
-                    initial_state = menu_choose_player(race)
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, all_visited, "bfs_debug")
+                    print("GIF gerado com sucesso!\n")
 
-                    print()
-                    debug = menu_mode(race)
+            case 3:
+                print()
+                initial_state = menu_choose_player(race)
 
-                    print()
-                    choice = menu_heuristic(race)
+                print()
+                debug = menu_mode(race)
 
-                    race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.a_star_solution(initial_state, choice)
+                print()
+                choice = menu_heuristic(race)
 
-                    print()
-                    Graph.print_path(path, cost)
-                    drawer.draw_path(race.matrix, path)
+                race.build_graph(initial_state=initial_state)
+                path, cost, all_visited = race.greedy_solution(initial_state, choice)
 
-                    if debug:
-                        print("\nA gerar GIF com iterações...\n")
-                        drawer.create_gif(race.matrix, all_visited, "astar_debug")
-                        print("GIF gerado com sucesso!\n")
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
-                case 4:
-                    print()
-                    initial_state = menu_choose_player(race)
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, all_visited, "greedy_debug")
+                    print("GIF gerado com sucesso!\n")
 
-                    print()
-                    debug = menu_mode(race)
+            case 4:
+                print()
+                initial_state = menu_choose_player(race)
 
-                    print()
-                    choice = menu_heuristic(race)
+                print()
+                debug = menu_mode(race)
 
-                    race.build_graph(initial_state=initial_state)
-                    path, cost, all_visited = race.greedy_solution(initial_state, choice)
+                print()
+                choice = menu_heuristic(race)
 
-                    print()
-                    Graph.print_path(path, cost)
-                    drawer.draw_path(race.matrix, path)
+                race.build_graph(initial_state=initial_state)
+                path, cost, all_visited = race.a_star_solution(initial_state, choice)
 
-                    if debug:
-                        print("\nA gerar GIF com iterações...\n")
-                        drawer.create_gif(race.matrix, all_visited, "greedy_debug")
-                        print("GIF gerado com sucesso!\n")
+                print()
+                Graph.print_path(path, cost)
+                drawer.draw_path(race.matrix, path)
 
-                case other:
-                    print("\nOpção inválida!\n")
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, all_visited, "astar_debug")
+                    print("GIF gerado com sucesso!\n")
 
-
-
-def menu_algorithms_print(race):
-    print("=====================")
-    print("Escolha de Algoritmo")
-    print("1.. DFS")
-    print("2.. BFS")
-    print("3.. A*")
-    print("4.. Greedy")
-    print("0.. Voltar")
-    print("=====================")
-
-    return int(input("Introduza a sua opção: "))
+            case other:
+                print("\nOpção inválida!\n")
 
 
 def menu_mode(race):
@@ -219,21 +225,29 @@ def menu_heuristic(race):
 
 
 def menu_multiplayer(race):
-    print("=====================")
+    print()
+    print("======================================")
     print("Escolha dos algoritmos de cada jogador")
-    print("=====================")
-
 
     for state in race.start:
-        print(state)
-        print("1... DFS")
-        print("2... BFS")
-        print("3... Greedy")
-        print("4... Astar")
+        opt = -1
+        while opt not in {1, 2, 3, 4}:
+            print("=================================================================")
+            print(state)
+            print("1... DFS")
+            print("2... BFS")
+            print("3... Greedy")
+            print("4... A*")
+            print("=================================================================")
 
-        opt = input()
+            opt = int(input("Introduza a sua opção: "))
+            if opt not in {1, 2, 3, 4}:
+                print("\nOpção inválida")
 
-        race.player_algorithms[state] = opt
+            print()
+
+        race.player_algorithms[state] = str(opt)
+
 
 def menu(race):
     opt = -1
@@ -256,9 +270,7 @@ def menu(race):
 
         match opt:
             case 0:
-                img_dir = "../img"
-                for f in os.listdir(img_dir):
-                    os.remove(os.path.join(img_dir, f))
+                drawer.clean_dir()
 
             case 1:
                 print()
@@ -288,7 +300,7 @@ def menu(race):
 
             case 8:
                 if len(race.start) < 2:
-                    print("Jogadores insuficientes para iniciar o modo multiplayer!")
+                    print("\nJogadores insuficientes para iniciar o modo multiplayer!\n")
                 else:
                     menu_multiplayer(race)
                     race.multiplayer()
@@ -304,7 +316,6 @@ def menu(race):
 
 def main():
     race = menu_setup_race()
-
     menu(race)
 
 
