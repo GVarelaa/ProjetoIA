@@ -7,6 +7,7 @@ from graph import Graph
 import position_calculator
 from copy import deepcopy
 import drawer
+import matplotlib.pyplot as plt
 
 
 class Race:
@@ -144,20 +145,21 @@ class Race:
         for i in range(len(players_states)):
             initial_positions.insert(i, players_states[i])
 
-        plt, ax = drawer.draw_circuit(self.matrix)
-        plt.show()
-        #plt.show()
-
         while not all_true(paths_found):
             for i in range(len(players_states)):
                 if paths_found[i] == False:
                     paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix, self.player_algorithms[initial_positions[i]]) # 1 - DFS, 2 - BFS, 3 - Greedy, 4 - Astar, 5 - Função de utilidade
                     last_pos = parents[i][players_states[i]]
-                    drawer.draw_displacement(last_pos.pos, drawer.calculate_displacement(last_pos.pos, players_states[i].pos), ax)
+                    fig, ax = drawer.draw_circuit(self.matrix)
+                    plt.title("Player " + str(i))
+                    drawer.draw_displacement(last_pos.pos, drawer.calculate_displacement(last_pos.pos, players_states[i].pos), ax, 0.1, 0.1)
+                    plt.show()
+                    #a = input()
                     if paths_found[i] == True:
                         mat_row = len(self.matrix) - math.floor(players_states[i].pos[1]) - 1
                         mat_collumn = math.floor(players_states[i].pos[0])
                         self.matrix[mat_row][mat_collumn] = 'F'
+
 
 
             # Joga jogador 1
@@ -181,7 +183,7 @@ class Race:
         path = list()
         match alg:
             case '1':
-                (path, cost, all_visited) = self.graph.DFS(state, self.end, [], set(), [])
+                (path, cost, all_visited) = self.graph.DFS(state, self.end, [], set(parents.keys()), [])
             case '2':
                 (path, cost, all_visited) = self.graph.BFS(state, self.end)
             case '3':
@@ -199,7 +201,7 @@ class Race:
 
         update_mat(state.pos, path[1].pos, mat)
         print_mat(mat)
-        a = input()
+        #a = input()
         return (path_found, path[1])
 
         """
