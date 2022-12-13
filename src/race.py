@@ -150,7 +150,7 @@ class Race:
                 if paths_found[i] == False:
                     paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix, self.player_algorithms[initial_positions[i]]) # 1 - DFS, 2 - BFS, 3 - Greedy, 4 - Astar, 5 - Função de utilidade
                     last_pos = parents[i][players_states[i]]
-                    fig, ax = drawer.draw_circuit(self.matrix)
+                    plt, ax = drawer.draw_circuit(self.matrix)
                     plt.title("Player " + str(i))
                     drawer.draw_displacement(last_pos.pos, drawer.calculate_displacement(last_pos.pos, players_states[i].pos), ax, 0.1, 0.1)
                     plt.show()

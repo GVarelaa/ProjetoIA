@@ -5,8 +5,7 @@ import subprocess, os, platform
 
 
 def draw_circuit(circuit):
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    fig, ax = plt.subplots()
     ax.set_yscale('linear')
     ax.set_xscale('linear')
     plt.xlim(0, len(circuit[0]))
@@ -23,8 +22,7 @@ def draw_circuit(circuit):
             if circuit[i][j] == 'F':
                 ax.add_patch(Rectangle((j, len(circuit) - i - 1), 1, 1, facecolor='red'))
 
-    return fig, ax
-
+    return plt, ax
 
 
 def draw_path(circuit, path):
