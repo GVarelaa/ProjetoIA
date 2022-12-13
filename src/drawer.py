@@ -5,7 +5,8 @@ import subprocess, os, platform
 
 
 def draw_circuit(circuit):
-    fig, ax = plt.subplots()
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
     ax.set_yscale('linear')
     ax.set_xscale('linear')
     plt.xlim(0, len(circuit[0]))
@@ -17,10 +18,12 @@ def draw_circuit(circuit):
             plt.axvline(x=j + 1)
             if circuit[i][j] == 'X':
                 ax.add_patch(Rectangle((j, len(circuit) - i - 1), 1, 1))
+            if circuit[i][j] == 'P':
+                ax.add_patch(Rectangle((j, len(circuit) - i - 1), 1, 1, facecolor='yellow'))
             if circuit[i][j] == 'F':
                 ax.add_patch(Rectangle((j, len(circuit) - i - 1), 1, 1, facecolor='red'))
 
-    return plt, ax
+    return fig, ax
 
 
 
@@ -47,8 +50,8 @@ def calculate_displacement(pos1, pos2):
     return dispx, dispy
 
 
-def draw_displacement(pos, disp, ax):
-    ax.arrow(pos[0], pos[1], disp[0], disp[1], width=0.03, head_width=0, head_length=0, color='green')
+def draw_displacement(pos, disp, ax, h_w=0, h_l=0):
+    ax.arrow(pos[0], pos[1], disp[0], disp[1], width=0.03, head_width=h_w, head_length=h_l, color='green')
 
 
 def draw_frame(plt, pos):
