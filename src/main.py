@@ -229,10 +229,12 @@ def menu_multiplayer(race):
     print("======================================")
     print("Escolha dos algoritmos de cada jogador")
 
+    i = 0
     for state in race.start:
         opt = -1
         while opt not in {1, 2, 3, 4}:
             print("=================================================================")
+            print(f"Jogador {i}: ", end="")
             print(state)
             print("1... DFS")
             print("2... BFS")
@@ -246,7 +248,9 @@ def menu_multiplayer(race):
 
             print()
 
-        race.player_algorithms[state] = str(opt)
+        race.player_algorithms[i] = str(opt)
+
+        i += 1
 
 
 def menu(race):

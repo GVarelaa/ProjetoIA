@@ -25,9 +25,7 @@ def draw_circuit(circuit):
     return plt, ax
 
 
-def draw_path(circuit, path):
-    plt, ax = draw_circuit(circuit)
-
+def draw_path(plt, ax, path):
     if len(path) > 0:
         initial_node = path[0]
         plt.scatter(initial_node.pos[0], initial_node.pos[1], color='green')
@@ -39,7 +37,7 @@ def draw_path(circuit, path):
 
         initial_node = node
 
-    plt.show()
+    return plt, ax
 
 
 def calculate_displacement(pos1, pos2):

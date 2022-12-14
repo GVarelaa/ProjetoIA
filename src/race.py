@@ -130,79 +130,61 @@ class Race:
         path, cost, all_visited = self.graph.greedy(initial_state, self.end, type)
         return path, cost, all_visited
 
+
+    def check_win(self, players):
+        for player in players:
+            for end in self.end:
+                if player.pos == end.pos:
+                    return True
+
+        return False
+
+    def show_multiple_paths(self, paths, matrix):
+        plt, ax = drawer.draw_circuit(matrix)
+
+        for path in paths.values():
+            plt, ax = drawer.draw_path(plt, ax, path)
+
+        plt.show()
+
     def multiplayer(self):
         # paths ,costs
         players_states = deepcopy(self.start)
-        paths_found = list()    # Se já chegou ao fim da pista
-        parents = list()
-        for state in players_states:
-            paths_found.append(False)
-            dic = dict()
-            dic[state] = None
-            parents.append(dic)
+        matrix = deepcopy(self.matrix)
 
-        initial_positions = list()
+        paths = dict()
         for i in range(len(players_states)):
-            initial_positions.insert(i, players_states[i])
+            paths[i] = list()
 
-        while not all_true(paths_found):
+        while not self.check_win(players_states):
             for i in range(len(players_states)):
-                if paths_found[i] == False:
-                    paths_found[i], players_states[i] = self.play(players_states[i], parents[i], self.matrix, self.player_algorithms[initial_positions[i]]) # 1 - DFS, 2 - BFS, 3 - Greedy, 4 - Astar, 5 - Função de utilidade
-                    last_pos = parents[i][players_states[i]]
-                    plt, ax = drawer.draw_circuit(self.matrix)
-                    plt.title("Player " + str(i))
-                    drawer.draw_displacement(last_pos.pos, drawer.calculate_displacement(last_pos.pos, players_states[i].pos), ax, 0.1, 0.1)
-                    plt.show()
-                    #a = input()
-                    if paths_found[i] == True:
-                        mat_row = len(self.matrix) - math.floor(players_states[i].pos[1]) - 1
-                        mat_collumn = math.floor(players_states[i].pos[0])
-                        self.matrix[mat_row][mat_collumn] = 'F'
+                players_states[i] = self.play(players_states[i], matrix, self.player_algorithms[i])
+                paths[i].append(players_states[i])
+
+                self.show_multiple_paths(paths, matrix)
 
 
 
-            # Joga jogador 1
-            # Joga jogador 2
-            # ...
-        i=0
-        for p in parents:
-            path = []
-            node = players_states[i]
-            path.append(node)
-            while p[node] is not None:
-                path.append(p[node])
-                node = p[node]
-            path.reverse()
-            print(path)
-            i+=1
-        return ([], [])
-
-    def play(self, state, parents, mat, alg):
-        self.build_graph(mat, state, self.end)
+    def play(self, player, matrix, algorithm):
+        self.build_graph(matrix, player, self.end)
         path = list()
-        match alg:
+        match algorithm:
             case '1':
-                (path, cost, all_visited) = self.graph.DFS(state, self.end, [], set(parents.keys()), [])
+                path, cost, all_visited = self.graph.DFS(player, self.end)
             case '2':
-                (path, cost, all_visited) = self.graph.BFS(state, self.end)
+                path, cost, all_visited = self.graph.BFS(player, self.end)
             case '3':
-                (path, cost, all_visited) = self.graph.greedy(state, self.end,"distance")
+                path, cost, all_visited = self.graph.greedy(player, self.end, "distance")
             case '4':
-                (path, cost, all_visited) = self.graph.a_star(state, self.end, "distance")
+                path, cost, all_visited = self.graph.a_star(player, self.end, "distance")
             case '5':
                 return
+        #print(path)
+        update_mat(player.pos, path[1].pos, matrix)
+        print_mat(matrix)
 
-        path_found = False
-        for end_state in self.end:
-            if path[1].pos == end_state.pos:
-                path_found = True
-        parents[path[1]] = state
+        return path[1]
 
-        update_mat(state.pos, path[1].pos, mat)
-        print_mat(mat)
-        #a = input()
-        return (path_found, path[1])
 
 def update_mat(begin, end, mat):
     mat_begin_row = len(mat) - math.floor(begin[1]) - 1
