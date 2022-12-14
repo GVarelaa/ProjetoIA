@@ -115,20 +115,20 @@ class Race:
                                      "velocity")  # velocidade atual
 
     def DFS_solution(self, initial_state):
-        path, cost, all_visited = self.graph.DFS(initial_state, self.end, path=[], visited=set(), all_visited=[])
-        return path, cost, all_visited
+        path, cost, pos_visited = self.graph.DFS(initial_state, self.end, path=[], visited=set(), pos_visited=[])
+        return path, cost, pos_visited
 
     def BFS_solution(self, initial_state):
-        path, cost, all_visited = self.graph.BFS(initial_state, self.end)
-        return path, cost, all_visited
+        path, cost, pos_visited = self.graph.BFS(initial_state, self.end)
+        return path, cost, pos_visited
 
     def a_star_solution(self, initial_state, type):
-        path, cost, all_visited = self.graph.a_star(initial_state, self.end, type)
-        return path, cost, all_visited
+        path, cost, pos_visited = self.graph.a_star(initial_state, self.end, type)
+        return path, cost, pos_visited
 
     def greedy_solution(self, initial_state, type):
-        path, cost, all_visited = self.graph.greedy(initial_state, self.end, type)
-        return path, cost, all_visited
+        path, cost, pos_visited = self.graph.greedy(initial_state, self.end, type)
+        return path, cost, pos_visited
 
     def check_win(self, players):
         for player in players:
