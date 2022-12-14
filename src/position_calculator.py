@@ -139,6 +139,8 @@ def calculate_disp_result(border_position, displ, map):
 
 def calculate_stop_position(current_pos, disp, map):
     # Partindo da posição, até chegar à posição final, procura a próxima interseção com uma fronteira
+    if current_pos is (2.5, 6.5):
+        print('ola')
     if disp == (0, 0):
         return current_pos, DispResult.ADVANCE
 

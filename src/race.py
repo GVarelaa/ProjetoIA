@@ -7,6 +7,7 @@ from graph import Graph
 import position_calculator
 from copy import deepcopy
 import drawer
+import math
 import matplotlib.pyplot as plt
 
 
@@ -66,8 +67,8 @@ class Race:
 
         if not found:
             for accel in accelerations:
-                nodes.append((self.next_state(state, accel, mat), accel))
-
+                s = (self.next_state(state, accel, mat), accel)
+                nodes.append(s)
         return nodes
 
     @staticmethod
@@ -144,38 +145,66 @@ class Race:
         matrix = deepcopy(self.matrix)
 
         paths = dict()
+        dist = list()
         for i in range(len(players_states)):
             paths[i] = list()
+            dist.append(math.inf)
 
         while not self.check_win(players_states):
             for i in range(len(players_states)):
-                players_states[i] = self.play(players_states[i], matrix, self.player_algorithms[i])
+                r = self.play(players_states[i], matrix, self.player_algorithms[i])
+                list_checked = list()
+                list_checked.append(i)
+
+                if r is None:
+                    next_states = self.expand_state(players_states[i], matrix)
+                    next_pos = higher_vel_state(next_states)
+                    update_mat(players_states[i].pos, next_pos.pos, matrix)
+                else:
+                    next_pos, dist[i] = r
+
+                players_states[i] = next_pos
+
                 paths[i].append(players_states[i])
 
                 drawer.show_multiplayer_paths(paths, matrix)
 
     def play(self, player, matrix, algorithm):
+        self.graph = Graph()
         self.build_graph(matrix, player, self.end)
         path = list()
         match algorithm:
             case 1:
-                path, cost, all_visited = self.graph.DFS(player, self.end)
+                 r = self.graph.DFS(player, self.end)
             case 2:
-                path, cost, all_visited = self.graph.BFS(player, self.end)
+                r = self.graph.BFS(player, self.end)
             case 3:
-                path, cost, all_visited = self.graph.greedy(player, self.end, "distance")
+                r = self.graph.greedy(player, self.end, "distance")
             case 4:
-                path, cost, all_visited = self.graph.a_star(player, self.end, "distance")
+                r = self.graph.a_star(player, self.end, "distance")
             case 5:
                 return
-
+        if r is not None:
+            path, cost, all_visited = r
+        else:
+            return r
         #print(path)
         update_mat(player.pos, path[1].pos, matrix)
         print_mat(matrix)
 
-        return path[1]
+        return path[1], cost
 
+def get_vel_value(velocity):
+    return math.sqrt(velocity[0]**2 + velocity[1]**2)
 
+def higher_vel_state(states):
+    higher = states[0][0]
+
+    for state in states:
+        if get_vel_value(higher.vel) < get_vel_value(state[0].vel):
+            higher = state[0]
+
+    return higher
 def update_mat(begin, end, mat):
     mat_begin_row = len(mat) - math.floor(begin[1]) - 1
     mat_begin_collumn = math.floor(begin[0])
