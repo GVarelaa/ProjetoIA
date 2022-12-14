@@ -93,9 +93,7 @@ def menu_algorithms(race):
                 print()
                 Graph.print_path(path, cost)
 
-                plt, ax = drawer.draw_circuit(race.matrix)
-                plt, ax = drawer.draw_path(plt, ax, path)
-                plt.show()
+                drawer.show_path_plot(race.matrix, path)
 
                 if debug:
                     print("A gerar GIF com iterações...\n")
@@ -116,9 +114,7 @@ def menu_algorithms(race):
                 print()
                 Graph.print_path(path, cost)
 
-                plt, ax = drawer.draw_circuit(race.matrix)
-                plt, ax = drawer.draw_path(plt, ax, path)
-                plt.show()
+                drawer.show_path_plot(race.matrix, path)
 
                 if debug:
                     print("A gerar GIF com iterações...\n")
@@ -142,9 +138,7 @@ def menu_algorithms(race):
                 print()
                 Graph.print_path(path, cost)
 
-                plt, ax = drawer.draw_circuit(race.matrix)
-                plt, ax = drawer.draw_path(plt, ax, path)
-                plt.show()
+                drawer.show_path_plot(race.matrix, path)
 
                 if debug:
                     print("A gerar GIF com iterações...\n")
@@ -168,9 +162,7 @@ def menu_algorithms(race):
                 print()
                 Graph.print_path(path, cost)
 
-                plt, ax = drawer.draw_circuit(race.matrix)
-                plt, ax = drawer.draw_path(plt, ax, path)
-                plt.show()
+                drawer.show_path_plot(race.matrix, path)
 
                 if debug:
                     print("A gerar GIF com iterações...\n")
@@ -312,7 +304,7 @@ def menu(race):
                 race.graph.draw()
 
             case 6:
-                drawer.draw_path(race.matrix, [])
+                drawer.show_circuit_plot(race.matrix)
 
             case 7:
                 print()

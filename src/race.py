@@ -130,7 +130,6 @@ class Race:
         path, cost, all_visited = self.graph.greedy(initial_state, self.end, type)
         return path, cost, all_visited
 
-
     def check_win(self, players):
         for player in players:
             for end in self.end:
@@ -138,14 +137,6 @@ class Race:
                     return True
 
         return False
-
-    def show_multiple_paths(self, paths, matrix):
-        plt, ax = drawer.draw_circuit(matrix)
-
-        for path in paths.values():
-            plt, ax = drawer.draw_path(plt, ax, path)
-
-        plt.show()
 
     def multiplayer(self):
         # paths ,costs
@@ -161,9 +152,7 @@ class Race:
                 players_states[i] = self.play(players_states[i], matrix, self.player_algorithms[i])
                 paths[i].append(players_states[i])
 
-                self.show_multiple_paths(paths, matrix)
-
-
+                drawer.show_multiplayer_paths(paths, matrix)
 
     def play(self, player, matrix, algorithm):
         self.build_graph(matrix, player, self.end)
@@ -179,6 +168,7 @@ class Race:
                 path, cost, all_visited = self.graph.a_star(player, self.end, "distance")
             case 5:
                 return
+
         #print(path)
         update_mat(player.pos, path[1].pos, matrix)
         print_mat(matrix)

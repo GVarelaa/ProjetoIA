@@ -25,19 +25,39 @@ def draw_circuit(circuit):
     return plt, ax
 
 
+def show_circuit_plot(circuit):
+    plt, ax = draw_circuit(circuit)
+    plt.show()
+
+
 def draw_path(plt, ax, path):
     if len(path) > 0:
         initial_node = path[0]
-        plt.scatter(initial_node.pos[0], initial_node.pos[1], color='green')
+        draw_frame(plt, initial_node.pos)
 
     for node in path:
         disp = calculate_displacement(initial_node.pos, node.pos)
         draw_displacement(initial_node.pos, disp, ax)
-        plt.scatter(node.pos[0], node.pos[1], color='green')
+        draw_frame(plt, node.pos)
 
         initial_node = node
 
-    return plt, ax
+    return plt
+
+
+def show_path_plot(circuit, path):
+    plt, ax = draw_circuit(circuit)
+    plt = draw_path(plt, ax, path)
+    plt.show()
+
+
+def show_multiplayer_paths(paths, circuit):
+    plt, ax = draw_circuit(circuit)
+
+    for path in paths.values():
+        plt = draw_path(plt, ax, path)
+
+    plt.show()
 
 
 def calculate_displacement(pos1, pos2):
@@ -47,7 +67,7 @@ def calculate_displacement(pos1, pos2):
 
 
 def draw_displacement(pos, disp, ax, h_w=0, h_l=0):
-    ax.arrow(pos[0], pos[1], disp[0], disp[1], width=0.03, head_width=h_w, head_length=h_l, color='green')
+    ax.arrow(pos[0], pos[1], disp[0], disp[1], width=0.03, head_width=h_w, head_length=h_l, color='black')
 
 
 def draw_frame(plt, pos):
