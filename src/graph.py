@@ -163,7 +163,7 @@ class Graph:
         plt.draw()
         plt.show()
 
-    def DFS(self, start, end, path=[], visited=set(), pos_visited=[]):
+    def DFS(self, start, end, path, visited, pos_visited):
         path.append(start)
         visited.add(start)
         pos_visited.append(start.pos)  # debug
@@ -175,7 +175,7 @@ class Graph:
 
         for adj, cost in self.graph[start]:
             if adj not in visited:
-                ret = self.DFS(adj, end, path, visited)
+                ret = self.DFS(adj, end, path, visited, pos_visited)
                 if ret is not None:
                     return ret
 

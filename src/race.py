@@ -1,5 +1,6 @@
 import math
 from enum import Enum
+from time import sleep
 
 from node import Node
 from parser import parser
@@ -149,29 +150,30 @@ class Race:
 
         while not self.check_win(players_states):
             for i in range(len(players_states)):
+                print(players_states[i])
                 players_states[i] = self.play(players_states[i], matrix, self.player_algorithms[i])
                 paths[i].append(players_states[i])
 
-                drawer.show_multiplayer_paths(paths, matrix)
+            drawer.show_multiplayer_paths(paths, matrix)
+            print_mat(matrix)
+
+            sleep(0.55)
 
     def play(self, player, matrix, algorithm):
         self.build_graph(matrix, player, self.end)
         path = list()
         match algorithm:
             case 1:
-                path, cost, all_visited = self.graph.DFS(player, self.end)
+                path, cost, pos_visited = self.graph.DFS(player, self.end, path=[], visited=set(), pos_visited=[])
+                #print(path)
             case 2:
-                path, cost, all_visited = self.graph.BFS(player, self.end)
+                path, cost, pos_visited = self.graph.BFS(player, self.end)
             case 3:
-                path, cost, all_visited = self.graph.greedy(player, self.end, "distance")
+                path, cost, pos_visited = self.graph.greedy(player, self.end, "distance")
             case 4:
-                path, cost, all_visited = self.graph.a_star(player, self.end, "distance")
-            case 5:
-                return
+                path, cost, pos_visited = self.graph.a_star(player, self.end, "distance")
 
-        #print(path)
         update_mat(player.pos, path[1].pos, matrix)
-        print_mat(matrix)
 
         return path[1]
 
