@@ -169,15 +169,15 @@ class Race:
         self.build_graph(matrix, player, self.end)
         path = list()
         match algorithm:
-            case '1':
+            case 1:
                 path, cost, all_visited = self.graph.DFS(player, self.end)
-            case '2':
+            case 2:
                 path, cost, all_visited = self.graph.BFS(player, self.end)
-            case '3':
+            case 3:
                 path, cost, all_visited = self.graph.greedy(player, self.end, "distance")
-            case '4':
+            case 4:
                 path, cost, all_visited = self.graph.a_star(player, self.end, "distance")
-            case '5':
+            case 5:
                 return
         #print(path)
         update_mat(player.pos, path[1].pos, matrix)
