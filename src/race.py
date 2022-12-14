@@ -1,5 +1,6 @@
 import math
 from enum import Enum
+from time import sleep
 
 from node import Node
 from parser import parser
@@ -167,7 +168,10 @@ class Race:
 
                 paths[i].append(players_states[i])
 
-                drawer.show_multiplayer_paths(paths, matrix)
+            drawer.show_multiplayer_paths(paths, matrix)
+            print_mat(matrix)
+
+            sleep(0.55)
 
     def play(self, player, matrix, algorithm):
         self.graph = Graph()
@@ -188,11 +192,6 @@ class Race:
             path, cost, all_visited = r
         else:
             return r
-        #print(path)
-        update_mat(player.pos, path[1].pos, matrix)
-        print_mat(matrix)
-
-        return path[1], cost
 
 def get_vel_value(velocity):
     return math.sqrt(velocity[0]**2 + velocity[1]**2)
