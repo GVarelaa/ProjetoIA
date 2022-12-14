@@ -1,4 +1,4 @@
-import os
+import time
 from parser import parser
 from race import Race
 from graph import Graph
@@ -101,6 +101,7 @@ def menu_algorithms(race):
                     print("A gerar GIF com iterações...\n")
                     drawer.create_gif(race.matrix, all_visited, "dfs_debug")
                     print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
 
             case 2:
                 print()
@@ -123,6 +124,7 @@ def menu_algorithms(race):
                     print("A gerar GIF com iterações...\n")
                     drawer.create_gif(race.matrix, all_visited, "bfs_debug")
                     print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
 
             case 3:
                 print()
@@ -148,6 +150,7 @@ def menu_algorithms(race):
                     print("A gerar GIF com iterações...\n")
                     drawer.create_gif(race.matrix, all_visited, "greedy_debug")
                     print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
 
             case 4:
                 print()
@@ -173,6 +176,7 @@ def menu_algorithms(race):
                     print("A gerar GIF com iterações...\n")
                     drawer.create_gif(race.matrix, all_visited, "astar_debug")
                     print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
 
             case other:
                 print("\nOpção inválida!\n")
@@ -263,7 +267,6 @@ def menu_multiplayer(race):
         race.player_algorithms[i] = opt
 
         i += 1
-
 
 
 def menu(race):
