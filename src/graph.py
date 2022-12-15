@@ -163,7 +163,9 @@ class Graph:
         plt.draw()
         plt.show()
 
-    def DFS(self, start, end, path, visited, pos_visited):
+    # 0 - (1,2) -> (1,3) -> (1,4)
+    # 1 - (1,4) -> (1,3)
+    def DFS(self, start, end, path, visited, pos_visited, paths, iter_number):
         path.append(start)
         visited.add(start)
         pos_visited.append(start.pos)  # debug
@@ -175,23 +177,28 @@ class Graph:
 
         for adj, cost in self.graph[start]:
             if adj not in visited:
-                ret = self.DFS(adj, end, path, visited, pos_visited)
-                if ret is not None:
-                    return ret
+                if not adj_in_others_path(adj, paths, iter_number):
+                    ret = self.DFS(adj, end, path, visited, pos_visited, paths, iter_number+1)
+                    if ret is not None:
+                        return ret
 
         path.pop()  # se nao encontrar, remover o que está no caminho
         return None
 
-    def BFS(self, start, end):
+    def BFS(self, start, end, paths):
         pos_visited = [start]  # debug
         visited = {start}
         q = Queue()
+        i = 0
 
         q.put(start)
 
         # garantir que o start node nao tem pais
         parents = dict()
         parents[start] = None
+
+        level = dict()
+        level[start] = 0
 
         path_found = False
         while not q.empty() and not path_found:
@@ -204,9 +211,11 @@ class Graph:
 
             if not path_found:
                 for (adj, cost) in self.graph[node]:
-                    if adj not in visited:
+                    i = level[node] + 1
+                    if adj not in visited and not adj_in_others_path(adj, paths, i):
                         q.put(adj)
                         parents[adj] = node
+                        level[adj] = i
                         visited.add(adj)
 
         # reconstruir o caminho
@@ -221,11 +230,14 @@ class Graph:
             total_cost = self.calc_path_cost(path)
             return path, total_cost, pos_visited
 
-    def greedy(self, start, end, type):
+    def greedy(self, start, end, type, paths):
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
             heuristic = self.h2
+
+        level = dict()
+        level[start] = 0
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set()  # nodos visitados
@@ -260,9 +272,12 @@ class Graph:
 
             # para todos os vizinhos do nodo corrente
             for (adj, cost) in self.graph[n]:
+                i = level[n] + 1
                 if adj not in open_list and adj not in closed_list:
                     open_list.add(adj)
                     parents[adj] = n
+                    if not adj_in_others_path(adj, paths, i):
+                        level[adj] = i
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
@@ -270,11 +285,13 @@ class Graph:
 
         return None
 
-    def a_star(self, start, end, type):
+    def a_star(self, start, end, type, paths):
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
             heuristic = self.h2
+
+        levels = {start: 0}
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set()  # nodos visitados
@@ -288,7 +305,8 @@ class Graph:
 
             # encontra nodo com a menor heuristica
             for node in open_list:
-                if n is None or (heuristic[node] + costs[node]) < (heuristic[n] + costs[n]):
+                i = levels[n] + 1
+                if n is None or (heuristic[node] + costs[node]) < (heuristic[n] + costs[n]) and not adj_in_others_path(adj, paths, i):
                     n = node
 
             pos_visited.append(n.pos)  # debug
@@ -312,6 +330,7 @@ class Graph:
                 if adj not in open_list and adj not in closed_list:
                     open_list.add(adj)
                     parents[adj] = n
+                    levels[adj] = i
                     costs[adj] = costs[n] + cost
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
