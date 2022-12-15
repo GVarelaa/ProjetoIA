@@ -6,6 +6,11 @@ import drawer
 
 
 def print_mat(mat):
+    """
+    Imprime a matriz
+    :param mat: Matriz
+    :return:
+    """
     string = ""
     for l in mat:
         for c in l:
@@ -23,6 +28,10 @@ class Graph:
         self.h2 = {}  # heurística da velocidade
 
     def __str__(self):
+        """
+
+        :return:
+        """
         string = ""
         for key in self.graph.keys():
             string = string + str(key) + ": \n"
@@ -33,6 +42,10 @@ class Graph:
         return string
 
     def __repr__(self):
+        """
+
+        :return:
+        """
         string = ""
         for key in self.graph.keys():
             string = string + str(key) + ": \n"
@@ -43,11 +56,23 @@ class Graph:
         return string
 
     def get_node_by_pos(self, pos):
+        """
+        Obtem o nodo de uma posição
+        :param pos: Posição
+        :return: Nodo
+        """
         for node in self.nodes:
             if node.get_pos() == pos:
                 return node
 
     def add_edge(self, node1, node2, cost):
+        """
+        Adiciona uma aresta
+        :param node1: Primeiro Nodo
+        :param node2: Segundo Nodo
+        :param cost: Custo
+        :return:
+        """
         if node1 not in self.nodes:
             self.nodes.add(node1)
             self.graph[node1] = set()
@@ -59,6 +84,13 @@ class Graph:
         self.graph[node1].add((node2, cost))
 
     def add_heuristic(self, node, value, type):
+        """
+        Adiciona uma heurística
+        :param node: Nodo
+        :param value: Valor
+        :param type: Tipo
+        :return:
+        """
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
@@ -68,12 +100,23 @@ class Graph:
             heuristic[node] = value
 
     def get_neighbours(self, node):
+        """
+        Obtem a vizinhança de um nodo
+        :param node: Nodo
+        :return: Lista de nodos vizinhos
+        """
         lista = []
         for (adj, peso) in self.graph[node]:
             lista.append((adj, peso))
         return lista
 
     def get_arc_cost(self, node1, node2):
+        """
+        Obtem o custo entre dois nodos
+        :param node1: Primeiro Nodo
+        :param node2: Segundo Nodo
+        :return: Custo do arco
+        """
         total = 0
 
         adjs = self.graph[node1]  # lista de arestas para aquele nodo
@@ -84,6 +127,11 @@ class Graph:
         return total
 
     def calc_path_cost(self, path):
+        """
+        Calcula o custo de um caminho
+        :param path: Caminho
+        :return: Custo do caminho
+        """
         total = 0
         i = 0
 
@@ -95,6 +143,12 @@ class Graph:
 
     @staticmethod
     def print_path(path, cost):
+        """
+        Imprime o custo e os nodos de um caminho
+        :param path: Caminho
+        :param cost: Custo
+        :return:
+        """
         counter = 1
         res = ""
 
@@ -106,6 +160,10 @@ class Graph:
         print(f"Custo: {cost}\n")
 
     def print_nodes(self):
+        """
+        Imprime os nodos
+        :return:
+        """
         nodes = ""
 
         for node in self.nodes:
@@ -114,6 +172,10 @@ class Graph:
         print(nodes)
 
     def print_edges(self):
+        """
+        Imrime as Arestas
+        :return:
+        """
         edges = ""
 
         for node in self.graph.keys():
@@ -123,6 +185,11 @@ class Graph:
         print(edges)
 
     def print_heuristics(self, type):
+        """
+        Imprime as heurísticas
+        :param type: tipo da heurística
+        :return:
+        """
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
@@ -136,6 +203,10 @@ class Graph:
         print(heuristics)
 
     def count_edges(self):
+        """
+        Conta o número de Arestas
+        :return:
+        """
         counter = 0
         for node in self.graph.keys():
             for (adj, cost) in self.graph[node]:
@@ -144,6 +215,10 @@ class Graph:
         return counter
 
     def draw(self):
+        """
+        Desenha e imprime um Grafo
+        :return:
+        """
         verts = self.nodes
         g = nx.Graph()
 
@@ -194,6 +269,17 @@ class Graph:
     # 0 - (1,2) -> (1,3) -> (1,4)
     # 1 - (1,4) -> (1,3)
     def DFS(self, start, end, path, visited, pos_visited, paths=dict(), iter_number=0):
+        """
+        Algoritmo "Depth-First-Search"
+        :param start: Posição inicial
+        :param end: Posição final
+        :param path: Caminho
+        :param visited: Nodos Visitados
+        :param pos_visited: Posições visitadas
+        :param paths: Caminhos
+        :param iter_number: Número de iterações
+        :return:
+        """
         path.append(start)
         visited.add(start)
         pos_visited.append(start.pos)  # debug
@@ -214,6 +300,13 @@ class Graph:
         return None
 
     def BFS(self, start, end, paths=dict()):
+        """
+        Algoritmo "Breadth-First-Search"
+        :param start: Posição inicial
+        :param end: Posição final
+        :param paths: Caminhos
+        :return: Caminho, Custo total e Posições visitadas
+        """
         pos_visited = [start]  # debug
         visited = {start}
         q = Queue()
@@ -259,6 +352,14 @@ class Graph:
             return path, total_cost, pos_visited
 
     def greedy(self, start, end, type, paths=dict()):
+        """
+        Algoritmo Greedy
+        :param start: Posição Inicial
+        :param end: Posição Final
+        :param type: Tipo
+        :param paths: Caminhos
+        :return:
+        """
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
@@ -313,6 +414,14 @@ class Graph:
         return None
 
     def a_star(self, start, end, type, paths=dict()):
+        """
+        Algoritmo "A-Star"
+        :param start: Posição Inicial
+        :param end: Posição Final
+        :param type: Tipo
+        :param paths: Caminhos
+        :return:
+        """
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
