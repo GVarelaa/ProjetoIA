@@ -9,12 +9,22 @@ class DispResult(Enum):
 
 
 def is_int(num):
+    """
+    Verifica se é um inteiro
+    :param num: Número
+    :return: Bool
+    """
     return math.floor(num) == num
 
 
 # Example: nextInt(3) = 4
 #          nextInt(2.5) = 3
 def next_int(num):
+    """
+    Incrementa um número
+    :param num: Número
+    :return: Numero incrementado
+    """
     if is_int(num):
         return num + 1
     else:
@@ -24,12 +34,23 @@ def next_int(num):
 # Example: lastInt(3) = 2
 #          nextInt(2.5) = 2
 def last_int(num):
+    """
+    Decremeneta um número
+    :param num: Número
+    :return: Número decrementado
+    """
     if is_int(num):
         return num - 1
     else:
         return math.floor(num)
 
 def calculate_next_border_position(current_pos, disp):
+    """
+    Calcula a borda da proxima posição
+    :param current_pos: Posição Atual
+    :param disp: Deslocamento
+    :return: Posição
+    """
     if disp[1] == 0:  # Horizontal displacement
         if disp[0] < 0:
             return last_int(current_pos[0]), current_pos[1]
@@ -70,6 +91,12 @@ def calculate_next_border_position(current_pos, disp):
 
 # Get the object in that map position
 def get_map_object(position, map):
+    """
+    Destaca uma posição no mapa
+    :param position: Posição
+    :param map: mapa
+    :return: mapa
+    """
     map_position = (math.floor(position[0]), math.floor(position[1]))
     matrix_line = len(map) - map_position[1] - 1
     matrix_column = map_position[0]
@@ -78,6 +105,12 @@ def get_map_object(position, map):
 
 # Get middle position of the next square, given border_position and displacement
 def get_middle_position(border_position, displ):
+    """
+    Obtem a posição intemédia
+    :param border_position: Posição da borda
+    :param displ: Deslocamento
+    :return: Posição
+    """
     if is_int(border_position[1]):  # Case (float, int)
         if displ[0] == 0:  # Vertical motion
             return border_position[0], border_position[1] + displ[1] / (abs(displ[1]) * 2)
@@ -91,6 +124,13 @@ def get_middle_position(border_position, displ):
 
 
 def calculate_disp_result(border_position, displ, map):
+    """
+    Calcula o resultado do deslocamento
+    :param border_position: Posição da borda
+    :param displ: Deslocamento
+    :param map: mapa
+    :return: POsição
+    """
     if is_int(border_position[0]) and is_int(border_position[1]):  # Esquina
         if displ[0] < 0 and displ[1] < 0:  # esquerda baixo
             first_point = (border_position[0] - 0.5, border_position[1] + 0.5)  # Can block displacement
@@ -138,6 +178,13 @@ def calculate_disp_result(border_position, displ, map):
 
 
 def calculate_stop_position(current_pos, disp, map):
+    """
+    Calcula a posição onde pára
+    :param current_pos: Posição Atual
+    :param disp: Deslocamento
+    :param map: mapa
+    :return: Posição e deslocamento
+    """
     # Partindo da posição, até chegar à posição final, procura a próxima interseção com uma fronteira
     if current_pos is (2.5, 6.5):
         print('ola')

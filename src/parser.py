@@ -1,4 +1,9 @@
 def parser(file_path):
+    """
+    Parser de um ficheiro com um circuito para uma matriz
+    :param file_path: Diretoria do ficheiro
+    :return: Matriz, Ponto Inicial, Ponto Final
+    """
     matrix = list()
 
     f = open(file_path, "r")

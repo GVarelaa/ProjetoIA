@@ -6,6 +6,10 @@ import drawer
 
 
 def menu_setup_race():
+    """
+    Menu para carragar o circuito
+    :return: Matriz com a posição inicial e final
+    """
     race = None
 
     print("=========================")
@@ -33,11 +37,22 @@ def menu_setup_race():
 
 
 def set_players_algorithms(race, opt):
+    """
+    Seleciona os algoritmos para cada jogador
+    :param race: Corrida
+    :param opt: Opção
+    :return:
+    """
     for state in race.start:
         race.player_algorithms[state] = opt
 
 
 def menu_choose_player(race):
+    """
+    Escolhe o jogador como estado inicial
+    :param race: Corrida
+    :return: Jogador inical da corrida fornecida
+    """
     print("=========================================================")
     print("Qual dos jogadores pretende escolher como estado inicial:")
 
@@ -61,6 +76,12 @@ def menu_choose_player(race):
 
 
 def menu_algorithms(race, player):
+    """
+    Menu para a escolha do Algoritmo a usar numa corrida por um jogador
+    :param race: Corrida
+    :param player: Jogador
+    :return:
+    """
     opt = -1
 
     while opt not in {0, 1, 2, 3, 4}:
@@ -159,6 +180,11 @@ def menu_algorithms(race, player):
 
 
 def menu_mode(race):
+    """
+    Menu com os modos de Corrida possíveis
+    :param race: Corrida
+    :return: Bool
+    """
     opt = -1
     debug = False
 
@@ -188,6 +214,11 @@ def menu_mode(race):
 
 
 def menu_heuristic(race):
+    """
+    Menu da heurística de uma corrida
+    :param race: Corrida
+    :return: Escolha
+    """
     opt = -1
     choice = ""
 
@@ -217,6 +248,11 @@ def menu_heuristic(race):
 
 
 def menu_multiplayer(race):
+    """
+    Menu para a escolha do algoritmo de cada jogador
+    :param race: Corrida
+    :return:
+    """
     print()
     print("======================================")
     print("Escolha dos algoritmos de cada jogador")
@@ -246,6 +282,11 @@ def menu_multiplayer(race):
 
 
 def menu(race):
+    """
+    Menu Principal
+    :param race: Corrida
+    :return:
+    """
     num_players = len(race.start)
     opt = -1
 
@@ -280,6 +321,12 @@ def menu(race):
 
 
 def menu_player(race, player):
+    """
+    Menu do jogador
+    :param race: Corrida
+    :param player: Jogador
+    :return:
+    """
     opt = -1
 
     while opt != 0:
@@ -337,6 +384,10 @@ def menu_player(race, player):
 
 
 def main():
+    """
+    Main
+    :return:
+    """
     race = menu_setup_race()
     menu(race)
 

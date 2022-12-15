@@ -5,6 +5,11 @@ import subprocess, os, platform
 
 
 def draw_circuit(circuit):
+    """
+    Desenha um cricuito
+    :param circuit: Circuito
+    :return:
+    """
     fig, ax = plt.subplots()
     ax.set_yscale('linear')
     ax.set_xscale('linear')
@@ -26,11 +31,24 @@ def draw_circuit(circuit):
 
 
 def show_circuit_plot(circuit):
+    """
+    Mostra o circuito desenhado
+    :param circuit: Circuito
+    :return:
+    """
     plt, ax = draw_circuit(circuit)
     plt.show()
 
 
 def draw_path(plt, ax, path, color='black'):
+    """
+    Desenha o Caminho
+    :param plt:
+    :param ax:
+    :param path:
+    :param color: Cor
+    :return:
+    """
     if len(path) > 0:
         initial_node = path[0]
         draw_frame(plt, initial_node.pos)
@@ -46,12 +64,24 @@ def draw_path(plt, ax, path, color='black'):
 
 
 def show_path_plot(circuit, path):
+    """
+    Mostra o Caminho
+    :param circuit: Circuito
+    :param path: Caminho
+    :return:
+    """
     plt, ax = draw_circuit(circuit)
     plt = draw_path(plt, ax, path)
     plt.show()
 
 
 def show_multiplayer_paths(paths, circuit):
+    """
+    Mostra os caminhos no circuito
+    :param paths: Caminhos
+    :param circuit: Circuito
+    :return:
+    """
     colors = ['darkviolet', 'darkorange', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen']
     i = 0
 
@@ -65,21 +95,50 @@ def show_multiplayer_paths(paths, circuit):
 
 
 def calculate_displacement(pos1, pos2):
+    """
+    Calcula o deslocamento entre duas posições
+    :param pos1: Posição A
+    :param pos2: Posição B
+    :return: Deslocamento no eixo do x e y
+    """
     dispx = pos2[0] - pos1[0]
     dispy = pos2[1] - pos1[1]
     return dispx, dispy
 
 
 def draw_displacement(pos, disp, ax, h_w=0, h_l=0, color='black'):
+    """
+    Desenha o deslocamento entre duas posições
+    :param pos: Posição
+    :param disp: Distãncia
+    :param ax:
+    :param h_w: Largura
+    :param h_l: Comprimento
+    :param color: Cor
+    :return:
+    """
     ax.arrow(pos[0], pos[1], disp[0], disp[1], width=0.03, head_width=h_w, head_length=h_l, color=color)
 
 
 def draw_frame(plt, pos, color='black'):
+    """
+    Desenha um frame
+    :param plt:
+    :param pos: Posição
+    :param color: Cor
+    :return:
+    """
     plt.scatter(pos[0], pos[1], color=color)
     return plt
 
 
 def create_frames(circuit, positions):
+    """
+    Cria uma lista com os frames das várias posições
+    :param circuit: Circuito
+    :param positions: Lista de Posições
+    :return: Lista de frames
+    """
     t = 1
     frames = []
     filenames = []
@@ -102,6 +161,13 @@ def create_frames(circuit, positions):
 
 
 def create_gif(circuit, positions, name):
+    """
+    Cria uma imagem com as posições usadas
+    :param circuit: Circuito
+    :param positions: Lista de Posições
+    :param name: Nome da imagem
+    :return:
+    """
     frames = create_frames(circuit, positions)
 
     imageio.mimsave(f'../img/{name}.gif', frames, fps=5, loop=1)
@@ -109,6 +175,11 @@ def create_gif(circuit, positions, name):
 
 
 def print_gif(name):
+    """
+    Imprime uma imagem
+    :param name: Nome da imagem
+    :return:
+    """
     if platform.system() == 'Darwin':  # macOS
         subprocess.call(('open', f"../img/{name}.gif"))
     elif platform.system() == 'Windows':  # Windows
@@ -118,6 +189,10 @@ def print_gif(name):
 
 
 def clean_dir():
+    """
+    Remove as imagens guardadas
+    :return:
+    """
     img_dir = "../img"
     for f in os.listdir(img_dir):
         os.remove(os.path.join(img_dir, f))
