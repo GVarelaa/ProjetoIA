@@ -11,7 +11,7 @@ class Node:
         return "Position =" + str(self.pos) + "| Velocity=" + str(self.vel) + " | Is_Crashed : " + str(self.crashed)
 
     def __eq__(self, other):
-        return self.pos == other.pos and self.vel == other.vel and self.crashed == other.crashed
+        return self.pos == other.pos and self.vel == other.vel
 
     def __hash__(self):
         return hash((self.pos, self.vel))

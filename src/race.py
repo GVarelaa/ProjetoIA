@@ -68,7 +68,7 @@ class Race:
 
         if not found:
             for accel in accelerations:
-                s = (self.next_state(state, accel, mat), accel)
+                s = self.next_state(state, accel, mat), accel
                 nodes.append(s)
         return nodes
 
@@ -83,24 +83,19 @@ class Race:
 
         return distance
 
-    def build_graph(self, mat=None, initial_state=None, end=None):
-        if mat is None:
-            mat = self.matrix
-
+    def build_graph(self, initial_state=None):
         if initial_state is None:
             initial_state = self.start[0]
 
-        if end is None:
-            end = self.end
-
-        states = [deepcopy(initial_state)]
-        visited = [deepcopy(initial_state)]
+        states = {deepcopy(initial_state)}
+        visited = {deepcopy(initial_state)}
 
         while states:
             state = states.pop()
-            expansion = self.expand_state(state, mat)
+            visited.add(state)
+            expansion = self.expand_state(state, self.matrix)
 
-            for (e,accel) in expansion:
+            for e, accel in expansion:
                 if e.crashed:
                     e.crashed = False
                     self.graph.add_edge(state, e, 25)
@@ -108,28 +103,28 @@ class Race:
                     self.graph.add_edge(state, e, 1)
 
                 if e not in visited:
-                    states.append(e)
-                    visited.append(e)
+                    states.add(e)
 
-            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, end),
+            self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end),
                                      "distance")  # distância às posiçoes finais
             self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2),
                                      "velocity")  # velocidade atual
 
-    def DFS_solution(self, initial_state):
-        path, cost, pos_visited = self.graph.DFS(initial_state, self.end, path=[], visited=set(), pos_visited=[])
+
+    def DFS_solution(self, initial_state, paths=dict()):
+        path, cost, pos_visited = self.graph.DFS(initial_state, self.end, [], set(), [], paths)
         return path, cost, pos_visited
 
-    def BFS_solution(self, initial_state):
-        path, cost, pos_visited = self.graph.BFS(initial_state, self.end)
+    def BFS_solution(self, initial_state, paths=dict()):
+        path, cost, pos_visited = self.graph.BFS(initial_state, self.end, paths)
         return path, cost, pos_visited
 
-    def a_star_solution(self, initial_state, type):
-        path, cost, pos_visited = self.graph.a_star(initial_state, self.end, type)
+    def a_star_solution(self, initial_state, type, paths=dict()):
+        path, cost, pos_visited = self.graph.a_star(initial_state, self.end, type, paths)
         return path, cost, pos_visited
 
-    def greedy_solution(self, initial_state, type):
-        path, cost, pos_visited = self.graph.greedy(initial_state, self.end, type)
+    def greedy_solution(self, initial_state, type, paths=dict()):
+        path, cost, pos_visited = self.graph.greedy(initial_state, self.end, type, paths)
         return path, cost, pos_visited
 
     def check_win(self, players):
@@ -140,98 +135,28 @@ class Race:
 
         return False
 
-    def multiplayer(self):
+    def multiplayer(self, heuristics):
         # paths ,costs
-        players_states = deepcopy(self.start)
+        players = deepcopy(self.start)
         matrix = deepcopy(self.matrix)
-
         paths = dict()
-        dist = list()
-        for i in range(len(players_states)):
-            paths[i] = list()
-            dist.append(math.inf)
 
-        while not self.check_win(players_states):
-            for i in range(len(players_states)):
-                r = self.play(players_states[i], matrix, self.player_algorithms[i])
-                list_checked = list()
-                list_checked.append(i)
+        for i in range(len(players)):
+            match self.player_algorithms[i]:
+                case 1:
+                    path, cost, pos_visited = self.DFS_solution(players[i], paths)
+                    paths[i] = path
+                case 2:
+                    path, cost, pos_visited = self.BFS_solution(players[i], paths)
+                    paths[i] = path
+                case 3:
+                    path, cost, pos_visited = self.greedy_solution(players[i], heuristics[i], paths)
+                    paths[i] = path
+                case 4:
+                    path, cost, pos_visited = self.a_star_solution(players[i], heuristics[i], paths)
+                    paths[i] = path
 
-                if r is None:
-                    next_states = self.expand_state(players_states[i], matrix)
-                    next_pos = higher_vel_state(next_states)
-                    update_mat(players_states[i].pos, next_pos.pos, matrix)
-                else:
-                    next_pos, dist[i] = r
-
-                players_states[i] = next_pos
-
-                paths[i].append(players_states[i])
-
-            drawer.show_multiplayer_paths(paths, matrix)
-            print_mat(matrix)
-
-            sleep(0.55)
-
-    def play(self, player, matrix, algorithm):
-        self.graph = Graph()
-        self.build_graph(matrix, player, self.end)
-        path = list()
-        match algorithm:
-            case 1:
-                 r = self.graph.DFS(player, self.end)
-            case 2:
-                r = self.graph.BFS(player, self.end)
-            case 3:
-                r = self.graph.greedy(player, self.end, "distance")
-            case 4:
-                r = self.graph.a_star(player, self.end, "distance")
-            case 5:
-                return
-        if r is not None:
-            path, cost, all_visited = r
-        else:
-            return r
-
-def get_vel_value(velocity):
-    return math.sqrt(velocity[0]**2 + velocity[1]**2)
-
-def higher_vel_state(states):
-    higher = states[0][0]
-
-    for state in states:
-        if get_vel_value(higher.vel) < get_vel_value(state[0].vel):
-            higher = state[0]
-
-    return higher
-def update_mat(begin, end, mat):
-    mat_begin_row = len(mat) - math.floor(begin[1]) - 1
-    mat_begin_collumn = math.floor(begin[0])
-    mat_end_row = len(mat) - math.floor(end[1]) - 1
-    mat_end_collumn = math.floor(end[0])
-
-    mat[mat_begin_row][mat_begin_collumn] = '-'
-    mat[mat_end_row][mat_end_collumn] = 'P'
-
-
-def all_true(list):
-    flag = True
-
-    for bool in list:
-        if not bool:
-            return False
-
-    return True
-
-
-def utility_value(node, final_nodes):
-    dist_to_obj = Race.calculate_shorter_distance(node, final_nodes)
-    if dist_to_obj == 0:
-        return math.inf
-    else:
-        return -dist_to_obj + node.vel[0]**2 + node.vel[1]**2
-    # TODO
-
+        drawer.show_multiplayer_paths(paths, self.matrix)
 
 def print_mat(mat):
     string = ""

@@ -97,17 +97,17 @@ def calculate_disp_result(border_position, displ, map):
             second_point = (border_position[0] + 0.5, border_position[1] - 0.5)  # Can block displacement
             third_point = (border_position[0] - 0.5, border_position[1] - 0.5)  # Next position block
 
-        if displ[0] < 0 and displ[1] > 0:  # esquerda cima
+        elif displ[0] < 0 and displ[1] > 0:  # esquerda cima
             first_point = (border_position[0] - 0.5, border_position[1] - 0.5)
             second_point = (border_position[0] + 0.5, border_position[1] + 0.5)
             third_point = (border_position[0] - 0.5, border_position[1] + 0.5)
 
-        if displ[0] > 0 and displ[1] < 0:  # direita baixo
+        elif displ[0] > 0 and displ[1] < 0:  # direita baixo
             first_point = (border_position[0] + 0.5, border_position[1] + 0.5)
             second_point = (border_position[0] - 0.5, border_position[1] - 0.5)
             third_point = (border_position[0] + 0.5, border_position[1] - 0.5)
 
-        if displ[0] > 0 and displ[1] > 0:  # direita cima
+        elif displ[0] > 0 and displ[1] > 0:  # direita cima
             first_point = (border_position[0] - 0.5, border_position[1] + 0.5)
             second_point = (border_position[0] + 0.5, border_position[1] - 0.5)
             third_point = (border_position[0] + 0.5, border_position[1] + 0.5)
@@ -129,7 +129,7 @@ def calculate_disp_result(border_position, displ, map):
     # Get object inside the square
     obj_in_square = get_map_object(middle_position, map)
 
-    if obj_in_square == 'P' or obj_in_square == 'X':
+    if obj_in_square == 'X':
         return DispResult.CRASH
     elif obj_in_square == 'F':
         return DispResult.FINISH
@@ -139,8 +139,6 @@ def calculate_disp_result(border_position, displ, map):
 
 def calculate_stop_position(current_pos, disp, map):
     # Partindo da posição, até chegar à posição final, procura a próxima interseção com uma fronteira
-    if current_pos is (2.5, 6.5):
-        print('ola')
     if disp == (0, 0):
         return current_pos, DispResult.ADVANCE
 
@@ -149,13 +147,15 @@ def calculate_stop_position(current_pos, disp, map):
     while i < abs(disp[0]) + abs(disp[1]):
         current_pos = calculate_next_border_position(current_pos, disp)  # Calculate position when leaving the square
         displacement_result = calculate_disp_result(current_pos, disp, map)  # Calculate object in next Square or Squares
+        is_int_x = is_int(current_pos[0])
+        is_int_y = is_int(current_pos[1])
 
-        if is_int(current_pos[0]) and is_int(current_pos[1]) and displacement_result == DispResult.CRASH:
+        if is_int_x and is_int_y and displacement_result == DispResult.CRASH:
             final_position = (
                 current_pos[0] - (disp[0] / abs(disp[0])) * 0.5, current_pos[1] - (disp[1] / abs(disp[1])) * 0.5)
             return final_position, displacement_result
 
-        if is_int(current_pos[0]) and is_int(current_pos[1]) and displacement_result == DispResult.FINISH:
+        elif is_int_x and is_int_y and displacement_result == DispResult.FINISH:
             final_position = (
                 current_pos[0] + (disp[0] / abs(disp[0])) * 0.5, current_pos[1] + (disp[1] / abs(disp[1])) * 0.5)
             return final_position, displacement_result
@@ -164,11 +164,11 @@ def calculate_stop_position(current_pos, disp, map):
             final_position = get_middle_position(current_pos, (-1 * disp[0], -1 * disp[1]))
             return final_position, displacement_result
 
-        if displacement_result == DispResult.FINISH:
+        elif displacement_result == DispResult.FINISH:
             final_position = get_middle_position(current_pos, disp)
             return final_position, displacement_result
 
-        if is_int(current_pos[0]) and is_int(current_pos[1]):
+        if is_int_x and is_int_y:
             i += 1
 
         i += 1

@@ -17,7 +17,7 @@ def print_mat(mat):
 class Graph:
     # construtor de classe
     def __init__(self):
-        self.nodes = []  # lista com os nodos do grafo
+        self.nodes = set()  # lista com os nodos do grafo
         self.graph = {}  # dicionario do grafo
         self.h1 = {}  # heurística da distância até a posição final
         self.h2 = {}  # heurística da velocidade
@@ -49,11 +49,11 @@ class Graph:
 
     def add_edge(self, node1, node2, cost):
         if node1 not in self.nodes:
-            self.nodes.append(node1)
+            self.nodes.add(node1)
             self.graph[node1] = set()
 
         if node2 not in self.nodes:
-            self.nodes.append(node2)
+            self.nodes.add(node2)
             self.graph[node2] = set()
 
         self.graph[node1].add((node2, cost))
@@ -163,9 +163,37 @@ class Graph:
         plt.draw()
         plt.show()
 
+    @staticmethod
+    def minor_length_path(paths):
+        caminhos = list()
+
+        for path in paths.values():
+            caminhos.append(path)
+
+        length = len(caminhos[0])
+        for path in caminhos:
+            if len(path) < length:
+                length = len(path)
+
+        return length
+
+    @staticmethod
+    def node_in_other_paths(node, iteration_number, paths):
+        if len(paths.values()) < 1:
+            return False
+
+        minor_length = Graph.minor_length_path(paths) #[X X X, X X X X X , X X]
+        if minor_length <= iteration_number:
+            return False
+
+        for list in paths.values():
+            if list[iteration_number].pos == node.pos:
+                return True
+        return False
+
     # 0 - (1,2) -> (1,3) -> (1,4)
     # 1 - (1,4) -> (1,3)
-    def DFS(self, start, end, path, visited, pos_visited, paths, iter_number):
+    def DFS(self, start, end, path, visited, pos_visited, paths=dict(), iter_number=0):
         path.append(start)
         visited.add(start)
         pos_visited.append(start.pos)  # debug
@@ -177,7 +205,7 @@ class Graph:
 
         for adj, cost in self.graph[start]:
             if adj not in visited:
-                if not adj_in_others_path(adj, paths, iter_number):
+                if not Graph.node_in_other_paths(adj, iter_number, paths):
                     ret = self.DFS(adj, end, path, visited, pos_visited, paths, iter_number+1)
                     if ret is not None:
                         return ret
@@ -185,7 +213,7 @@ class Graph:
         path.pop()  # se nao encontrar, remover o que está no caminho
         return None
 
-    def BFS(self, start, end, paths):
+    def BFS(self, start, end, paths=dict()):
         pos_visited = [start]  # debug
         visited = {start}
         q = Queue()
@@ -212,7 +240,7 @@ class Graph:
             if not path_found:
                 for (adj, cost) in self.graph[node]:
                     i = level[node] + 1
-                    if adj not in visited and not adj_in_others_path(adj, paths, i):
+                    if adj not in visited and not Graph.node_in_other_paths(adj, i, paths):
                         q.put(adj)
                         parents[adj] = node
                         level[adj] = i
@@ -230,7 +258,7 @@ class Graph:
             total_cost = self.calc_path_cost(path)
             return path, total_cost, pos_visited
 
-    def greedy(self, start, end, type, paths):
+    def greedy(self, start, end, type, paths=dict()):
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
@@ -273,11 +301,10 @@ class Graph:
             # para todos os vizinhos do nodo corrente
             for (adj, cost) in self.graph[n]:
                 i = level[n] + 1
-                if adj not in open_list and adj not in closed_list:
+                if adj not in open_list and adj not in closed_list and not Graph.node_in_other_paths(adj, i, paths):
                     open_list.add(adj)
                     parents[adj] = n
-                    if not adj_in_others_path(adj, paths, i):
-                        level[adj] = i
+                    level[adj] = i
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
@@ -285,13 +312,13 @@ class Graph:
 
         return None
 
-    def a_star(self, start, end, type, paths):
+    def a_star(self, start, end, type, paths=dict()):
         if type == "distance":
             heuristic = self.h1
         elif type == "velocity":
             heuristic = self.h2
 
-        levels = {start: 0}
+        level = {start: 0}
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
         closed_list = set()  # nodos visitados
@@ -305,8 +332,7 @@ class Graph:
 
             # encontra nodo com a menor heuristica
             for node in open_list:
-                i = levels[n] + 1
-                if n is None or (heuristic[node] + costs[node]) < (heuristic[n] + costs[n]) and not adj_in_others_path(adj, paths, i):
+                if n is None or (heuristic[node] + costs[node]) < (heuristic[n] + costs[n]):
                     n = node
 
             pos_visited.append(n.pos)  # debug
@@ -327,10 +353,11 @@ class Graph:
                     return reconst_path, self.calc_path_cost(reconst_path), pos_visited
 
             for adj, cost in self.graph[n]:
-                if adj not in open_list and adj not in closed_list:
+                i = level[n] + 1
+                if adj not in open_list and adj not in closed_list and not Graph.node_in_other_paths(adj, i, paths):
                     open_list.add(adj)
                     parents[adj] = n
-                    levels[adj] = i
+                    level[adj] = i
                     costs[adj] = costs[n] + cost
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados

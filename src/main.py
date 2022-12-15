@@ -20,9 +20,10 @@ def menu_setup_race():
             exit()
 
         case 1:
-            path = "../circuits/melodudas.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
+            path = "../circuits/circuito3.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
             matrix, start, end = parser(path)
             race = Race(matrix, start, end)
+            race.build_graph()
 
             print("\nCircuito carregado com sucesso!\n")
 
@@ -217,6 +218,8 @@ def menu_heuristic(race):
 
 
 def menu_multiplayer(race):
+    heuristics = list()
+
     print()
     print("======================================")
     print("Escolha dos algoritmos de cada jogador")
@@ -240,9 +243,17 @@ def menu_multiplayer(race):
 
             print()
 
+        if opt == 3 or opt == 4:
+            choice = menu_heuristic(race)
+            heuristics.append(choice)
+        else:
+            heuristics.append(None)
+
         race.player_algorithms[i] = opt
 
         i += 1
+
+    return heuristics
 
 
 def menu(race):
@@ -266,12 +277,11 @@ def menu(race):
             if len(race.start) < 2:
                 print("\nJogadores insuficientes para iniciar o modo multiplayer!\n")
             else:
-                menu_multiplayer(race)
-                race.multiplayer()
+                heuristics = menu_multiplayer(race)
+                race.multiplayer(heuristics)
 
-        elif num_players > opt-1 > 0:
+        elif num_players >= opt-1 > 0:
             player = race.start[opt-2]
-            race.build_graph(initial_state=player)
             print()
             menu_player(race, player)
 
