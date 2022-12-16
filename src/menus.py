@@ -90,7 +90,6 @@ def menu_choose_player(race):
         opt = int(input("Introduza a sua opção: "))
 
         if num_players >= opt > 0:
-            print("entrei")
             player = race.start[opt - 1]
             print()
             menu_singleplayer(race, player)
@@ -201,44 +200,48 @@ def menu_singleplayer(race, player):
     """
     opt = -1
 
-    opt = int(input("Introduza a sua opção: "))
+    while opt != 0:
+        print_menu_singleplayer()
 
-    match opt:
-        case 0:
-            drawer.clean_dir()
+        opt = int(input("Introduza a sua opção: "))
 
-        case 1:
-            print()
-            print(race.graph)
+        match opt:
+            case 0:
+                drawer.clean_dir()
+                exit()
 
-        case 2:
-            print()
-            race.graph.print_nodes()
+            case 1:
+                print()
+                print(race.graph)
 
-        case 3:
-            race.graph.print_edges()
+            case 2:
+                print()
+                race.graph.print_nodes()
 
-        case 4:
-            print()
-            choice = menu_heuristic(race)
-            race.graph.print_heuristics(choice)
+            case 3:
+                race.graph.print_edges()
 
-        case 5:
-            race.graph.draw()
+            case 4:
+                print()
+                choice = menu_heuristic(race)
+                race.graph.print_heuristics(choice)
 
-        case 6:
-            drawer.show_circuit_plot(race.matrix)
+            case 5:
+                race.graph.draw()
 
-        case 7:
-            print()
-            menu_choose_algorithm(race, player)
+            case 6:
+                drawer.show_circuit_plot(race.matrix)
 
-        case 8:
-            print()
-            menu_play_mode(race)
+            case 7:
+                print()
+                menu_choose_algorithm(race, player)
 
-        case other:
-            print("\nOpção inválida!\n")
+            case 8:
+                print()
+                menu_play_mode(race)
+
+            case other:
+                print("\nOpção inválida!\n")
 
 
 def print_choose_alg_mode():
