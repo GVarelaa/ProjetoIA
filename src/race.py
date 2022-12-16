@@ -127,8 +127,8 @@ class Race:
         if initial_state is None:
             initial_state = self.start[0]
 
-        states = {deepcopy(initial_state)}
-        visited = {deepcopy(initial_state)}
+        states = {initial_state}
+        visited = {initial_state}
 
         while states:
             state = states.pop()
@@ -147,7 +147,7 @@ class Race:
 
             self.graph.add_heuristic(state, Race.calculate_shorter_distance(state, self.end),
                                      "distance")  # distância às posiçoes finais
-            self.graph.add_heuristic(state, math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2),
+            self.graph.add_heuristic(state, -(math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2)),
                                      "velocity")  # velocidade atual
 
 
@@ -187,6 +187,7 @@ class Race:
         :return: Caminho, Custo e Posições Visitadas
         """
         path, cost, pos_visited = self.graph.greedy(initial_state, self.end, type, paths)
+        return path, cost, pos_visited
 
     def check_win(self, players):
         """
@@ -207,8 +208,8 @@ class Race:
         :return:
         """
         # paths ,costs
-        players = deepcopy(self.start)
-        matrix = deepcopy(self.matrix)
+        players = self.start
+        matrix = self.matrix
         paths = dict()
 
         for i in range(len(players)):

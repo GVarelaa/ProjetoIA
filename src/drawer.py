@@ -82,16 +82,32 @@ def show_multiplayer_paths(paths, circuit):
     :param circuit: Circuito
     :return:
     """
+    lists = list(paths.values())
+    max_len = max_length_path(list(paths.values()))
+
+    for i in range(max_len):
+        plt, ax = draw_circuit(circuit)
+        draw_iterative_path(list(paths.values()), i+1, plt, ax)
+
+
+def max_length_path(paths):
+    length = len(paths[0])
+    for path in paths:
+        if len(path) > length:
+            length = len(path)
+
+    return length
+
+
+def draw_iterative_path(paths, iteration, plt, ax):
     colors = ['darkviolet', 'darkorange', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen']
     i = 0
-
-    plt, ax = draw_circuit(circuit)
-
-    for path in paths.values():
-        plt = draw_path(plt, ax, path, colors[i])
-        i += 1
+    for path in paths:
+        plt = draw_path(plt, ax, path[:iteration], colors[i])
+        i+=1
 
     plt.show()
+
 
 
 def calculate_displacement(pos1, pos2):
