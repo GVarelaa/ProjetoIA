@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from queue import Queue
 from copy import deepcopy
 import drawer
+from src import position_calculator
 
 
 def print_mat(mat):
@@ -253,7 +254,7 @@ class Graph:
         return length
 
     @staticmethod
-    def node_in_other_paths(node, iteration_number, paths):
+    def node_in_other_paths(start_node, final_node, iteration_number, paths):
         if len(paths.values()) < 1:
             return False
 
@@ -261,13 +262,15 @@ class Graph:
         if minor_length <= iteration_number:
             return False
 
+        disp = drawer.calculate_displacement(start_node.pos, final_node.pos)
+        disp_squares = position_calculator.squares_visited(start_node.pos, disp)
+
         for list in paths.values():
-            if list[iteration_number].pos == node.pos:
-                return True
+            for square in disp_squares:
+                if list[iteration_number].pos == square:
+                    return True
         return False
 
-    # 0 - (1,2) -> (1,3) -> (1,4)
-    # 1 - (1,4) -> (1,3)
     def DFS(self, start, end, path, visited, pos_visited, paths=dict(), iter_number=0):
         """
         Algoritmo "Depth-First-Search"
@@ -291,7 +294,7 @@ class Graph:
 
         for adj, cost in self.graph[start]:
             if adj not in visited:
-                if not Graph.node_in_other_paths(adj, iter_number, paths):
+                if not Graph.node_in_other_paths(state, adj, iter_number, paths):
                     ret = self.DFS(adj, end, path, visited, pos_visited, paths, iter_number+1)
                     if ret is not None:
                         return ret
@@ -333,7 +336,7 @@ class Graph:
             if not path_found:
                 for (adj, cost) in self.graph[node]:
                     i = level[node] + 1
-                    if adj not in visited and not Graph.node_in_other_paths(adj, i, paths):
+                    if adj not in visited and not Graph.node_in_other_paths(state, adj, i, paths):
                         q.put(adj)
                         parents[adj] = node
                         level[adj] = i
@@ -402,7 +405,7 @@ class Graph:
             # para todos os vizinhos do nodo corrente
             for (adj, cost) in self.graph[n]:
                 i = level[n] + 1
-                if adj not in open_list and adj not in closed_list and not Graph.node_in_other_paths(adj, i, paths):
+                if adj not in open_list and adj not in closed_list and not Graph.node_in_other_paths(n, adj, i, paths):
                     open_list.add(adj)
                     parents[adj] = n
                     level[adj] = i
@@ -463,7 +466,7 @@ class Graph:
 
             for adj, cost in self.graph[n]:
                 i = level[n] + 1
-                if adj not in open_list and adj not in closed_list and not Graph.node_in_other_paths(adj, i, paths):
+                if adj not in open_list and adj not in closed_list and not Graph.node_in_other_paths(n, adj, i, paths):
                     open_list.add(adj)
                     parents[adj] = n
                     level[adj] = i
