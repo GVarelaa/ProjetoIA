@@ -102,6 +102,19 @@ def get_middle_position(border_position, displ):
     :param displ: Deslocamento
     :return: Posição do meio do quadrado
     """
+    if int(border_position[1]) == border_position[1] and int(border_position[0]) == border_position[0]: # Case (int, int)
+        if displ[0] < 0 and displ[1] < 0:  # esquerda baixo
+            return (border_position[0] - 0.5, border_position[1] - 0.5)  # Next position block
+
+        elif displ[0] < 0 and displ[1] > 0:  # esquerda cima
+            return (border_position[0] - 0.5, border_position[1] + 0.5)
+
+        elif displ[0] > 0 and displ[1] < 0:  # direita baixo
+            return (border_position[0] + 0.5, border_position[1] - 0.5)
+
+        elif displ[0] > 0 and displ[1] > 0:  # direita cima
+            return (border_position[0] + 0.5, border_position[1] + 0.5)
+
     if int(border_position[1]) == border_position[1]:  # Case (float, int)
         if displ[0] == 0:  # Vertical motion
             return border_position[0], border_position[1] + displ[1] / (abs(displ[1]) * 2)
@@ -214,3 +227,22 @@ def calculate_stop_position(current_pos, disp, map):
     final_position = get_middle_position(current_pos, disp)
     displacement_result = DispResult.ADVANCE
     return final_position, displacement_result
+
+def squares_visited(start_pos, disp):
+    squares_visited = list()
+
+    i = 0
+    current_pos = start_pos
+    while i < abs(disp[0]) + abs(disp[1]):
+        current_pos = calculate_next_border_position(current_pos, disp)  # Calculate position when leaving the square
+        middle_pos = get_middle_position(current_pos, disp)
+        squares_visited.insert(i, middle_pos)
+
+        is_int_x = int(current_pos[0]) == current_pos[0]
+        is_int_y = int(current_pos[1]) == current_pos[1]
+
+        if is_int_x and is_int_y:
+            i += 1
+        i+=1
+
+    return squares_visited
