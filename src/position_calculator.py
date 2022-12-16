@@ -8,24 +8,15 @@ class DispResult(Enum):
     FINISH = 3
 
 
-def is_int(num):
-    """
-    Verifica se é um inteiro
-    :param num: Número
-    :return: Bool
-    """
-    return math.floor(num) == num
-
-
 # Example: nextInt(3) = 4
 #          nextInt(2.5) = 3
 def next_int(num):
     """
-    Incrementa um número
+    Calcula o primeiro inteiro que é maior que um dado número
     :param num: Número
-    :return: Numero incrementado
+    :return: Primeiro inteiro à direita do número indicado
     """
-    if is_int(num):
+    if int(num) == num:
         return num + 1
     else:
         return math.ceil(num)
@@ -35,11 +26,11 @@ def next_int(num):
 #          nextInt(2.5) = 2
 def last_int(num):
     """
-    Decremeneta um número
+    Calcula o primeiro inteiro que é menor que um dado número
     :param num: Número
-    :return: Número decrementado
+    :return: Primeiro inteiro à esquerda do número indicado
     """
-    if is_int(num):
+    if int(num) == num:
         return num - 1
     else:
         return math.floor(num)
@@ -49,7 +40,7 @@ def calculate_next_border_position(current_pos, disp):
     Calcula a borda da proxima posição
     :param current_pos: Posição Atual
     :param disp: Deslocamento
-    :return: Posição
+    :return: Posição de fronteira com a próxima posição
     """
     if disp[1] == 0:  # Horizontal displacement
         if disp[0] < 0:
@@ -92,10 +83,10 @@ def calculate_next_border_position(current_pos, disp):
 # Get the object in that map position
 def get_map_object(position, map):
     """
-    Destaca uma posição no mapa
-    :param position: Posição
+    Destaca o objeto numa posição no mapa
+    :param position: Posição a verificar
     :param map: mapa
-    :return: mapa
+    :return: objeto nessa posição (ex: 'X' or '-')
     """
     map_position = (math.floor(position[0]), math.floor(position[1]))
     matrix_line = len(map) - map_position[1] - 1
@@ -106,12 +97,12 @@ def get_map_object(position, map):
 # Get middle position of the next square, given border_position and displacement
 def get_middle_position(border_position, displ):
     """
-    Obtem a posição intemédia
+    Obtem a posição intemédia de um quadrado dada posição da borda e o deslocamento
     :param border_position: Posição da borda
     :param displ: Deslocamento
-    :return: Posição
+    :return: Posição do meio do quadrado
     """
-    if is_int(border_position[1]):  # Case (float, int)
+    if int(border_position[1]) == border_position[1]:  # Case (float, int)
         if displ[0] == 0:  # Vertical motion
             return border_position[0], border_position[1] + displ[1] / (abs(displ[1]) * 2)
         else:
@@ -128,10 +119,10 @@ def calculate_disp_result(border_position, displ, map):
     Calcula o resultado do deslocamento
     :param border_position: Posição da borda
     :param displ: Deslocamento
-    :param map: mapa
-    :return: POsição
+    :param map: mapa (matriz)
+    :return: Posição (é sempre o centro de um quadrado)
     """
-    if is_int(border_position[0]) and is_int(border_position[1]):  # Esquina
+    if int(border_position[0]) == border_position[0] and int(border_position[1]) == border_position[1]:  # Esquina
         if displ[0] < 0 and displ[1] < 0:  # esquerda baixo
             first_point = (border_position[0] - 0.5, border_position[1] + 0.5)  # Can block displacement
             second_point = (border_position[0] + 0.5, border_position[1] - 0.5)  # Can block displacement
@@ -194,8 +185,8 @@ def calculate_stop_position(current_pos, disp, map):
     while i < abs(disp[0]) + abs(disp[1]):
         current_pos = calculate_next_border_position(current_pos, disp)  # Calculate position when leaving the square
         displacement_result = calculate_disp_result(current_pos, disp, map)  # Calculate object in next Square or Squares
-        is_int_x = is_int(current_pos[0])
-        is_int_y = is_int(current_pos[1])
+        is_int_x = int(current_pos[0]) == current_pos[0]
+        is_int_y = int(current_pos[1]) == current_pos[1]
 
         if is_int_x and is_int_y and displacement_result == DispResult.CRASH:
             final_position = (
@@ -208,7 +199,7 @@ def calculate_stop_position(current_pos, disp, map):
             return final_position, displacement_result
 
         if displacement_result == DispResult.CRASH:
-            final_position = get_middle_position(current_pos, (-1 * disp[0], -1 * disp[1]))
+            final_position = get_middle_position(current_pos, (-1 * disp[0], -1 * disp[1])) # Return last position, before wall
             return final_position, displacement_result
 
         elif displacement_result == DispResult.FINISH:
