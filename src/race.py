@@ -160,6 +160,10 @@ class Race:
         path, cost, pos_visited = self.graph.DFS(initial_state, self.end, [], set(), [], paths)
         return path, cost, pos_visited
 
+    def iterative_DFS_solution(self, initial_state):
+        path, cost = self.graph.IDDFS(initial_state, self.end, 10000)
+        return path, cost
+
     def BFS_solution(self, initial_state, paths=dict()):
         """
         Calcula a solução do algoritmo BFS a partir de um estado inicial
@@ -167,6 +171,10 @@ class Race:
         :return: Caminho, Custo e Posições vistadas
         """
         path, cost, pos_visited = self.graph.BFS(initial_state, self.end, paths)
+        return path, cost, pos_visited
+
+    def uniform_cost_solution(self, initial_state, paths=dict()):
+        path, cost, pos_visited = self.graph.uniform_cost(initial_state, self.end, paths)
         return path, cost, pos_visited
 
     def a_star_solution(self, initial_state, type, paths=dict()):

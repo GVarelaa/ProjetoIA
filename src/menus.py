@@ -28,7 +28,7 @@ def menu_setup_race():
             exit()
 
         case 1:
-            path = "../circuits/teste.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
+            path = "../circuits/circuito3.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
             matrix, start, end = parser(path)
             race = Race(matrix, start, end)
             race.build_graph()
@@ -284,6 +284,8 @@ def print_choose_alg():
     print("2... BFS")
     print("3... Greedy")
     print("4... A*")
+    print("5... Custo uniforme")
+    print("6... Iterativo")
     print("=====================")
 
 
@@ -373,6 +375,40 @@ def menu_choose_algorithm(race, player):
                 if debug:
                     print("A gerar GIF com iterações...\n")
                     drawer.create_gif(race.matrix, all_visited, "astar_debug")
+                    print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
+
+            case 5:
+                print()
+                debug = menu_choose_alg_mode(race)
+
+                path, cost, pos_visited = race.uniform_cost_solution(player)
+
+                print()
+                Graph.print_path(path, cost)
+
+                drawer.show_path_plot(race.matrix, path)
+
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, pos_visited, "uniform_cost_debug")
+                    print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
+
+            case 6:
+                print()
+                debug = menu_choose_alg_mode(race)
+
+                path, cost = race.iterative_DFS_solution(player)
+
+                print()
+                Graph.print_path(path, cost)
+
+                drawer.show_path_plot(race.matrix, path)
+
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, pos_visited, "iterative_dfs_debug")
                     print("GIF gerado com sucesso!\n")
                     time.sleep(1)
 
