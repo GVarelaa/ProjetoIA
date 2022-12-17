@@ -258,16 +258,12 @@ class Graph:
         if len(paths.values()) < 1:
             return False
 
-        minor_length = Graph.minor_length_path(paths) #[X X X, X X X X X , X X]
-        if minor_length <= iteration_number:
-            return False
-
         disp = drawer.calculate_displacement(start_node.pos, final_node.pos)
         disp_squares = position_calculator.squares_visited(start_node.pos, disp)
 
         for list in paths.values():
             for square in disp_squares:
-                if list[iteration_number].pos == square:
+                if len(list) > iteration_number and list[iteration_number].pos == square:
                     return True
         return False
 
