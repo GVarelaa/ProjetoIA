@@ -267,7 +267,7 @@ class Graph:
                     return True
         return False
 
-    def DFS(self, start, end, path, visited, pos_visited, paths=dict(), iter_number=0):
+    def DFS(self, start, end, path, visited, pos_visited, paths=dict(), iter_number=0, depth=-1):
         """
         Algoritmo "Depth-First-Search"
         :param start: Posição inicial
@@ -288,47 +288,30 @@ class Graph:
                 total_cost = self.calc_path_cost(path)
                 return path, total_cost, pos_visited
 
-        for adj, cost in self.graph[start]:
-            if adj not in visited:
-                if not Graph.node_in_other_paths(state, adj, iter_number, paths):
-                    ret = self.DFS(adj, end, path, visited, pos_visited, paths, iter_number+1)
-                    if ret is not None:
-                        return ret
-
-        path.pop()  # se nao encontrar, remover o que está no caminho
-        return None
-
-    def DLS(self, start, end, path, visited, max_depth):
-        path.append(start)
-        visited.add(start)
-
-        for state in end:
-            if state.pos == start.pos:
-                total_cost = self.calc_path_cost(path)
-                return True, path, total_cost
-
-        if max_depth <= 0:
-            return False, None, None
+        if depth == 0:
+            return None
 
         for adj, cost in self.graph[start]:
-            if adj not in visited:
-                ret = self.DLS(adj, end, path, visited, max_depth-1)
+            if adj not in visited and not Graph.node_in_other_paths(state, adj, iter_number, paths):
+                ret = self.DFS(adj, end, path, visited, pos_visited, paths, iter_number+1, depth-1)
                 if ret is not None:
                     return ret
 
         path.pop()  # se nao encontrar, remover o que está no caminho
         return None
 
-    def IDDFS(self, start, end, max_depth):
+    def iterative_DFS(self, start, end, paths=dict()):
+        i = 1
+        path = []
+        cost = 0
+        path_found = False
+        ret = None
 
-        # Repeatedly depth-limit search till the
-        # maximum depth
-        for i in range(max_depth):
-            path_found, path, cost = self.DLS(start, end, [], set(), i)
-            if path_found:
-                return path, cost
+        while ret is None:
+            ret = self.DFS(start, end, path=[], visited=set(), pos_visited=[], paths=paths, depth=i)
+            i += 1
 
-        return False
+        return ret
 
     def BFS(self, start, end, paths=dict()):
         """
@@ -382,20 +365,14 @@ class Graph:
             total_cost = self.calc_path_cost(path)
             return path, total_cost, pos_visited
 
-    def uniform_cost(self, start, end, type, paths=dict()):
+    def uniform_cost(self, start, end, paths=dict()):
         """
         Algoritmo Custo Uniforme
         :param start: Posição Inicial
         :param end: Posição Final
-        :param type: Tipo
         :param paths: Caminhos
         :return:
         """
-        if type == "distance":
-            heuristic = self.h1
-        elif type == "velocity":
-            heuristic = self.h2
-
         level = {start: 0}
 
         open_list = {start}  # nodos visitados + vizinhos que ainda não foram todos visitados
@@ -443,8 +420,6 @@ class Graph:
             closed_list.add(n)
 
         return None
-
-
 
     def greedy(self, start, end, type, paths=dict()):
         """

@@ -150,7 +150,6 @@ class Race:
             self.graph.add_heuristic(state, -(math.sqrt(state.vel[0] ** 2 + state.vel[1] ** 2)),
                                      "velocity")  # velocidade atual
 
-
     def DFS_solution(self, initial_state, paths=dict()):
         """
         Calcula a solução do algoritmo DFS a partir de um estado inicial
@@ -160,9 +159,14 @@ class Race:
         path, cost, pos_visited = self.graph.DFS(initial_state, self.end, [], set(), [], paths)
         return path, cost, pos_visited
 
-    def iterative_DFS_solution(self, initial_state):
-        path, cost = self.graph.IDDFS(initial_state, self.end, 10000)
-        return path, cost
+    def iterative_DFS_solution(self, initial_state, paths=dict()):
+        """
+        Calcula a solução do algoritmo DFS iterativo a partir de um estado inicial
+        :param initial_state: Estado Inicial
+        :return: Caminho, Custo e Posições vistadas
+        """
+        path, cost, pos_visited = self.graph.iterative_DFS(initial_state, self.end, paths)
+        return path, cost, pos_visited
 
     def BFS_solution(self, initial_state, paths=dict()):
         """

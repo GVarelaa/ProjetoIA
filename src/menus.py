@@ -281,11 +281,11 @@ def print_choose_alg():
     print("=====================")
     print("Escolha de Algoritmo")
     print("1... DFS")
-    print("2... BFS")
-    print("3... Greedy")
-    print("4... A*")
-    print("5... Custo uniforme")
-    print("6... Iterativo")
+    print("2... DFS Iterativo")
+    print("3... BFS")
+    print("4... Custo Uniforme")
+    print("5... Greedy")
+    print("6... A*")
     print("=====================")
 
 
@@ -325,6 +325,23 @@ def menu_choose_algorithm(race, player):
                 print()
                 debug = menu_choose_alg_mode(race)
 
+                path, cost, pos_visited = race.iterative_DFS_solution(player)
+
+                print()
+                Graph.print_path(path, cost)
+
+                drawer.show_path_plot(race.matrix, path)
+
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, pos_visited, "iterative_dfs_debug")
+                    print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
+
+            case 3:
+                print()
+                debug = menu_choose_alg_mode(race)
+
                 path, cost, pos_visited = race.BFS_solution(player)
 
                 print()
@@ -338,7 +355,24 @@ def menu_choose_algorithm(race, player):
                     print("GIF gerado com sucesso!\n")
                     time.sleep(1)
 
-            case 3:
+            case 4:
+                print()
+                debug = menu_choose_alg_mode(race)
+
+                path, cost, pos_visited = race.uniform_cost_solution(player)
+
+                print()
+                Graph.print_path(path, cost)
+
+                drawer.show_path_plot(race.matrix, path)
+
+                if debug:
+                    print("A gerar GIF com iterações...\n")
+                    drawer.create_gif(race.matrix, pos_visited, "uniform_cost_debug")
+                    print("GIF gerado com sucesso!\n")
+                    time.sleep(1)
+
+            case 5:
                 print()
                 debug = menu_choose_alg_mode(race)
 
@@ -358,7 +392,7 @@ def menu_choose_algorithm(race, player):
                     print("GIF gerado com sucesso!\n")
                     time.sleep(1)
 
-            case 4:
+            case 6:
                 print()
                 debug = menu_choose_alg_mode(race)
 
@@ -375,40 +409,6 @@ def menu_choose_algorithm(race, player):
                 if debug:
                     print("A gerar GIF com iterações...\n")
                     drawer.create_gif(race.matrix, all_visited, "astar_debug")
-                    print("GIF gerado com sucesso!\n")
-                    time.sleep(1)
-
-            case 5:
-                print()
-                debug = menu_choose_alg_mode(race)
-
-                path, cost, pos_visited = race.uniform_cost_solution(player)
-
-                print()
-                Graph.print_path(path, cost)
-
-                drawer.show_path_plot(race.matrix, path)
-
-                if debug:
-                    print("A gerar GIF com iterações...\n")
-                    drawer.create_gif(race.matrix, pos_visited, "uniform_cost_debug")
-                    print("GIF gerado com sucesso!\n")
-                    time.sleep(1)
-
-            case 6:
-                print()
-                debug = menu_choose_alg_mode(race)
-
-                path, cost = race.iterative_DFS_solution(player)
-
-                print()
-                Graph.print_path(path, cost)
-
-                drawer.show_path_plot(race.matrix, path)
-
-                if debug:
-                    print("A gerar GIF com iterações...\n")
-                    drawer.create_gif(race.matrix, pos_visited, "iterative_dfs_debug")
                     print("GIF gerado com sucesso!\n")
                     time.sleep(1)
 
