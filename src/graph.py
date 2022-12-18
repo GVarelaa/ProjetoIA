@@ -1,37 +1,25 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from queue import Queue
-from copy import deepcopy
 import drawer
 from src import position_calculator
-
-
-def print_mat(mat):
-    """
-    Imprime a matriz
-    :param mat: Matriz
-    :return:
-    """
-    string = ""
-    for l in mat:
-        for c in l:
-            string = string + str(c) + " "
-        string += "\n"
-    print(string)
 
 
 class Graph:
     # construtor de classe
     def __init__(self):
+        """
+        Construtor de um grafo
+        """
         self.nodes = set()  # lista com os nodos do grafo
-        self.graph = {}  # dicionario do grafo
-        self.h1 = {}  # heurística da distância até a posição final
-        self.h2 = {}  # heurística da velocidade
+        self.graph = dict()  # dicionario do grafo
+        self.h1 = dict()  # heurística da distância até a posição final
+        self.h2 = dict()  # heurística da velocidade
 
     def __str__(self):
         """
-
-        :return:
+        Devolve a representação em string do objeto Graph
+        :return: String
         """
         string = ""
         for key in self.graph.keys():
@@ -41,38 +29,13 @@ class Graph:
                 string += "     " + str(edge) + "\n"
 
         return string
-
-    def __repr__(self):
-        """
-
-        :return:
-        """
-        string = ""
-        for key in self.graph.keys():
-            string = string + str(key) + ": \n"
-
-            for edge in self.graph[key]:
-                string += "     " + str(edge) + "\n"
-
-        return string
-
-    def get_node_by_pos(self, pos):
-        """
-        Obtem o nodo de uma posição
-        :param pos: Posição
-        :return: Nodo
-        """
-        for node in self.nodes:
-            if node.get_pos() == pos:
-                return node
 
     def add_edge(self, node1, node2, cost):
         """
-        Adiciona uma aresta
-        :param node1: Primeiro Nodo
-        :param node2: Segundo Nodo
-        :param cost: Custo
-        :return:
+        Adiciona uma aresta entre os nodos passados como argumento
+        :param node1: Primeiro nodo
+        :param node2: Segundo nodo
+        :param cost: Custo da aresta
         """
         if node1 not in self.nodes:
             self.nodes.add(node1)
@@ -87,10 +50,9 @@ class Graph:
     def add_heuristic(self, node, value, type):
         """
         Adiciona uma heurística
-        :param node: Nodo
-        :param value: Valor
-        :param type: Tipo
-        :return:
+        :param node: Nodo ao qual será adicionada
+        :param value: Valor da heurística
+        :param type: Tipo da heurística
         """
         if type == "distance":
             heuristic = self.h1
@@ -102,25 +64,27 @@ class Graph:
 
     def get_neighbours(self, node):
         """
-        Obtem a vizinhança de um nodo
+        Obtém a vizinhança de um nodo
         :param node: Nodo
         :return: Lista de nodos vizinhos
         """
-        lista = []
-        for (adj, peso) in self.graph[node]:
-            lista.append((adj, peso))
-        return lista
+        neighbours = []
+
+        for (adj, cost) in self.graph[node]:
+            neighbours.append((adj, cost))
+
+        return neighbours
 
     def get_arc_cost(self, node1, node2):
         """
-        Obtem o custo entre dois nodos
-        :param node1: Primeiro Nodo
-        :param node2: Segundo Nodo
-        :return: Custo do arco
+        Obtém o custo de uma aresta entre 2 nodos dados, caso exista
+        :param node1: Primeiro nodo
+        :param node2: Segundo nodo
+        :return: Custo da aresta
         """
         total = 0
-
         adjs = self.graph[node1]  # lista de arestas para aquele nodo
+
         for (node, cost) in adjs:
             if node == node2:
                 total = cost
@@ -148,7 +112,6 @@ class Graph:
         Imprime o custo e os nodos de um caminho
         :param path: Caminho
         :param cost: Custo
-        :return:
         """
         counter = 1
         res = ""
@@ -162,8 +125,7 @@ class Graph:
 
     def print_nodes(self):
         """
-        Imprime os nodos
-        :return:
+        Imprime os nodos de um grafo
         """
         nodes = ""
 
@@ -174,8 +136,7 @@ class Graph:
 
     def print_edges(self):
         """
-        Imrime as Arestas
-        :return:
+        Imrime as arestas de um grafo
         """
         edges = ""
 
@@ -187,9 +148,8 @@ class Graph:
 
     def print_heuristics(self, type):
         """
-        Imprime as heurísticas
-        :param type: tipo da heurística
-        :return:
+        Imprime as heurísticas de um grafo
+        :param type: Tipo da heurística
         """
         if type == "distance":
             heuristic = self.h1
@@ -203,58 +163,32 @@ class Graph:
 
         print(heuristics)
 
-    def count_edges(self):
-        """
-        Conta o número de Arestas
-        :return:
-        """
-        counter = 0
-        for node in self.graph.keys():
-            for (adj, cost) in self.graph[node]:
-                counter += 1
-
-        return counter
-
-    def draw(self):
-        """
-        Desenha e imprime um Grafo
-        :return:
-        """
-        verts = self.nodes
-        g = nx.Graph()
-
-        # Converter para o formato usado pela biblioteca networkx
-        for node in verts:
-            g.add_node(str(node))
-            for (adj, cost) in self.graph[node]:
-                l = (node, adj)
-                g.add_edge(str(node), str(adj), cost=cost)
-
-        # desenhar o grafo
-        pos = nx.spring_layout(g)
-        nx.draw_networkx(g, pos, with_labels=True, font_weight='bold')
-        labels = nx.get_edge_attributes(g, 'cost')
-        nx.draw_networkx_edge_labels(g, pos, edge_labels=labels)
-
-        plt.draw()
-        plt.show()
-
     @staticmethod
     def minor_length_path(paths):
-        caminhos = list()
+        """
+        Devolve o caminho com menor comprimento
+        :param paths: Dicionário com os caminhos
+        :return: Comprimento do menor caminho
+        """
+        min = len(list(paths.values())[0])
 
-        for path in paths.values():
-            caminhos.append(path)
+        for path in list(paths.values()):
+            if len(path) < min:
+                min = len(path)
 
-        length = len(caminhos[0])
-        for path in caminhos:
-            if len(path) < length:
-                length = len(path)
-
-        return length
+        return min
 
     @staticmethod
     def node_in_other_paths(start_node, final_node, iteration_number, paths):
+        """
+        Verifica se há colisão entre jogadores
+        Dado um nodo inicial e um nodo final, verifica-se se o deslocamento embate numa posição onde tenha estado algum jogador na iteração dada
+        :param start_node: Nodo inicial
+        :param final_node: Nodo final
+        :param iteration_number: Iteração
+        :param paths: Dicionário com os caminhos dos vários jogadores
+        :return: True em caso afirmativo, caso contrário False
+        """
         if len(paths.values()) < 1:
             return False
 
@@ -271,12 +205,13 @@ class Graph:
         """
         Algoritmo "Depth-First-Search"
         :param start: Posição inicial
-        :param end: Posição final
-        :param path: Caminho
-        :param visited: Nodos Visitados
-        :param pos_visited: Posições visitadas
-        :param paths: Caminhos
-        :param iter_number: Número de iterações
+        :param end: Posições finais
+        :param path: Caminho final
+        :param visited: Nodos visitados
+        :param pos_visited: Posições visitadas (debug)
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :param iter_number: Número de iteração (multiplayer)
+        :param depth: Profundidade (DFS iterativo)
         :return:
         """
         path.append(start)
@@ -301,10 +236,14 @@ class Graph:
         return None
 
     def iterative_DFS(self, start, end, paths=dict()):
+        """
+        Algoritmo "Depth-First Search" Iterativo
+        :param start: Posição inicial
+        :param end: Posições finais
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return:
+        """
         i = 1
-        path = []
-        cost = 0
-        path_found = False
         ret = None
 
         while ret is None:
@@ -317,14 +256,13 @@ class Graph:
         """
         Algoritmo "Breadth-First-Search"
         :param start: Posição inicial
-        :param end: Posição final
-        :param paths: Caminhos
-        :return: Caminho, Custo total e Posições visitadas
+        :param end: Posições finais
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         pos_visited = [start]  # debug
         visited = {start}
         q = Queue()
-        i = 0
 
         q.put(start)
 
@@ -367,11 +305,11 @@ class Graph:
 
     def uniform_cost(self, start, end, paths=dict()):
         """
-        Algoritmo Custo Uniforme
-        :param start: Posição Inicial
-        :param end: Posição Final
-        :param paths: Caminhos
-        :return:
+        Algoritmo do Custo Uniforme
+        :param start: Posição inicial
+        :param end: Posições finais
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         level = {start: 0}
 
@@ -423,12 +361,12 @@ class Graph:
 
     def greedy(self, start, end, type, paths=dict()):
         """
-        Algoritmo Greedy
-        :param start: Posição Inicial
-        :param end: Posição Final
-        :param type: Tipo
-        :param paths: Caminhos
-        :return:
+        Algoritmo "Greedy"
+        :param start: Posição inicial
+        :param end: Posições finais
+        :param type: Tipo de heurística
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         if type == "distance":
             heuristic = self.h1
@@ -485,12 +423,12 @@ class Graph:
 
     def a_star(self, start, end, type, paths=dict()):
         """
-        Algoritmo "A-Star"
-        :param start: Posição Inicial
-        :param end: Posição Final
-        :param type: Tipo
-        :param paths: Caminhos
-        :return:
+        Algoritmo "A*"
+        :param start: Posição inicial
+        :param end: Posições finais
+        :param type: Tipo de heurística
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         if type == "distance":
             heuristic = self.h1

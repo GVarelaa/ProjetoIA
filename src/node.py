@@ -1,10 +1,10 @@
 class Node:
     def __init__(self, pos, vel, crashed):
         """
-
-        :param pos:
-        :param vel:
-        :param crashed:
+        Construtor de um nodo
+        :param pos: Posição
+        :param vel: Velocidade
+        :param crashed: Bool a verificar se embateu
         """
         self.pos = pos
         self.vel = vel
@@ -12,29 +12,22 @@ class Node:
 
     def __str__(self):
         """
-
-        :return:
+        Devolve a representação em string do objeto Node
+        :return: String
         """
         return "Position =" + str(self.pos) + " | Velocity=" + str(self.vel) + " | Is_Crashed : " + str(self.crashed)
 
-    def __repr__(self):
-        """
-
-        :return:
-        """
-        return "Position =" + str(self.pos) + "| Velocity=" + str(self.vel) + " | Is_Crashed : " + str(self.crashed)
-
     def __eq__(self, other):
         """
-
-        :param other:
-        :return:
+        Verifica se o objeto é igual ao objeto passado como argumento
+        :param other: Nodo a comparar
+        :return: True caso sejam iguais, False caso contrário
         """
         return self.pos == other.pos and self.vel == other.vel
 
     def __hash__(self):
         """
-
-        :return:
+        Devolve o hash value do objeto
+        :return: Hash value
         """
         return hash((self.pos, self.vel))

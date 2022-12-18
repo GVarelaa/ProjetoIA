@@ -15,10 +15,10 @@ import matplotlib.pyplot as plt
 class Race:
     def __init__(self, matrix, start, end):
         """
-
-        :param matrix:
-        :param start:
-        :param end:
+        Construtor de uma corrida
+        :param matrix: Matriz
+        :param start: Posições iniciais
+        :param end: Posições finais
         """
         self.matrix = matrix
         self.graph = Graph()
@@ -34,8 +34,8 @@ class Race:
 
     def __str__(self):
         """
-
-        :return:
+        Devolve a representação em string do objeto Race
+        :return: String
         """
         return str(self.matrix) + str(self.graph)
 
@@ -45,8 +45,8 @@ class Race:
         Calcula o próximo estado
         :param state: Estado atual
         :param accel_pair: Aceleração
-        :param mat: matriz
-        :return: Nodo
+        :param mat: Matriz
+        :return: Nodo seguinte
         """
         disp = (state.vel[0] + accel_pair[0], state.vel[1] + accel_pair[1])
 
@@ -63,32 +63,16 @@ class Race:
 
         return Node(new_position, new_vel, is_crashed)
 
-    def print_result(self, path):
-        """
-        Imprime o resultado
-        :param path: Caminho
-        :return:
-        """
-        matrix = deepcopy(self.matrix)
-        y_max = len(matrix)
-
-        for node in path:
-            pos_x = node.pos[0] - 0.5
-            pos_y = y_max - node.pos[1] - 0.5
-            matrix[int(pos_y)][int(pos_x)] = 'O'
-
-        print_mat(matrix)
-
     def expand_state(self, state, mat):
         """
-        Cria uma lista de nodos
-        :param state: Estado Atual
+        Expande um dado estado em novos estados
+        :param state: Estado atual
         :param mat: Matriz
-        :return: Nodos
+        :return: Lista com os novos estados
         """
         nodes = list()
         found = False
-        accelerations = [(1, 1), (1, -1), (1, 0), (-1, 1), (-1, -1), (0, -1), (-1, 0), (0,0), (0,1)]
+        accelerations = [(1, 1), (1, -1), (1, 0), (-1, 1), (-1, -1), (0, -1), (-1, 0), (0, 0), (0, 1)]
 
         for end in self.end:
             if state.pos == end.pos:
@@ -98,15 +82,16 @@ class Race:
             for accel in accelerations:
                 s = self.next_state(state, accel, mat), accel
                 nodes.append(s)
+
         return nodes
 
     @staticmethod
     def calculate_shorter_distance(curr_state, pos_list):
         """
-        Calcula a menor distancia
-        :param curr_state: Estado Atual
-        :param pos_list: Lista de Posições
-        :return: Distancia
+        Calcula a menor distância
+        :param curr_state: Estado atual
+        :param pos_list: Lista de posições
+        :return: Menor distância
         """
         distance = math.inf
 
@@ -121,9 +106,7 @@ class Race:
         """
         Constroi um grafo
         :param initial_state: Estado inicial
-        :return:
         """
-
         if initial_state is None:
             initial_state = self.start[0]
 
@@ -152,72 +135,71 @@ class Race:
 
     def DFS_solution(self, initial_state, paths=dict()):
         """
-        Calcula a solução do algoritmo DFS a partir de um estado inicial
-        :param initial_state: Estado Inicial
-        :return: Caminho, Custo e Posições vistadas
+        Aplica o algoritmo DFS
+        :param initial_state: Estado inicial
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         path, cost, pos_visited = self.graph.DFS(initial_state, self.end, [], set(), [], paths)
         return path, cost, pos_visited
 
     def iterative_DFS_solution(self, initial_state, paths=dict()):
         """
-        Calcula a solução do algoritmo DFS iterativo a partir de um estado inicial
-        :param initial_state: Estado Inicial
-        :return: Caminho, Custo e Posições vistadas
+        Aplica o algoritmo DFS iterativo
+        :param initial_state: Estado inicial
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         path, cost, pos_visited = self.graph.iterative_DFS(initial_state, self.end, paths)
         return path, cost, pos_visited
 
     def BFS_solution(self, initial_state, paths=dict()):
         """
-        Calcula a solução do algoritmo BFS a partir de um estado inicial
-        :param initial_state: Estado Inicial
-        :return: Caminho, Custo e Posições vistadas
+        Aplica o algoritmo BFS
+        :param initial_state: Estado inicial
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         path, cost, pos_visited = self.graph.BFS(initial_state, self.end, paths)
         return path, cost, pos_visited
 
     def uniform_cost_solution(self, initial_state, paths=dict()):
+        """
+        Aplica o algoritmo do Custo Uniforme
+        :param initial_state: Estado inicial
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
+        """
         path, cost, pos_visited = self.graph.uniform_cost(initial_state, self.end, paths)
         return path, cost, pos_visited
 
     def a_star_solution(self, initial_state, type, paths=dict()):
         """
-        Calcula a solução do algoritmo A-Star a partir de um estado inicial
-        :param initial_state: Estado Inicial
-        :param type: Tipo
-        :return: Caminho, Custo e Posições visitadas
+        Aplica o algoritmo A*
+        :param initial_state: Estado inicial
+        :param type: Tipo de heurística
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         path, cost, pos_visited = self.graph.a_star(initial_state, self.end, type, paths)
         return path, cost, pos_visited
 
     def greedy_solution(self, initial_state, type, paths=dict()):
         """
-        Calcula a solução do algoritmo Greedy a partir de um estado inicial
-        :param initial_state: Estado Inicial
-        :param type: Tipo
-        :return: Caminho, Custo e Posições Visitadas
+        Aplica o algoritmo Greedy
+        :param initial_state: Estado inicial
+        :param type: Tipo de heurística
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :return: Caminho final, custo da solução e posições visitadas para debug
         """
         path, cost, pos_visited = self.graph.greedy(initial_state, self.end, type, paths)
         return path, cost, pos_visited
 
-    def check_win(self, players):
-        """
-        Verifica se um jogador já chegou ao final
-        :param players: Lista de jogadores
-        :return: Bool
-        """
-        for player in players:
-            for end in self.end:
-                if player.pos == end.pos:
-                    return True
-
-        return False
-
     def multiplayer(self, heuristics):
         """
         Executa o modo multiplayer
-        :return:
+        :param heuristics: Lista onde o indíce corresponde ao número do jogador e o valor à respetiva heurística
+                           (em caso de procura não-informada o valor é None)
         """
         # paths ,costs
         players = self.start
@@ -240,17 +222,3 @@ class Race:
                     paths[i] = path
 
         return list(paths.values())
-
-def print_mat(mat):
-    """
-    Imprime a Matriz
-    :param mat: Matriz
-    :return:
-    """
-    string = ""
-    for i in range(len(mat)):
-        for j in range(len(mat[i])):
-            string += str(mat[i][j]) + " "
-        string += "\n"
-
-    print(string)
