@@ -239,7 +239,7 @@ class Race:
                     path, cost, pos_visited = self.a_star_solution(players[i], heuristics[i], paths)
                     paths[i] = path
 
-        drawer.show_multiplayer_paths(paths, self.matrix)
+        return list(paths.values())
 
 def print_mat(mat):
     """

@@ -63,7 +63,8 @@ def menu_play_mode(race):
                 print("\nJogadores insuficientes para iniciar o modo multiplayer!\n")
             else:
                 heuristics = menu_multiplayer(race)
-                race.multiplayer(heuristics)
+                paths = race.multiplayer(heuristics)
+                drawer.show_multiplayer_paths(paths, race.matrix)
 
         case 2:
             print()
