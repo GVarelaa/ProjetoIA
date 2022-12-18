@@ -16,6 +16,7 @@ SIZE_Y = 600 // 2
 screen = pygame.display.set_mode((x, y))
 font_titulo = pygame.font.Font('freesansbold.ttf', 40)
 font_pequena = pygame.font.Font('freesansbold.ttf', 30)
+font_pequena_pequena = pygame.font.Font('freesansbold.ttf', 18)
 clock = pygame.time.Clock()
 
 input_rect = pygame.Rect(380, 200, 140, 32)
@@ -48,13 +49,23 @@ def main_menu(circuits):
 
     while True:
         screen.fill("white")
-        button2 = pygame.Rect(0, y // 7, x, 60)
-        pygame.draw.rect(screen, (163, 163, 194), button2)
+        button1 = pygame.Rect(0, y // 7, x, 60)
+        pygame.draw.rect(screen, (163, 163, 194), button1)
         draw_text("Escolha o circuito", font_titulo, "black", screen, x // 2, y // 5)
 
-        button1 = pygame.Rect(SIZE_X - 100, SIZE_Y - 25, 200, 50)
-        pygame.draw.rect(screen, (102, 153, 0), button1, border_radius=10)
+        button2 = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
+        pygame.draw.rect(screen, (102, 153, 0), button2, border_radius=15)
+        select = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
+        pygame.draw.rect(screen, (153, 204, 255), select, width=5, border_radius=15)
         draw_text(circuits[index][0], font_pequena, "white", screen, x // 2, y // 2)
+
+        button_left = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y - 20, 150, 40)
+        pygame.draw.rect(screen, (0, 153, 0), button_left, border_radius=10)
+        draw_text(circuits[loop_index_left(index, len(circuits))][0], font_pequena_pequena, "white", screen, SIZE_X - 112.5 - 125, y // 2)
+
+        button_right = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y - 20, 150, 40)
+        pygame.draw.rect(screen, (0, 153, 0), button_right, border_radius=10)
+        draw_text(circuits[loop_index_right(index, len(circuits))][0], font_pequena_pequena, "white", screen, SIZE_X - 112.5 + 200 + 150, y // 2)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -83,39 +94,46 @@ def main_menu(circuits):
 def menu_choose_mode(race):
     click = False
     running = True
+    index = 0
     while running:
         screen.fill("white")
         draw_text("Escolha o modo de jogo", font_titulo, "black", screen, x // 2, y // 5)
 
         mx, my = pygame.mouse.get_pos()
 
-        button_sing = pygame.Rect(350, 200, 200, 50)
-        button_mult = pygame.Rect(350, 300, 200, 50)
-        text1 = font_titulo.render("Singleplayer", True, "white")
-        text2 = font_titulo.render("Multiplayer", True, "white")
+        select1 = pygame.Rect(SIZE_X - 125, SIZE_Y - 55, 250, 50)
+        select2 = pygame.Rect(SIZE_X - 125, SIZE_Y + 55, 250, 50)
 
-        if button_sing.collidepoint((mx, my)):
-            if click:
-                menus.menu_choose_algorithm(race)
-                click = False
+        button_mult = pygame.Rect(SIZE_X - 125, SIZE_Y - 55, 250, 50)
+        button_sing = pygame.Rect(SIZE_X - 125, SIZE_Y + 55, 250, 50)
+        pygame.draw.rect(screen, (102, 153, 0), button_mult, border_radius=15)
+        pygame.draw.rect(screen, (102, 153, 0), button_sing, border_radius=15)
 
-        if button_mult.collidepoint((mx, my)):
-            if click:
-                menu_multiplayer(race)
-                click = False
+        draw_text("Singleplayer", font_pequena, "white", screen, x // 2, SIZE_Y + 80)
+        draw_text("Multiplayer", font_pequena, "white", screen, x // 2, SIZE_Y - 30)
 
-        pygame.draw.rect(screen, (255, 0, 0), button_sing)
-        pygame.draw.rect(screen, (255, 0, 0), button_mult)
-        screen.blit(text1, (button_sing.x + 5, button_sing.y + 5))
-        screen.blit(text2, (button_mult.x + 5, button_mult.y + 5))
+        if index == 0:
+            pygame.draw.rect(screen, (153, 204, 255), select1, width=5, border_radius=15)
+        else:
+            pygame.draw.rect(screen, (153, 204, 255), select2, width=5, border_radius=15)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    index = loop_index_left(index, 2)
+                elif event.key == pygame.K_DOWN:
+                    index = loop_index_right(index, 2)
+                elif event.key == pygame.K_RETURN:
+                    if index == 0:
+                        menu_multiplayer(race)
+                    else:
+                        menu_choose_algorithm(race)
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
 
         pygame.display.update()
         clock.tick(60)
@@ -138,93 +156,96 @@ def menu_multiplayer(race):
 def menu_choose_algorithm(race):
     click = False
     running = True
+    index = 0
     while running:
         screen.fill("white")
         draw_text("Escolha o algoritmo a utilizar", font_titulo, "black", screen, x // 2, y // 5)
 
         mx, my = pygame.mouse.get_pos()
 
-        button_dfs = pygame.Rect(350, 200, 100, 30)
-        button_bfs = pygame.Rect(350, 250, 100, 30)
-        button_iterative = pygame.Rect(350, 300, 100, 30)
-        button_uniform = pygame.Rect(350, 350, 100, 30)
-        button_a_star = pygame.Rect(350, 400, 100, 30)
-        button_greedy = pygame.Rect(350, 450, 100, 30)
-        text_bfs = font_titulo.render("BFS", True, "white")
-        text_dfs = font_titulo.render("DFS", True, "white")
-        text_iterative = font_titulo.render("Iterative", True, "white")
-        text_uniform = font_titulo.render("Uniform", True, "white")
-        text_a_star = font_titulo.render("A*", True, "white")
-        text_greedy = font_titulo.render("Greedy", True, "white")
+        select1 = pygame.Rect(SIZE_X - 100, 175, 200, 40)
+        select2 = pygame.Rect(SIZE_X - 100, 255, 200, 40)
+        select3 = pygame.Rect(SIZE_X - 100, 325, 200, 40)
+        select4 = pygame.Rect(SIZE_X - 100, 400, 200, 40)
+        select5 = pygame.Rect(SIZE_X - 100, 475, 200, 40)
+        select6 = pygame.Rect(SIZE_X - 100, 550, 200, 40)
+        button_dfs = pygame.Rect(350, 175, 200, 40)
+        button_bfs = pygame.Rect(350, 255, 200, 40)
+        button_iterative = pygame.Rect(350, 325, 200, 40)
+        button_uniform = pygame.Rect(350, 400, 200, 40)
+        button_a_star = pygame.Rect(350, 475, 200, 40)
+        button_greedy = pygame.Rect(350, 550, 200, 40)
 
-        if button_bfs.collidepoint((mx, my)):
-            if click:
-                path, cost, pos_visited = race.BFS_solution(race.start[0])
-                draw_paths([path], cost, race.matrix)
+        pygame.draw.rect(screen, (102, 153, 0), button_bfs, border_radius=15)
+        pygame.draw.rect(screen, (102, 153, 0), button_dfs, border_radius=15)
+        pygame.draw.rect(screen, (102, 153, 0), button_iterative, border_radius=15)
+        pygame.draw.rect(screen, (102, 153, 0), button_uniform, border_radius=15)
+        pygame.draw.rect(screen, (102, 153, 0), button_a_star, border_radius=15)
+        pygame.draw.rect(screen, (102, 153, 0), button_greedy, border_radius=15)
 
-                click = False
+        if index == 0:
+            pygame.draw.rect(screen, (153, 204, 255), select1, width=5, border_radius=15)
+        elif index == 1:
+            pygame.draw.rect(screen, (153, 204, 255), select2, width=5, border_radius=15)
+        elif index == 2:
+            pygame.draw.rect(screen, (153, 204, 255), select3, width=5, border_radius=15)
+        elif index == 3:
+            pygame.draw.rect(screen, (153, 204, 255), select4, width=5, border_radius=15)
+        elif index == 4:
+            pygame.draw.rect(screen, (153, 204, 255), select5, width=5, border_radius=15)
+        elif index == 5:
+            pygame.draw.rect(screen, (153, 204, 255), select6, width=5, border_radius=15)
 
-        if button_dfs.collidepoint((mx, my)):
-            if click:
-                path, cost, pos_visited = race.DFS_solution(race.start[0])
-                draw_paths([path], cost, race.matrix)
-
-                click = False
-
-        if button_iterative.collidepoint((mx, my)):
-            if click:
-                path, cost, pos_visited = race.iterative_DFS_solution(race.start[0])
-                draw_paths([path], cost, race.matrix)
-
-                click = False
-
-        if button_uniform.collidepoint((mx, my)):
-            if click:
-                path, cost, pos_visited = race.uniform_cost_solution(race.start[0])
-                draw_paths([path], cost, race.matrix)
-
-                click = False
-
-        if button_a_star.collidepoint((mx, my)):
-            if click:
-                path, cost, pos_visited = race.a_star_solution(race.start[0], "distance")
-                draw_paths([path], cost, race.matrix)
-
-                click = False
-
-        if button_greedy.collidepoint((mx, my)):
-            if click:
-                path, cost, pos_visited = race.greedy_solution(race.start[0], "distance")
-                draw_paths([path], cost, race.matrix)
-
-                click = False
+        draw_text("BFS", font_pequena, "white", screen, x // 2, 195)
+        draw_text("DFS", font_pequena, "white", screen,  x // 2, 275)
+        draw_text("Iterative", font_pequena, "white", screen,  x // 2, 345)
+        draw_text("Uniform", font_pequena, "white", screen,  x // 2, 420)
+        draw_text("A*", font_pequena, "white", screen,  x // 2, 495)
+        draw_text("Greedy", font_pequena, "white", screen,  x // 2, 570)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
 
-        pygame.draw.rect(screen, (255, 0, 0), button_bfs)
-        pygame.draw.rect(screen, (255, 0, 0), button_dfs)
-        pygame.draw.rect(screen, (255, 0, 0), button_iterative)
-        pygame.draw.rect(screen, (255, 0, 0), button_uniform)
-        pygame.draw.rect(screen, (255, 0, 0), button_a_star)
-        pygame.draw.rect(screen, (255, 0, 0), button_greedy)
-        screen.blit(text_bfs, (button_bfs.x + 5, button_bfs.y + 5))
-        screen.blit(text_dfs, (button_dfs.x + 5, button_dfs.y + 5))
-        screen.blit(text_iterative, (button_iterative.x + 5, button_iterative.y + 5))
-        screen.blit(text_uniform, (button_uniform.x + 5, button_uniform.y + 5))
-        screen.blit(text_a_star, (button_a_star.x + 5, button_a_star.y + 5))
-        screen.blit(text_greedy, (button_greedy.x + 5, button_greedy.y + 5))
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    index = loop_index_left(index, 6)
+                elif event.key == pygame.K_DOWN:
+                    index = loop_index_right(index, 6)
+                elif event.key == pygame.K_RETURN:
+                    if index == 0:
+                        path, cost, pos_visited = race.BFS_solution(race.start[0])
+                        draw_paths([path], cost, race.matrix)
+
+                    if index == 1:
+                        path, cost, pos_visited = race.DFS_solution(race.start[0])
+                        draw_paths([path], cost, race.matrix)
+
+                    if index == 3:
+                        path, cost, pos_visited = race.iterative_DFS_solution(race.start[0])
+                        draw_paths([path], cost, race.matrix)
+
+                    if index == 4:
+                        path, cost, pos_visited = race.uniform_cost_solution(race.start[0])
+                        draw_paths([path], cost, race.matrix)
+
+                    if index == 5:
+                        path, cost, pos_visited = race.a_star_solution(race.start[0], "distance")
+                        draw_paths([path], cost, race.matrix)
+
+                    if index == 6:
+                        path, cost, pos_visited = race.greedy_solution(race.start[0], "distance")
+                        draw_paths([path], cost, race.matrix)
+
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
 
         pygame.display.update()
         clock.tick(60)
 
 
-def draw_paths(paths, matrix, cost=-1):
+def draw_circuit(matrix):
     x_draw = y_draw = 0
     walls = list()
     finish = list()
@@ -260,65 +281,75 @@ def draw_paths(paths, matrix, cost=-1):
     for s in start:
         pygame.draw.rect(screen, (51, 204, 51), s)
 
+
+def draw_until_frame(paths, matrix, index):
+    colors = ["orange", "red", "green", "blue", "yellow", "magenta", "gray", "cyan"]
+    for j in range(len(paths)):
+        if index < len(paths[j]):
+            for i in range(index+1):
+                final_pos = paths[j][i].pos
+                final_pos = (final_pos[0] * 16, len(matrix) * 16 - final_pos[1] * 16)
+                if i > 0:
+                    start_pos = paths[j][i - 1].pos
+                    start_pos = (start_pos[0] * 16, len(matrix) * 16 - start_pos[1] * 16)
+                    pygame.draw.circle(screen, colors[j], start_pos, 5)
+                    pygame.draw.line(screen, colors[j], start_pos, final_pos, 2)
+
+                pygame.draw.circle(screen, colors[j], final_pos, 5)
+
+
+def draw_frame(paths, matrix, index):
+    for path in paths:
+        if index < len(path):
+            final_pos = path[index].pos
+            final_pos = (final_pos[0] * 16, len(matrix) * 16 - final_pos[1] * 16)
+            if index > 0:
+                start_pos = path[index - 1].pos
+                start_pos = (start_pos[0] * 16, len(matrix) * 16 - start_pos[1] * 16)
+                pygame.draw.circle(screen, (153, 102, 0), start_pos, 5)
+                pygame.draw.line(screen, (153, 102, 0), start_pos, final_pos, 2)
+
+            pygame.draw.circle(screen, (153, 102, 0), final_pos, 5)
+
+
+def draw_paths(paths, matrix, cost=-1):
+    draw_circuit(matrix)
+
     max_len = len(paths[0])
     for path in paths:
         if len(path) > max_len:
             max_len = len(path)
 
     i = 1
+    index = 0
+    running = True
     while running:
-        if i == max_len:
-            break
-
-        for path in paths:
-            if i < len(path):
-                start_pos = path[i-1].pos
-                start_pos = (start_pos[0]*16, len(matrix)*16 - start_pos[1]*16)
-                final_pos = path[i].pos
-                final_pos = (final_pos[0]*16, len(matrix)*16 - final_pos[1]*16)
-                pygame.draw.circle(screen, (153, 102, 0), start_pos, 5)
-                pygame.draw.circle(screen, (153, 102, 0), final_pos, 5)
-                pygame.draw.line(screen, (153, 102, 0), start_pos, final_pos, 2)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-        pygame.time.delay(500)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    index = loop_index_left(index, max_len)
+                    draw_circuit(matrix)
+                    draw_until_frame(paths, matrix, index)
+                elif event.key == pygame.K_RIGHT:
+                    index = loop_index_right(index, max_len)
+                    draw_circuit(matrix)
+                    draw_until_frame(paths, matrix, index)
+                elif event.key == pygame.K_ESCAPE:
+                    running = False
+
+        clock.tick(60)
         pygame.display.update()
         i += 1
-
-    click = False
-    while running:
-        mx, my = pygame.mouse.get_pos()
-
-        button_back = pygame.Rect(400, 285, 100, 30)
-        text = font_titulo.render("Voltar", True, "white")
-
-        if button_back.collidepoint((mx, my)):
-            if click:
-                running = False
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    click = True
-
-        pygame.draw.rect(screen, (255, 0, 0), button_back)
-        screen.blit(text, (button_back.x + 5, button_back.y + 5))
-
-        pygame.display.update()
-        clock.tick(60)
-
 
 
 
 circuits = list()
 circuits.append(("Monaco", "../circuits/circuito3.txt"))
 circuits.append(("Reta", "../circuits/circuito4.txt"))
+circuits.append(("Abu Dhabi", "../circuits/circuito1.txt"))
 
 main_menu(circuits)
