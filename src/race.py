@@ -208,17 +208,23 @@ class Race:
 
         for i in range(len(players)):
             match self.player_algorithms[i]:
+                case 0:
+                    path, cost, pos_visited = self.BFS_solution(players[i], paths)
+                    paths[i] = path
                 case 1:
                     path, cost, pos_visited = self.DFS_solution(players[i], paths)
                     paths[i] = path
                 case 2:
-                    path, cost, pos_visited = self.BFS_solution(players[i], paths)
+                    path, cost, pos_visited = self.iterative_DFS_solution(players[i], paths)
                     paths[i] = path
                 case 3:
-                    path, cost, pos_visited = self.greedy_solution(players[i], heuristics[i], paths)
+                    path, cost, pos_visited = self.uniform_cost_solution(players[i], paths)
                     paths[i] = path
                 case 4:
                     path, cost, pos_visited = self.a_star_solution(players[i], heuristics[i], paths)
+                    paths[i] = path
+                case 5:
+                    path, cost, pos_visited = self.greedy_solution(players[i], heuristics[i], paths)
                     paths[i] = path
 
         return list(paths.values())
