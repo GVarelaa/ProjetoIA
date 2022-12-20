@@ -25,8 +25,8 @@ clock = pygame.time.Clock()
 
 input_rect = pygame.Rect(380, 200, 140, 32)
 
-monaco_img = pygame.image.load("../circuits/monaco.png")
-monaco_img = pygame.transform.scale(monaco_img, (300, 300))
+iman_img = pygame.image.load("../circuits/iman.png")
+iman_img = pygame.transform.scale(iman_img, (300, 300))
 
 bahrain_img = pygame.image.load("../circuits/bahrain.png")
 bahrain_img = pygame.transform.scale(bahrain_img, (300, 300))
@@ -36,6 +36,9 @@ oval_img = pygame.transform.scale(oval_img, (300, 300))
 
 vector_img = pygame.image.load("../circuits/vector.png")
 vector_img = pygame.transform.scale(vector_img, (300, 300))
+
+rect_img = pygame.image.load("../circuits/rect.png")
+rect_img = pygame.transform.scale(rect_img, (400, 100))
 
 def loop_index_left(index, len):
     if index - 1 == -1:
@@ -97,13 +100,15 @@ def main_menu(circuits):
         drop_shadow_text(screen, circuits[loop_index_right(index, len(circuits))][0], 18, SIZE_X - 112.5 + 200 + 150, y // 2 - 87.5, font="freesansbold.ttf")
 
         if index == 0:
-            screen.blit(monaco_img, (SIZE_X - 150, 262.5))
+            screen.blit(iman_img, (SIZE_X - 150, 262.5))
         elif index == 1:
             screen.blit(bahrain_img, (SIZE_X - 150, 262.5))
         elif index == 2:
             screen.blit(oval_img, (SIZE_X - 150, 262.5))
         elif index == 3:
             screen.blit(vector_img, (SIZE_X - 150, 262.5))
+        elif index == 4:
+            screen.blit(rect_img, (SIZE_X - 200, 362.5))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -592,9 +597,10 @@ def draw_paths(paths, matrix, costs):
 
 
 circuits = list()
-circuits.append(("Monaco", "../circuits/circuito3.txt"))
-circuits.append(("Bahrain", "../circuits/bahrain_simp.txt"))
+circuits.append(("Iman", "../circuits/iman.txt"))
+circuits.append(("Bahrain", "../circuits/bahrain.txt"))
 circuits.append(("Oval", "../circuits/oval.txt"))
 circuits.append(("Vector", "../circuits/vector.txt"))
+circuits.append(("Rect", "../circuits/rect.txt"))
 
 main_menu(circuits)

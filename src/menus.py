@@ -28,7 +28,7 @@ def menu_setup_race():
             exit()
 
         case 1:
-            path = "../circuits/circuito3.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
+            path = "../circuits/iman.txt"  # input("Indique a diretoria do ficheiro do circuito: ")
             matrix, start, end = parser(path)
             race = Race(matrix, start, end)
             race.build_graph()
