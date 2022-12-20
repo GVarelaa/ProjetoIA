@@ -91,7 +91,7 @@ def main_menu(circuits):
         pygame.draw.rect(screen, "black", button, width=2, border_radius=15)
         draw_shadow_text(screen, circuits[index][0], 30, x // 2, y // 2 - 87.5, font="freesansbold.ttf")
 
-        draw_shadow_text(screen, ">", 50, x//2 + 130, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
+        draw_shadow_text(screen, ">", 50, x//2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
         draw_shadow_text(screen, "<", 50, x//2 - 140, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
 
         if index == 0:
@@ -141,7 +141,7 @@ def menu_choose_mode(race):
         pygame.draw.rect(screen, "black", button, width=2, border_radius=15)
         draw_shadow_text(screen, modes[index], 30, x // 2, y // 2 - 87.5, font="freesansbold.ttf")
 
-        draw_shadow_text(screen, ">", 50, x // 2 + 130, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
+        draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
         draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
 
         for event in pygame.event.get():
@@ -196,7 +196,7 @@ def menu_multiplayer_algorithms(players):
     heuristics = ["distance", "velocity"]
 
     for i in range(len(players)):
-        indexes[i] = (0, 0)
+        indexes[i] = (0, (0, 0))
 
     running = True
     index = 0
@@ -216,31 +216,22 @@ def menu_multiplayer_algorithms(players):
         pygame.draw.rect(screen, (255, 179, 26), button_alg, border_radius=15)
         draw_shadow_text(screen, alg_handler(indexes[index][0]), 30, x//2, y//2)
 
-        if indexes[index][0] == 4 or indexes[index][0] == 5:
+        if indexes[index][0] == 4:
             button_heuristic = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 55, 225, 65)
             pygame.draw.rect(screen, (255, 179, 26), button_heuristic, border_radius=10)
 
-            if vert_index == 2:
-                pygame.draw.rect(screen, (255, 179, 26), button_player, border_radius=15)
-                draw_shadow_text(screen, f"Jogador {index}", 30, x // 2, y // 2 - 87.5, font="freesansbold.ttf")
+            draw_shadow_text(screen, heur_handler(indexes[index][1][0]), 30, x // 2, SIZE_Y + 85,
+                             font="freesansbold.ttf")
 
-                pygame.draw.rect(screen, (255, 179, 26), button_alg, border_radius=15)
-                draw_shadow_text(screen, alg_handler(indexes[index][0]), 30, x // 2, y // 2)
+        elif indexes[index][0] == 5:
+            button_heuristic = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 55, 225, 65)
+            pygame.draw.rect(screen, (255, 179, 26), button_heuristic, border_radius=10)
 
-                pygame.draw.rect(screen, (255, 204, 102), button_heuristic, border_radius=10)
-                pygame.draw.rect(screen, "black", button_heuristic, width=2, border_radius=10)
-
-                draw_shadow_text(screen, ">", 50, x // 2 + 130, y // 2 + 80.5, colour=(255, 179, 26), font="freesansbold.ttf")
-                draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 + 80.5, colour=(255, 179, 26), font="freesansbold.ttf")
-
-                if indexes[index][1] == 0:  # Distance
-                    draw_shadow_text(screen, heuristics[0], 30, x // 2, SIZE_Y+85, font="freesansbold.ttf")
-
-                elif indexes[index][1] == 1:  # Velocity
-                    draw_shadow_text(screen, heuristics[1], 30, x // 2, SIZE_Y+85, font="freesansbold.ttf")
+            draw_shadow_text(screen, heur_handler(indexes[index][1][1]), 30, x // 2, SIZE_Y + 85,
+                             font="freesansbold.ttf")
 
         if vert_index == 0:
-            draw_shadow_text(screen, ">", 50, x // 2 + 130, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
+            draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
             draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
 
         elif vert_index == 1:
@@ -251,8 +242,32 @@ def menu_multiplayer_algorithms(players):
             draw_shadow_text(screen, alg_handler(indexes[index][0]), 30, x // 2, y // 2)
             pygame.draw.rect(screen, "black", button_alg, width=2, border_radius=15)
 
-            draw_shadow_text(screen, ">", 50, x // 2 + 130, y // 2 - 5.5, colour=(255, 179, 26), font="freesansbold.ttf")
+            draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 - 5.5, colour=(255, 179, 26), font="freesansbold.ttf")
             draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 - 5.5, colour=(255, 179, 26), font="freesansbold.ttf")
+
+        elif vert_index == 2:
+            button_heuristic = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 55, 225, 65)
+            pygame.draw.rect(screen, (255, 179, 26), button_heuristic, border_radius=10)
+
+            pygame.draw.rect(screen, (255, 179, 26), button_player, border_radius=15)
+            draw_shadow_text(screen, f"Jogador {index}", 30, x // 2, y // 2 - 87.5, font="freesansbold.ttf")
+
+            pygame.draw.rect(screen, (255, 179, 26), button_alg, border_radius=15)
+            draw_shadow_text(screen, alg_handler(indexes[index][0]), 30, x // 2, y // 2)
+
+            pygame.draw.rect(screen, (255, 204, 102), button_heuristic, border_radius=10)
+            pygame.draw.rect(screen, "black", button_heuristic, width=2, border_radius=10)
+
+            draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 + 80.5, colour=(255, 179, 26),
+                             font="freesansbold.ttf")
+            draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 + 80.5, colour=(255, 179, 26),
+                             font="freesansbold.ttf")
+
+            if indexes[index][0] == 4:
+                draw_shadow_text(screen, heur_handler(indexes[index][1][0]), 30, x // 2, SIZE_Y + 85, font="freesansbold.ttf")
+            elif indexes[index][0] == 5:
+                draw_shadow_text(screen, heur_handler(indexes[index][1][1]), 30, x // 2, SIZE_Y + 85, font="freesansbold.ttf")
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -279,8 +294,16 @@ def menu_multiplayer_algorithms(players):
                         ind1, ind2 = indexes[index]
                         indexes[index] = (loop_index_left(indexes[index][0], 6), ind2)
                     elif vert_index == 2:
-                        ind1, ind2 = indexes[index]
-                        indexes[index] = (ind1, loop_index_left(indexes[index][1], 2))
+                        if indexes[index][0] == 4:
+                            ind1, ind2 = indexes[index]
+                            ind21, ind22 = ind2
+                            ind21 = loop_index_left(ind21, 2)
+                            indexes[index] = (ind1, (ind21, ind22))
+                        elif indexes[index][0] == 5:
+                            ind1, ind2 = indexes[index]
+                            ind21, ind22 = ind2
+                            ind22 = loop_index_left(ind22, 2)
+                            indexes[index] = (ind1, (ind21, ind22))
 
                 elif event.key == pygame.K_RIGHT:
                     if vert_index == 0:
@@ -289,8 +312,16 @@ def menu_multiplayer_algorithms(players):
                         ind1, ind2 = indexes[index]
                         indexes[index] = (loop_index_right(indexes[index][0], 6), ind2)
                     elif vert_index == 2:
-                        ind1, ind2 = indexes[index]
-                        indexes[index] = (ind1, loop_index_right(indexes[index][1], 2))
+                        if indexes[index][0] == 4:
+                            ind1, ind2 = indexes[index]
+                            ind21, ind22 = ind2
+                            ind21 = loop_index_right(ind21, 2)
+                            indexes[index] = (ind1, (ind21, ind22))
+                        elif indexes[index][0] == 5:
+                            ind1, ind2 = indexes[index]
+                            ind21, ind22 = ind2
+                            ind22 = loop_index_right(ind22, 2)
+                            indexes[index] = (ind1, (ind21, ind22))
 
                 elif event.key == pygame.K_RETURN:
                     running = False
@@ -311,7 +342,10 @@ def menu_multiplayer(race):
 
     for i in range(len(indexes.keys())):
         race.player_algorithms[i] = indexes[i][0]
-        heuristics[i] = heur_handler(indexes[i][1])
+        if race.player_algorithms[i] == 4:
+            heuristics[i] = heur_handler(indexes[i][1][0])
+        elif race.player_algorithms[i] == 5:
+            heuristics[i] = heur_handler(indexes[i][1][1])
 
     paths, costs = race.multiplayer(heuristics)
     screen.fill("white")
