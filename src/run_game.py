@@ -20,21 +20,22 @@ screen = pygame.display.set_mode((x, y))
 font_titulo = pygame.font.Font('freesansbold.ttf', 40)
 font_pequena = pygame.font.Font('freesansbold.ttf', 30)
 font_pequena_pequena = pygame.font.Font('freesansbold.ttf', 18)
+font_border = pygame.font.Font('freesansbold.ttf', 32)
 clock = pygame.time.Clock()
 
 input_rect = pygame.Rect(380, 200, 140, 32)
 
 monaco_img = pygame.image.load("../circuits/monaco.png")
-monaco_img = pygame.transform.scale(monaco_img, (200, 200))
+monaco_img = pygame.transform.scale(monaco_img, (300, 300))
 
 bahrain_img = pygame.image.load("../circuits/bahrain.png")
-bahrain_img = pygame.transform.scale(bahrain_img, (200, 200))
+bahrain_img = pygame.transform.scale(bahrain_img, (300, 300))
 
 oval_img = pygame.image.load("../circuits/oval.png")
-oval_img = pygame.transform.scale(oval_img, (200, 200))
+oval_img = pygame.transform.scale(oval_img, (300, 300))
 
 vector_img = pygame.image.load("../circuits/vector.png")
-vector_img = pygame.transform.scale(vector_img, (200, 200))
+vector_img = pygame.transform.scale(vector_img, (300, 300))
 
 def loop_index_left(index, len):
     if index - 1 == -1:
@@ -56,6 +57,21 @@ def draw_text(text, font, color, surface, x, y):
     textrect.center = (x, y)
     surface.blit(textobj, textrect)
 
+def drop_shadow_text(screen, text, size, x, y, colour=(255,255,255), drop_colour=(77, 77, 77), font=None):
+    # how much 'shadow distance' is best?
+    dropshadow_offset = 1 + (size // 15)
+    text_font = pygame.font.Font(font, size)
+    # make the drop-shadow
+    text_bitmap = text_font.render(text, True, drop_colour)
+    text_rect = text_bitmap.get_rect()
+    text_rect.center = (x+dropshadow_offset, y+dropshadow_offset)
+    screen.blit(text_bitmap, text_rect)
+    # make the overlay text
+    text_bitmap = text_font.render(text, True, colour)
+    text_rect = text_bitmap.get_rect()
+    text_rect.center = (x, y)
+    screen.blit(text_bitmap, text_rect)
+
 
 def main_menu(circuits):
     user_text = ""
@@ -63,30 +79,31 @@ def main_menu(circuits):
 
     while True:
         screen.fill("white")
-        draw_text("CIRCUITO", font_titulo, "black", screen, x // 2, y // 5)
+        draw_text("CIRCUITO", font_titulo, "black", screen, x // 2, y // 6)
 
-        button2 = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
-        pygame.draw.rect(screen, (102, 153, 0), button2, border_radius=15)
-        select = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
-        pygame.draw.rect(screen, (153, 204, 255), select, width=5, border_radius=15)
-        draw_text(circuits[index][0], font_pequena, "white", screen, x // 2, y // 2)
+        button2 = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 120, 225, 65)
+        pygame.draw.rect(screen, (255, 204, 102), button2, border_radius=15)
+        select = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 120, 225, 65)
+        pygame.draw.rect(screen, "black", select, width=2, border_radius=15)
+        drop_shadow_text(screen, circuits[index][0], 30, x // 2, y // 2 - 87.5, font="freesansbold.ttf")
 
-        button_left = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_left, border_radius=10)
-        draw_text(circuits[loop_index_left(index, len(circuits))][0], font_pequena_pequena, "white", screen, SIZE_X - 112.5 - 125, y // 2)
+        button_left = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y - 107.5, 150, 40)
+        pygame.draw.rect(screen, (255, 179, 26), button_left, border_radius=10)
+        drop_shadow_text(screen, circuits[loop_index_left(index, len(circuits))][0], 18, SIZE_X - 112.5 - 125, y // 2 - 87.5, font="freesansbold.ttf")
+        draw_text(circuits[loop_index_left(index, len(circuits))][0], font_pequena_pequena, "white", screen, SIZE_X - 112.5 - 125, y // 2 - 87.5)
 
-        button_right = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_right, border_radius=10)
-        draw_text(circuits[loop_index_right(index, len(circuits))][0], font_pequena_pequena, "white", screen, SIZE_X - 112.5 + 200 + 150, y // 2)
+        button_right = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y - 107.5, 150, 40)
+        pygame.draw.rect(screen, (255, 179, 26), button_right, border_radius=10)
+        drop_shadow_text(screen, circuits[loop_index_right(index, len(circuits))][0], 18, SIZE_X - 112.5 + 200 + 150, y // 2 - 87.5, font="freesansbold.ttf")
 
         if index == 0:
-            screen.blit(monaco_img, (SIZE_X - 100, 350))
+            screen.blit(monaco_img, (SIZE_X - 150, 262.5))
         elif index == 1:
-            screen.blit(bahrain_img, (SIZE_X - 100, 350))
+            screen.blit(bahrain_img, (SIZE_X - 150, 262.5))
         elif index == 2:
-            screen.blit(oval_img, (SIZE_X - 100, 350))
+            screen.blit(oval_img, (SIZE_X - 150, 262.5))
         elif index == 3:
-            screen.blit(vector_img, (SIZE_X - 100, 350))
+            screen.blit(vector_img, (SIZE_X - 150, 262.5))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -117,23 +134,27 @@ def menu_choose_mode(race):
     index = 0
     while running:
         screen.fill("white")
-        draw_text("Escolha o modo de jogo", font_titulo, "black", screen, x // 2, y // 5)
+        draw_text("MODO DE JOGO", font_titulo, "black", screen, x // 2, y // 5)
 
         select1 = pygame.Rect(SIZE_X - 125, SIZE_Y - 55, 250, 50)
         select2 = pygame.Rect(SIZE_X - 125, SIZE_Y + 55, 250, 50)
+        select3 = pygame.Rect(SIZE_X - 125, SIZE_Y - 55, 252, 52)
+        select4 = pygame.Rect(SIZE_X - 125, SIZE_Y + 55, 252, 52)
 
         button_mult = pygame.Rect(SIZE_X - 125, SIZE_Y - 55, 250, 50)
         button_sing = pygame.Rect(SIZE_X - 125, SIZE_Y + 55, 250, 50)
-        pygame.draw.rect(screen, (102, 153, 0), button_mult, border_radius=15)
-        pygame.draw.rect(screen, (102, 153, 0), button_sing, border_radius=15)
-
-        draw_text("Singleplayer", font_pequena, "white", screen, x // 2, SIZE_Y + 80)
-        draw_text("Multiplayer", font_pequena, "white", screen, x // 2, SIZE_Y - 30)
+        pygame.draw.rect(screen, (255, 179, 26), button_mult, border_radius=15)
+        pygame.draw.rect(screen, (255, 179, 26), button_sing, border_radius=15)
 
         if index == 0:
-            pygame.draw.rect(screen, (153, 204, 255), select1, width=5, border_radius=15)
+            pygame.draw.rect(screen, (255, 204, 102), select1, border_radius=15)
+            pygame.draw.rect(screen, "black", select3, width=2, border_radius=15)
         else:
-            pygame.draw.rect(screen, (153, 204, 255), select2, width=5, border_radius=15)
+            pygame.draw.rect(screen, (255, 204, 102), select2, border_radius=15)
+            pygame.draw.rect(screen, "black", select4, width=2, border_radius=15)
+
+        drop_shadow_text(screen, "Multiplayer", 25, x // 2, SIZE_Y - 30, font="freesansbold.ttf")
+        drop_shadow_text(screen, "Singleplayer", 25, x // 2, SIZE_Y + 80, font="freesansbold.ttf")
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -187,60 +208,63 @@ def menu_multiplayer_algorithms(players):
     vertical_index = 0
     while running:
         screen.fill("white")
-        draw_text("Escolha os algoritmos", font_titulo, "black", screen, x // 2, y // 5)
+        draw_text("ALGORITMOS DE PROCURA", font_titulo, "black", screen, x // 2, y // 5)
 
         button1 = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
-        pygame.draw.rect(screen, (102, 153, 0), button1, border_radius=15)
+        pygame.draw.rect(screen,  (255, 204, 102), button1, border_radius=15)
         draw_text("Jogador " + str(index), font_pequena, "white", screen, x // 2, y // 2)
 
         button_left1 = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_left1, border_radius=10)
+        pygame.draw.rect(screen, (255, 179, 26), button_left1, border_radius=10)
         draw_text("Jogador " + str(loop_index_left(index, len(players))), font_pequena_pequena, "white", screen, SIZE_X - 112.5 - 125,
                   y // 2)
 
         button_right1 = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_right1, border_radius=10)
+        pygame.draw.rect(screen, (255, 179, 26), button_right1, border_radius=10)
         draw_text("Jogador " + str(loop_index_right(index, len(players))), font_pequena_pequena, "white", screen,
                   SIZE_X - 112.5 + 200 + 150, y // 2)
 
         button2 = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 70, 225, 65)
-        pygame.draw.rect(screen, (102, 153, 0), button2, border_radius=15)
+        pygame.draw.rect(screen, (255, 204, 102), button2, border_radius=15)
         draw_text(alg_handler(indexes[index][0]), font_pequena, "white", screen, x // 2, SIZE_Y + 100)
 
         button_left2 = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y + 82.5, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_left2, border_radius=10)
+        pygame.draw.rect(screen, (255, 179, 26), button_left2, border_radius=10)
         draw_text(alg_handler(loop_index_left(indexes[index][0], 6)), font_pequena_pequena, "white", screen,
                   SIZE_X - 112.5 - 125, SIZE_Y + 100)
 
         button_right2 = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y + 82.5, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_right2, border_radius=10)
+        pygame.draw.rect(screen, (255, 179, 26), button_right2, border_radius=10)
         draw_text(alg_handler(loop_index_right(indexes[index][0], 6)), font_pequena_pequena, "white", screen,
                   SIZE_X - 112.5 + 200 + 150, SIZE_Y + 100)
 
         if indexes[index][0] == 4 or indexes[index][0] == 5:
-            button3 = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 172.5, 225, 65)
-            pygame.draw.rect(screen, (102, 153, 0), button3, border_radius=15)
-            draw_text(heur_handler(indexes[index][1]), font_pequena, "white", screen, x // 2, SIZE_Y + 200)
+            button_distance = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 150, 100, 30)
+            button_velocity = pygame.Rect(SIZE_X + 10, SIZE_Y + 150, 100, 30)
+            pygame.draw.rect(screen, (255, 179, 26), button_distance, border_radius=10)
+            pygame.draw.rect(screen, (255, 179, 26), button_velocity, border_radius=10)
 
-            button_left3 = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y + 185, 150, 40)
-            pygame.draw.rect(screen, (0, 153, 0), button_left3, border_radius=10)
-            draw_text(heur_handler(loop_index_left(indexes[index][1], 2)), font_pequena_pequena, "white", screen,
-                      SIZE_X - 112.5 - 125, SIZE_Y + 200)
+            if vertical_index == 2 and indexes[index][1] == 0:
+                button_distance = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 150, 100, 30)
+                pygame.draw.rect(screen, (255, 204, 102), button_distance, border_radius=10)
+                pygame.draw.rect(screen, "black", button_distance, width=2, border_radius=10)
+            elif vertical_index == 2 and indexes[index][1] == 1:
+                button_velocity = pygame.Rect(SIZE_X + 10, SIZE_Y + 150, 100, 30)
+                pygame.draw.rect(screen, (255, 204, 102), button_velocity, border_radius=10)
+                pygame.draw.rect(screen, "black", button_velocity, width=2, border_radius=10)
 
-            button_right3 = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y + 185, 150, 40)
-            pygame.draw.rect(screen, (0, 153, 0), button_right3, border_radius=10)
-            draw_text(heur_handler(loop_index_right(indexes[index][1], 2)), font_pequena_pequena, "white", screen,
-                      SIZE_X - 112.5 + 200 + 150, SIZE_Y + 200)
+            drop_shadow_text(screen, "Distance", 18, SIZE_X - 62.5, SIZE_Y + 165,
+                             font="freesansbold.ttf")
+            drop_shadow_text(screen, "Velocity", 18, SIZE_X + 60, SIZE_Y + 165,
+                             font="freesansbold.ttf")
 
         if vertical_index == 0:
             select1 = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
-            pygame.draw.rect(screen, (153, 204, 255), select1, width=5, border_radius=15)
+            pygame.draw.rect(screen, "black", select1, width=2, border_radius=15)
         elif vertical_index == 1:
             select2 = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 70, 225, 65)
-            pygame.draw.rect(screen, (153, 204, 255), select2, width=5, border_radius=15)
-        elif vertical_index == 2:
-            select3 = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 172.5, 225, 65)
-            pygame.draw.rect(screen, (153, 204, 255), select3, width=5, border_radius=15)
+            pygame.draw.rect(screen, "black", select2, width=2, border_radius=15)
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -312,41 +336,44 @@ def menu_choose_algorithm(race):
     heuristics = ["distance", "velocity"]
     while running:
         screen.fill("white")
-        draw_text("Escolha o algoritmo a utilizar", font_titulo, "black", screen, x // 2, y // 5)
+        draw_text("ALGORITMO DE PROCURA", font_titulo, "black", screen, x // 2, y // 5)
 
         button = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
-        pygame.draw.rect(screen, (102, 153, 0), button, border_radius=15)
-        draw_text(algorithms[index1], font_pequena, "white", screen, x // 2, y // 2)
+        pygame.draw.rect(screen, (255, 204, 102), button, border_radius=15)
+        drop_shadow_text(screen, algorithms[index1], 30, x // 2, y // 2, font="freesansbold.ttf")
 
         button_left = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_left, border_radius=10)
-        draw_text(algorithms[loop_index_left(index1, 6)], font_pequena_pequena, "white", screen, SIZE_X - 112.5 - 125, y // 2)
+        pygame.draw.rect(screen, (255, 179, 26), button_left, border_radius=10)
+        drop_shadow_text(screen, algorithms[loop_index_left(index1, 6)], 18, SIZE_X - 112.5 - 125, y // 2, font="freesansbold.ttf")
 
         button_right = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_right, border_radius=10)
-        draw_text(algorithms[loop_index_right(index1, 6)], font_pequena_pequena, "white", screen, SIZE_X - 112.5 + 200 + 150, y // 2)
+        pygame.draw.rect(screen, (255, 179, 26), button_right, border_radius=10)
+        drop_shadow_text(screen, algorithms[loop_index_right(index1, 6)], 18, SIZE_X - 112.5 + 200 + 150, y // 2, font="freesansbold.ttf")
 
         if index1 == 4 or index1 == 5:
-            button3 = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 70, 225, 65)
-            pygame.draw.rect(screen, (102, 153, 0), button3, border_radius=15)
-            draw_text(heuristics[index2], font_pequena, "white", screen, x // 2, SIZE_Y + 100)
+            button_distance = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 70, 100, 30)
+            button_velocity = pygame.Rect(SIZE_X + 10, SIZE_Y + 70, 100, 30)
+            pygame.draw.rect(screen, (255, 179, 26), button_distance, border_radius=10)
+            pygame.draw.rect(screen, (255, 179, 26), button_velocity, border_radius=10)
 
-            button_left3 = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y + 82.5, 150, 40)
-            pygame.draw.rect(screen, (0, 153, 0), button_left3, border_radius=10)
-            draw_text(heuristics[loop_index_left(index2, 2)], font_pequena_pequena, "white", screen,
-                      SIZE_X - 112.5 - 125, SIZE_Y + 100)
+            if index2 == 0 and index3 == 1:
+                button_distance = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 70, 100, 30)
+                pygame.draw.rect(screen, (255, 204, 102), button_distance, border_radius=10)
+                pygame.draw.rect(screen, "black", button_distance, width=2, border_radius=10)
+            elif index3 == 1:
+                button_velocity = pygame.Rect(SIZE_X + 10, SIZE_Y + 70, 100, 30)
+                pygame.draw.rect(screen, (255, 204, 102), button_velocity, border_radius=10)
+                pygame.draw.rect(screen, "black", button_velocity, width=2, border_radius=10)
 
-            button_right3 = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y + 82.5, 150, 40)
-            pygame.draw.rect(screen, (0, 153, 0), button_right3, border_radius=10)
-            draw_text(heuristics[loop_index_left(index2, 2)], font_pequena_pequena, "white", screen,
-                      SIZE_X - 112.5 + 200 + 150, SIZE_Y + 100)
+            drop_shadow_text(screen, "Distance", 18, SIZE_X - 62.5, SIZE_Y + 85,
+                             font="freesansbold.ttf")
+            drop_shadow_text(screen, "Velocity", 18, SIZE_X + 60, SIZE_Y + 85,
+                             font="freesansbold.ttf")
 
-        if index3 == 1:
-            select2 = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 70, 225, 65)
-            pygame.draw.rect(screen, (153, 204, 255), select2, width=5, border_radius=15)
-        else:
+
+        if index3 == 0:
             select1 = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
-            pygame.draw.rect(screen, (153, 204, 255), select1, width=5, border_radius=15)
+            pygame.draw.rect(screen, "black", select1, width=2, border_radius=15)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -371,7 +398,7 @@ def menu_choose_algorithm(race):
                     if index1 == 4 or index1 == 5:
                         index3 = loop_index_left(index3, 2)
                 elif event.key == pygame.K_RETURN:
-                    player = menu_choose_player(race.start)
+                    player = menu_choose_player(race)
                     if index1 == 0:
                         print("BFS")
                         path, cost, pos_visited = race.BFS_solution(player)
@@ -410,27 +437,31 @@ def menu_choose_algorithm(race):
         pygame.display.update()
         clock.tick(60)
 
-def menu_choose_player(players):
+def menu_choose_player(race):
     running = True
     index = 0
     while running:
         screen.fill("white")
-        draw_text("Escolha o jogador", font_titulo, "black", screen, x // 2, y // 5)
+        draw_text("Jogador", font_titulo, "black", screen, x // 2, y // 5)
 
-        button = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 32.5, 225, 65)
-        pygame.draw.rect(screen, (102, 153, 0), button, border_radius=15)
-        draw_text("Jogador " + str(index), font_pequena, "white", screen, x // 2, y // 2)
-        draw_text(str(players[index].pos), font_pequena, "black", screen, x // 2, y // 2 + 100)
+        button = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 120, 225, 65)
+        pygame.draw.rect(screen, (255, 204, 102), button, border_radius=15)
+        select = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 120, 225, 65)
+        pygame.draw.rect(screen, "black", select, width=2, border_radius=15)
+        drop_shadow_text(screen, "Jogador " + str(index), 30, x // 2, y // 2 - 87.5, font="freesansbold.ttf")
 
-        button_left = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_left, border_radius=10)
-        draw_text("Jogador " + str(loop_index_left(index, len(players))), font_pequena_pequena, "white", screen, SIZE_X - 112.5 - 125,
-                  y // 2)
+        button_left = pygame.Rect(SIZE_X - 112.5 - 200, SIZE_Y - 107.5, 150, 40)
+        pygame.draw.rect(screen, (255, 179, 26), button_left, border_radius=10)
+        drop_shadow_text(screen, "Jogador " + str(loop_index_left(index, len(race.start))), 18, SIZE_X - 112.5 - 125,
+                         y // 2 - 87.5, font="freesansbold.ttf")
 
-        button_right = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y - 20, 150, 40)
-        pygame.draw.rect(screen, (0, 153, 0), button_right, border_radius=10)
-        draw_text("Jogador " + str(loop_index_right(index, len(players))), font_pequena_pequena, "white", screen,
-                  SIZE_X - 112.5 + 200 + 150, y // 2)
+        button_right = pygame.Rect(SIZE_X - 112.5 + 200 + 75, SIZE_Y - 107.5, 150, 40)
+        pygame.draw.rect(screen, (255, 179, 26), button_right, border_radius=10)
+        drop_shadow_text(screen, "Jogador " + str(loop_index_right(index, len(race.start))), 18, SIZE_X - 112.5 + 200 + 150,
+                         y // 2 - 87.5, font="freesansbold.ttf")
+
+
+        draw_circuit(race.matrix, 450 - ((len(race.matrix[0]) // 2) * 10) - 10, 280, 10, index)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -439,20 +470,21 @@ def menu_choose_player(players):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    index = loop_index_left(index, len(players))
+                    index = loop_index_left(index, len(race.start))
                 elif event.key == pygame.K_RIGHT:
-                    index = loop_index_right(index, len(players))
+                    index = loop_index_right(index, len(race.start))
                 elif event.key == pygame.K_RETURN or event.key == pygame.K_ESCAPE:
                     running = False
 
         pygame.display.update()
         clock.tick(60)
 
-    return players[index]
+    return race.start[index]
 
-
-def draw_circuit(matrix):
-    x_draw = y_draw = 0
+def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
+    # 900 * 600
+    x_draw = x_total
+    y_draw = y_total
     walls = list()
     finish = list()
     start = list()
@@ -462,21 +494,18 @@ def draw_circuit(matrix):
     for row in matrix:
         for col in row:
             if col == "X":
-                walls.append(pygame.Rect(x_draw, y_draw, 16, 16))
+                walls.append(pygame.Rect(x_draw, y_draw, pixel, pixel))
             elif col == "P":
-                start.append(pygame.Rect(x_draw, y_draw, 16, 16))
-                players.append((x_draw + 8.5, y_draw + 8.5))
+                start.append(pygame.Rect(x_draw, y_draw, pixel, pixel))
+                players.append((x_draw + (pixel//2) + 0.5, y_draw + (pixel//2) + 0.5))
             elif col == "F":
-                finish.append(pygame.Rect(x_draw, y_draw, 16, 16))
+                finish.append(pygame.Rect(x_draw, y_draw, pixel, pixel))
             elif col == "-":
-                track.append(pygame.Rect(x_draw, y_draw, 16, 16))
-            x_draw += 16
-        y_draw += 16
-        x_draw = 0
+                track.append(pygame.Rect(x_draw, y_draw, pixel, pixel))
+            x_draw += pixel
+        y_draw += pixel
+        x_draw = x_total
 
-    running = True
-
-    screen.fill("white")
 
     for w in walls:
         pygame.draw.rect(screen, "white", w)
@@ -484,20 +513,23 @@ def draw_circuit(matrix):
         pygame.draw.rect(screen, (255, 0, 0), f)
     for t in track:
         pygame.draw.rect(screen, (41, 41, 61), t)
+
     for s in start:
         pygame.draw.rect(screen, (51, 204, 51), s)
 
+    if player != -1:
+        pygame.draw.rect(screen, (255, 153, 0), start[player])
 
-def draw_until_frame(paths, matrix, index):
+def draw_until_frame(paths, matrix, x_total, y_total, index):
     colors = ["orange", "red", "green", "blue", "yellow", "magenta", "gray", "cyan"]
     for j in range(len(paths)):
         if index < len(paths[j]):
             for i in range(index+1):
                 final_pos = paths[j][i].pos
-                final_pos = (final_pos[0] * 16, len(matrix) * 16 - final_pos[1] * 16)
+                final_pos = (x_total + final_pos[0] * 16, y_total + len(matrix) * 16 - final_pos[1] * 16)
                 if i > 0:
                     start_pos = paths[j][i - 1].pos
-                    start_pos = (start_pos[0] * 16, len(matrix) * 16 - start_pos[1] * 16)
+                    start_pos = (x_total + start_pos[0] * 16, y_total + len(matrix) * 16 - start_pos[1] * 16)
                     pygame.draw.circle(screen, colors[j], start_pos, 5)
                     pygame.draw.line(screen, colors[j], start_pos, final_pos, 2)
 
@@ -519,7 +551,10 @@ def draw_frame(paths, matrix, index):
 
 
 def draw_paths(paths, matrix, cost=-1):
-    draw_circuit(matrix)
+    screen.fill("white")
+    x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
+    y_total = 300 - (len(matrix) // 2) * 16
+    draw_circuit(matrix, x_total, y_total, 16)
 
     max_len = len(paths[0])
     for path in paths:
@@ -538,12 +573,12 @@ def draw_paths(paths, matrix, cost=-1):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     index = loop_index_left(index, max_len)
-                    draw_circuit(matrix)
-                    draw_until_frame(paths, matrix, index)
+                    draw_circuit(matrix, x_total, y_total, 16)
+                    draw_until_frame(paths, matrix, x_total, y_total, index)
                 elif event.key == pygame.K_RIGHT:
                     index = loop_index_right(index, max_len)
-                    draw_circuit(matrix)
-                    draw_until_frame(paths, matrix, index)
+                    draw_circuit(matrix,  x_total, y_total, 16)
+                    draw_until_frame(paths, matrix, x_total, y_total, index)
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
