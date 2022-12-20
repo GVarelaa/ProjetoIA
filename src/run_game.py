@@ -322,8 +322,12 @@ def menu_multiplayer(race):
     print(race.player_algorithms)
     print(heuristics)
 
-    paths = race.multiplayer(heuristics)
-    draw_paths(paths, race.matrix)
+    paths, costs = race.multiplayer(heuristics)
+    screen.fill("white")
+    x_total = 450 - ((len(race.matrix[0]) // 2) * 16) - 16
+    y_total = 300 - (len(race.matrix) // 2) * 16
+    draw_circuit(race.matrix, x_total, y_total, 16)
+    draw_paths(paths, race.matrix, costs)
 
 
 
@@ -520,10 +524,24 @@ def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
     if player != -1:
         pygame.draw.rect(screen, (255, 153, 0), start[player])
 
-def draw_until_frame(paths, matrix, x_total, y_total, index):
-    colors = ["orange", "red", "green", "blue", "yellow", "magenta", "gray", "cyan"]
+
+def draw_final_path(path, matrix, x_total, y_total, cost, color, index):
+    for i in range(len(path)):
+        final_pos = path[i].pos
+        final_pos = (x_total + final_pos[0] * 16, y_total + len(matrix) * 16 - final_pos[1] * 16)
+        if i > 0:
+            start_pos = path[i - 1].pos
+            start_pos = (x_total + start_pos[0] * 16, y_total + len(matrix) * 16 - start_pos[1] * 16)
+            pygame.draw.circle(screen, color, start_pos, 5)
+            pygame.draw.line(screen, color, start_pos, final_pos, 2)
+        pygame.draw.circle(screen, color, final_pos, 5)
+
+    draw_text(f"Jogador {index} : Custo {cost}", font_pequena_pequena, color, screen, 110, 30 + 30*index)
+
+def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
+    colors = ['darkviolet', 'darkorange', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen']
     for j in range(len(paths)):
-        if index < len(paths[j]):
+        if index + 1 < len(paths[j]):
             for i in range(index+1):
                 final_pos = paths[j][i].pos
                 final_pos = (x_total + final_pos[0] * 16, y_total + len(matrix) * 16 - final_pos[1] * 16)
@@ -534,28 +552,13 @@ def draw_until_frame(paths, matrix, x_total, y_total, index):
                     pygame.draw.line(screen, colors[j], start_pos, final_pos, 2)
 
                 pygame.draw.circle(screen, colors[j], final_pos, 5)
+        else:
+            draw_final_path(paths[j], matrix, x_total, y_total, costs[j], colors[j], j)
 
 
-def draw_frame(paths, matrix, index):
-    for path in paths:
-        if index < len(path):
-            final_pos = path[index].pos
-            final_pos = (final_pos[0] * 16, len(matrix) * 16 - final_pos[1] * 16)
-            if index > 0:
-                start_pos = path[index - 1].pos
-                start_pos = (start_pos[0] * 16, len(matrix) * 16 - start_pos[1] * 16)
-                pygame.draw.circle(screen, (153, 102, 0), start_pos, 5)
-                pygame.draw.line(screen, (153, 102, 0), start_pos, final_pos, 2)
-
-            pygame.draw.circle(screen, (153, 102, 0), final_pos, 5)
-
-
-def draw_paths(paths, matrix, cost=-1):
-    screen.fill("white")
+def draw_paths(paths, matrix, costs):
     x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
     y_total = 300 - (len(matrix) // 2) * 16
-    draw_circuit(matrix, x_total, y_total, 16)
-
     max_len = len(paths[0])
     for path in paths:
         if len(path) > max_len:
@@ -574,11 +577,11 @@ def draw_paths(paths, matrix, cost=-1):
                 if event.key == pygame.K_LEFT:
                     index = loop_index_left(index, max_len)
                     draw_circuit(matrix, x_total, y_total, 16)
-                    draw_until_frame(paths, matrix, x_total, y_total, index)
+                    draw_until_frame(paths, matrix, x_total, y_total, index, costs)
                 elif event.key == pygame.K_RIGHT:
                     index = loop_index_right(index, max_len)
                     draw_circuit(matrix,  x_total, y_total, 16)
-                    draw_until_frame(paths, matrix, x_total, y_total, index)
+                    draw_until_frame(paths, matrix, x_total, y_total, index, costs)
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 

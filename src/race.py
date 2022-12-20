@@ -205,26 +205,33 @@ class Race:
         players = self.start
         matrix = self.matrix
         paths = dict()
+        costs = list()
 
         for i in range(len(players)):
             match self.player_algorithms[i]:
                 case 0:
                     path, cost, pos_visited = self.BFS_solution(players[i], paths)
                     paths[i] = path
+                    costs.append(cost)
                 case 1:
                     path, cost, pos_visited = self.DFS_solution(players[i], paths)
                     paths[i] = path
+                    costs.append(cost)
                 case 2:
                     path, cost, pos_visited = self.iterative_DFS_solution(players[i], paths)
                     paths[i] = path
+                    costs.append(cost)
                 case 3:
                     path, cost, pos_visited = self.uniform_cost_solution(players[i], paths)
                     paths[i] = path
+                    costs.append(cost)
                 case 4:
                     path, cost, pos_visited = self.a_star_solution(players[i], heuristics[i], paths)
                     paths[i] = path
+                    costs.append(cost)
                 case 5:
                     path, cost, pos_visited = self.greedy_solution(players[i], heuristics[i], paths)
                     paths[i] = path
+                    costs.append(cost)
 
-        return list(paths.values())
+        return list(paths.values()), costs
