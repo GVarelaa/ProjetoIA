@@ -1,4 +1,3 @@
-import pygame
 import sys
 from menus import main_menu
 
