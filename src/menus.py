@@ -475,6 +475,7 @@ def menu_choose_algorithm(race):
 
                     if index_alg == 5:
                         path, cost, debug = race.greedy_solution(player, heuristics[index_greedy])
+                        print(len(path))
                         draw_circuit(race.matrix, x_total, y_total, 16)
                         draw_paths([(player_index, path)], race.matrix, [cost], debug)
 

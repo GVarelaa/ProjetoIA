@@ -162,7 +162,8 @@ def draw_final_path(path, matrix, x_total, y_total, cost, color):
 
 
 def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
-    colors = ['darkorange', 'darkviolet', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen','maroon']
+    colors = ['darkorange', 'darkviolet', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen',
+              'maroon', (230, 0, 230), (255, 255, 0), (153, 51, 0), (204, 179, 255), (51, 102, 0), (255, 255, 255)]
 
     f_pos = None
     for j in range(len(paths)):
