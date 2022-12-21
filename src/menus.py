@@ -6,22 +6,22 @@ SIZE_X = 900 // 2
 SIZE_Y = 600 // 2
 input_rect = pygame.Rect(380, 200, 140, 32)
 
-iman_img = pygame.image.load("../circuits/iman.png")
+iman_img = pygame.image.load("../circuits/img/iman.png")
 iman_img = pygame.transform.scale(iman_img, (200, 200))
 
-bahrain_img = pygame.image.load("../circuits/bahrain.png")
+bahrain_img = pygame.image.load("../circuits/img/bahrain.png")
 bahrain_img = pygame.transform.scale(bahrain_img, (200, 200))
 
-oval_img = pygame.image.load("../circuits/oval.png")
+oval_img = pygame.image.load("../circuits/img/oval.png")
 oval_img = pygame.transform.scale(oval_img, (200, 200))
 
-vector_img = pygame.image.load("../circuits/vector.png")
+vector_img = pygame.image.load("../circuits/img/vector.png")
 vector_img = pygame.transform.scale(vector_img, (200, 200))
 
-rect_img = pygame.image.load("../circuits/rect.png")
+rect_img = pygame.image.load("../circuits/img/rect.png")
 rect_img = pygame.transform.scale(rect_img, (350, 50))
 
-snake_img = pygame.image.load("../circuits/snake.png")
+snake_img = pygame.image.load("../circuits/img/snake.png")
 snake_img = pygame.transform.scale(snake_img, (200, 200))
 
 
@@ -514,7 +514,6 @@ def menu_choose_algorithm(race):
 
                     if index_alg == 5:
                         path, cost, debug = race.greedy_solution(player, heuristics[index_greedy])
-                        print(len(path))
                         draw_circuit(race.matrix, x_total, y_total, 16)
                         draw_paths([(player_index, path)], race.matrix, [cost], debug)
 
