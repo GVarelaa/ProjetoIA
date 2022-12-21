@@ -1,8 +1,6 @@
-import networkx as nx
-import matplotlib.pyplot as plt
 from queue import Queue
-import drawer
 from src import position_calculator
+from src.node import Node
 
 
 class Graph:
@@ -192,7 +190,7 @@ class Graph:
         if len(paths.values()) < 1:
             return False
 
-        disp = drawer.calculate_displacement(start_node.pos, final_node.pos)
+        disp = Node.calculate_displacement(start_node.pos, final_node.pos)
         disp_squares = position_calculator.squares_visited(start_node.pos, disp)
 
         for list in paths.values():

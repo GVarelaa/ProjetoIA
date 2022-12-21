@@ -31,3 +31,15 @@ class Node:
         :return: Hash value
         """
         return hash((self.pos, self.vel))
+
+    @staticmethod
+    def calculate_displacement(pos1, pos2):
+        """
+        Calcula o deslocamento entre duas posições
+        :param pos1: Posição A
+        :param pos2: Posição B
+        :return: Deslocamento no eixo do x e y
+        """
+        dispx = pos2[0] - pos1[0]
+        dispy = pos2[1] - pos1[1]
+        return dispx, dispy
