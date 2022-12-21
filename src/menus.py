@@ -63,6 +63,7 @@ def main_menu(circuits):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     matrix, start, end = parser(circuits[index][1])
+                    print(start)
                     race = Race(matrix, start, end)
                     race.build_graph()
 

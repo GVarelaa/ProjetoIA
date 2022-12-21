@@ -102,16 +102,17 @@ class Race:
 
         return distance
 
-    def build_graph(self, initial_state=None):
+    def build_graph(self):
         """
         Constroi um grafo
         :param initial_state: Estado inicial
         """
-        if initial_state is None:
-            initial_state = self.start[0]
 
-        states = {initial_state}
-        visited = {initial_state}
+        states = set()
+        visited = set()
+        for start in self.start:
+            states.add(start)
+            visited.add(start)
 
         while states:
             state = states.pop()
