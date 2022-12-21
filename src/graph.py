@@ -274,6 +274,7 @@ class Graph:
         level[start] = 0
 
         path_found = False
+        remains_same_spot = []
         while not q.empty() and not path_found:
             node = q.get()
             pos_visited.append(node.pos)  # debug
@@ -294,11 +295,12 @@ class Graph:
                 if q.empty():
                     i = level[node] + 1
                     for (adj, cost) in self.graph[node]:
-                        if adj not in visited:
+                        if adj == node:
+                            remains_same_spot.append(adj)
                             q.put(adj)
-                            parents[adj] = node
                             level[adj] = i
                             visited.add(adj)
+                            break
 
 
         # reconstruir o caminho
@@ -306,8 +308,14 @@ class Graph:
         if path_found:
             path.append(node)
             while parents[node] is not None:
+                if node in remains_same_spot:
+                    path.append(node)
                 path.append(parents[node])
                 node = parents[node]
+
+            if node in remains_same_spot:
+                path.append(node)
+
             path.reverse()
 
             total_cost = self.calc_path_cost(path)

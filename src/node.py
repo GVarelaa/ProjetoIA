@@ -23,7 +23,7 @@ class Node:
         :param other: Nodo a comparar
         :return: True caso sejam iguais, False caso contrário
         """
-        return self.pos == other.pos and self.vel == other.vel
+        return self.pos == other.pos and self.vel == other.vel and self.crashed == other.crashed
 
     def __hash__(self):
         """

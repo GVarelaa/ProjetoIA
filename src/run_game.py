@@ -561,7 +561,7 @@ def draw_final_path(path, matrix, x_total, y_total, cost, color, index):
 
 
 def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
-    colors = ['darkviolet', 'darkorange', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen']
+    colors = ['darkviolet', 'darkorange', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen','maroon']
     for j in range(len(paths)):
         if index + 1 < len(paths[j]):
             for i in range(index+1):
@@ -618,5 +618,6 @@ circuits.append(("Oval", "../circuits/oval.txt"))
 circuits.append(("Vector", "../circuits/vector.txt"))
 circuits.append(("Rect", "../circuits/rect.txt"))
 circuits.append(("Snake", "../circuits/snake.txt"))
+circuits.append(("Teste", "../circuits/test.txt"))
 
 main_menu(circuits)
