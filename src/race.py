@@ -234,4 +234,4 @@ class Race:
                     paths[i] = path
                     costs.append(cost)
 
-        return list(paths.values()), costs
+        return sorted(paths.items(), key=lambda x: len(x[1])), costs

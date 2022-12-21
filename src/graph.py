@@ -285,11 +285,20 @@ class Graph:
             if not path_found:
                 for (adj, cost) in self.graph[node]:
                     i = level[node] + 1
-                    if adj not in visited and not Graph.node_in_other_paths(state, adj, i, paths):
+                    if adj not in visited and not Graph.node_in_other_paths(node, adj, i, paths):
                         q.put(adj)
                         parents[adj] = node
                         level[adj] = i
                         visited.add(adj)
+
+                if q.empty():
+                    i = level[node] + 1
+                    for (adj, cost) in self.graph[node]:
+                        if adj not in visited:
+                            q.put(adj)
+                            parents[adj] = node
+                            level[adj] = i
+                            visited.add(adj)
 
         # reconstruir o caminho
         path = []
