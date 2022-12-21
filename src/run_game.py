@@ -444,34 +444,34 @@ def menu_choose_algorithm(race):
                     y_total = 300 - (len(race.matrix) // 2) * 16
 
                     if index_alg == 0:
-                        path, cost, pos_visited = race.BFS_solution(player)
+                        path, cost, debug = race.BFS_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([(player_index, path)], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost], debug)
 
                     if index_alg == 1:
-                        path, cost, pos_visited = race.DFS_solution(player)
+                        path, cost, debug = race.DFS_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([(player_index, path)], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost], debug)
 
                     if index_alg == 2:
-                        path, cost, pos_visited = race.iterative_DFS_solution(player)
+                        path, cost, debug = race.iterative_DFS_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([(player_index, path)], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost], debug)
 
                     if index_alg == 3:
-                        path, cost, pos_visited = race.uniform_cost_solution(player)
+                        path, cost, debug = race.uniform_cost_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([(player_index, path)], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost], debug)
 
                     if index_alg == 4:
-                        path, cost, pos_visited = race.a_star_solution(player, heuristics[index_a])
+                        path, cost, debug = race.a_star_solution(player, heuristics[index_a])
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([(player_index, path)], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost], debug)
 
                     if index_alg == 5:
-                        path, cost, pos_visited = race.greedy_solution(player, heuristics[index_greedy])
+                        path, cost, debug = race.greedy_solution(player, heuristics[index_greedy])
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([(player_index, path)], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost], debug)
 
                 elif event.key == pygame.K_ESCAPE:
                     running = False
@@ -490,6 +490,7 @@ def menu_choose_player(race):
         # Botão Player
         button_player = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 120, 225, 65)
         pygame.draw.rect(screen, (255, 204, 102), button_player, border_radius=15)
+        pygame.draw.rect(screen, "black", button_player, width=2, border_radius=15)
         draw_shadow_text(screen, f"Jogador {index}", 30, x // 2, y // 2 - 87.5, font="freesansbold.ttf")
 
         draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
@@ -556,12 +557,63 @@ def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
         pygame.draw.rect(screen, (255, 153, 0), start[player])
 
 
-def draw_debug(pos_visited, matrix, x_total, y_total):
-    for i in range(len(pos_visited)):
-        curr_pos = pos_visited[i].pos
-        curr_pos = (x_total + curr_pos[0] * 16, y_total + len(matrix) * 16 - curr_pos[1] * 16)
-        if i > 0:
-            pygame.draw.circle(screen, "black", curr_pos, 5)
+def draw_debug_frame(matrix, debug, index):
+    x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
+    y_total = 300 - (len(matrix) // 2) * 16
+
+    curr_pos = debug[index]
+    curr_pos = (x_total + curr_pos[0] * 16, y_total + len(matrix) * 16 - curr_pos[1] * 16)
+    pygame.draw.circle(screen, "darkorange", curr_pos, 5)
+
+def draw_debug(matrix, debug):
+    running = True
+    index = 0
+    x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
+    y_total = 300 - (len(matrix) // 2) * 16
+    screen.fill("white")
+    draw_circuit(matrix, x_total, y_total, 16)
+    draw_text("DEBUG", font_titulo, "black", screen, x // 2, y // 10)
+    while running:
+        keys = pygame.key.get_pressed()
+
+        if keys[K_LEFT]:
+            index = loop_index_left(index, len(debug))
+            screen.fill("white")
+            draw_circuit(matrix, x_total, y_total, 16)
+            draw_text("DEBUG", font_titulo, "black", screen, x // 2, y // 10)
+            draw_debug_frame(matrix, debug, index)
+        elif keys[K_RIGHT]:
+            index = loop_index_right(index, len(debug))
+            screen.fill("white")
+            draw_circuit(matrix, x_total, y_total, 16)
+            draw_text("DEBUG", font_titulo, "black", screen, x // 2, y // 10)
+            draw_debug_frame(matrix, debug, index)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    index = loop_index_left(index, len(debug))
+                    screen.fill("white")
+                    draw_circuit(matrix, x_total, y_total, 16)
+                    draw_text("DEBUG", font_titulo, "black", screen, x // 2, y // 10)
+                    draw_debug_frame(matrix, debug, index)
+                elif event.key == pygame.K_RIGHT:
+                    index = loop_index_right(index, len(debug))
+                    screen.fill("white")
+                    draw_circuit(matrix, x_total, y_total, 16)
+                    draw_text("DEBUG", font_titulo, "black", screen, x // 2, y // 10)
+                    draw_debug_frame(matrix, debug, index)
+                elif event.key == pygame.K_ESCAPE:
+                    screen.fill("white")
+                    draw_circuit(matrix, x_total, y_total, 16)
+                    running = False
+
+        pygame.display.update()
+        clock.tick(30)
 
 
 def draw_final_path(path, matrix, x_total, y_total, cost, color):
@@ -579,7 +631,7 @@ def draw_final_path(path, matrix, x_total, y_total, cost, color):
 
 
 def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
-    colors = ['darkviolet', 'darkorange', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen','maroon']
+    colors = ['darkorange', 'darkviolet', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen','maroon']
 
     f_pos = None
     for j in range(len(paths)):
@@ -599,7 +651,7 @@ def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
             draw_final_path(paths[j], matrix, x_total, y_total, costs[j], colors[j])
 
 
-def draw_paths(paths, matrix, costs):
+def draw_paths(paths, matrix, costs, debug=[]):
     x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
     y_total = 300 - (len(matrix) // 2) * 16
     max_len = len(paths[0])
@@ -611,7 +663,6 @@ def draw_paths(paths, matrix, costs):
     i = 1
     index = 0
     running = True
-
     while running:
         time.sleep(0.15)
         keys = pygame.key.get_pressed()
@@ -639,6 +690,8 @@ def draw_paths(paths, matrix, costs):
                     index = loop_index_right(index, max_len)
                     draw_circuit(matrix,  x_total, y_total, 16)
                     draw_until_frame(paths, matrix, x_total, y_total, index, costs)
+                elif event.key == pygame.K_d and len(paths) == 1:
+                    draw_debug(matrix, debug)
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 

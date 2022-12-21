@@ -201,36 +201,35 @@ class Graph:
                     return True
         return False
 
-    def DFS(self, start, end, path, visited, pos_visited, paths=dict(), iter_number=0, depth=-1):
+    def DFS(self, start, end, path, visited, debug, paths=dict(), iter_number=0, depth=-1):
         """
         Algoritmo "Depth-First-Search"
         :param start: Posição inicial
         :param end: Posições finais
         :param path: Caminho final
         :param visited: Nodos visitados
-        :param pos_visited: Posições visitadas (debug)
+        :param debug: Posições visitadas (debug)
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :param iter_number: Número de iteração (multiplayer)
         :param depth: Profundidade (DFS iterativo)
         :return:
         """
         visited.add(start)
-        pos_visited.append(start.pos)  # debug
+        debug.append(start.pos)  # debug
 
         for state in end:
             if state.pos == start.pos:
                 path.append(start)
                 total_cost = self.calc_path_cost(path)
-                return path, total_cost, pos_visited
+                return path, total_cost, debug
 
         if depth == 0:
             return None
 
-
         for adj, cost in self.graph[start]:
-            if adj not in visited and not Graph.node_in_other_paths(state, adj, iter_number, paths):
+            if adj not in visited and not Graph.node_in_other_paths(start, adj, iter_number, paths):
                 path.append(start)
-                ret = self.DFS(adj, end, path, visited, pos_visited, paths, iter_number+1, depth-1)
+                ret = self.DFS(adj, end, path, visited, debug, paths, iter_number+1, depth-1)
                 if ret is not None:
                     return ret
                 path.pop()
@@ -250,9 +249,8 @@ class Graph:
         ret = None
 
         while ret is None:
-            ret = self.DFS(start, end, path=[], visited=set(), pos_visited=[], paths=paths, depth=i)
+            ret = self.DFS(start, end, path=[], visited=set(), debug=[], paths=paths, depth=i)
             i += 1
-
 
         return ret
 
@@ -264,7 +262,7 @@ class Graph:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        pos_visited = [start]  # debug
+        debug = [start]  # debug
         visited = {start}
         q = Queue()
 
@@ -281,7 +279,7 @@ class Graph:
         remains_same_spot = []
         while not q.empty() and not path_found:
             node = q.get()
-            pos_visited.append(node.pos)  # debug
+            debug.append(node.pos)  # debug
 
             for state in end:
                 if node.pos == state.pos:
@@ -322,7 +320,7 @@ class Graph:
             path.reverse()
 
             total_cost = self.calc_path_cost(path)
-            return path, total_cost, pos_visited
+            return path, total_cost, debug
 
     def uniform_cost(self, start, end, paths=dict()):
         """
@@ -339,7 +337,7 @@ class Graph:
         parents = {start: start}  # mantém o antecessor de um nodo
         costs = {start: 0}
 
-        pos_visited = [start.pos]  # debug
+        debug = [start.pos]  # debug
 
         while len(open_list) > 0:
             n = None
@@ -349,7 +347,7 @@ class Graph:
                 if n is None or costs[node] < costs[n]:
                     n = node
 
-            pos_visited.append(n.pos)  # debug
+            debug.append(n.pos)  # debug
 
             # se o nodo corrente é o destino
             # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
@@ -364,7 +362,7 @@ class Graph:
                     reconst_path.append(start)
                     reconst_path.reverse()
 
-                    return reconst_path, self.calc_path_cost(reconst_path), pos_visited
+                    return reconst_path, self.calc_path_cost(reconst_path), debug
 
             for adj, cost in self.graph[n]:
                 i = level[n] + 1
@@ -401,7 +399,7 @@ class Graph:
         closed_list = set()  # nodos visitados
         parents = {start: start}  # mantém o antecessor de um nodo
 
-        pos_visited = [start.pos]  # debug
+        debug = [start.pos]  # debug
 
         while len(open_list) > 0:
             n = None
@@ -411,7 +409,7 @@ class Graph:
                 if n is None or (heuristic[node] < heuristic[n]):
                     n = node
 
-            pos_visited.append(n.pos)  # debug
+            debug.append(n.pos)  # debug
 
             # se o nodo corrente é o destino
             # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
@@ -426,7 +424,7 @@ class Graph:
                     reconst_path.append(start)
                     reconst_path.reverse()
 
-                    return reconst_path, self.calc_path_cost(reconst_path), pos_visited
+                    return reconst_path, self.calc_path_cost(reconst_path), debug
 
             # para todos os vizinhos do nodo corrente
             for (adj, cost) in self.graph[n]:
@@ -463,7 +461,7 @@ class Graph:
         parents = {start: start}  # mantém o antecessor de um nodo
         costs = {start: 0}
 
-        pos_visited = [start.pos]  # debug
+        debug = [start.pos]  # debug
 
         while len(open_list) > 0:
             n = None
@@ -473,7 +471,7 @@ class Graph:
                 if n is None or (heuristic[node] + costs[node]) < (heuristic[n] + costs[n]):
                     n = node
 
-            pos_visited.append(n.pos)  # debug
+            debug.append(n.pos)  # debug
 
             # se o nodo corrente é o destino
             # reconstruir o caminho a partir desse nodo até ao start seguindo o antecessor
@@ -488,7 +486,7 @@ class Graph:
                     reconst_path.append(start)
                     reconst_path.reverse()
 
-                    return reconst_path, self.calc_path_cost(reconst_path), pos_visited
+                    return reconst_path, self.calc_path_cost(reconst_path), debug
 
             for adj, cost in self.graph[n]:
                 i = level[n] + 1

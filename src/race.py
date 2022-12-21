@@ -140,8 +140,8 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, pos_visited = self.graph.DFS(initial_state, self.end, [], set(), [], paths)
-        return path, cost, pos_visited
+        path, cost, debug = self.graph.DFS(initial_state, self.end, [], set(), [], paths)
+        return path, cost, debug
 
     def iterative_DFS_solution(self, initial_state, paths=dict()):
         """
@@ -150,8 +150,8 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, pos_visited = self.graph.iterative_DFS(initial_state, self.end, paths)
-        return path, cost, pos_visited
+        path, cost, debug = self.graph.iterative_DFS(initial_state, self.end, paths)
+        return path, cost, debug
 
     def BFS_solution(self, initial_state, paths=dict()):
         """
@@ -160,8 +160,8 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, pos_visited = self.graph.BFS(initial_state, self.end, paths)
-        return path, cost, pos_visited
+        path, cost, debug = self.graph.BFS(initial_state, self.end, paths)
+        return path, cost, debug
 
     def uniform_cost_solution(self, initial_state, paths=dict()):
         """
@@ -170,8 +170,8 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, pos_visited = self.graph.uniform_cost(initial_state, self.end, paths)
-        return path, cost, pos_visited
+        path, cost, debug = self.graph.uniform_cost(initial_state, self.end, paths)
+        return path, cost, debug
 
     def a_star_solution(self, initial_state, type, paths=dict()):
         """
@@ -181,8 +181,8 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, pos_visited = self.graph.a_star(initial_state, self.end, type, paths)
-        return path, cost, pos_visited
+        path, cost, debug = self.graph.a_star(initial_state, self.end, type, paths)
+        return path, cost, debug
 
     def greedy_solution(self, initial_state, type, paths=dict()):
         """
@@ -192,8 +192,8 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, pos_visited = self.graph.greedy(initial_state, self.end, type, paths)
-        return path, cost, pos_visited
+        path, cost, debug = self.graph.greedy(initial_state, self.end, type, paths)
+        return path, cost, debug
 
     def multiplayer(self, heuristics):
         """
@@ -210,27 +210,27 @@ class Race:
         for i in range(len(players)):
             match self.player_algorithms[i]:
                 case 0:
-                    path, cost, pos_visited = self.BFS_solution(players[i], paths)
+                    path, cost, debug = self.BFS_solution(players[i], paths)
                     paths[i] = path
                     costs.append(cost)
                 case 1:
-                    path, cost, pos_visited = self.DFS_solution(players[i], paths)
+                    path, cost, debug = self.DFS_solution(players[i], paths)
                     paths[i] = path
                     costs.append(cost)
                 case 2:
-                    path, cost, pos_visited = self.iterative_DFS_solution(players[i], paths)
+                    path, cost, debug = self.iterative_DFS_solution(players[i], paths)
                     paths[i] = path
                     costs.append(cost)
                 case 3:
-                    path, cost, pos_visited = self.uniform_cost_solution(players[i], paths)
+                    path, cost, debug = self.uniform_cost_solution(players[i], paths)
                     paths[i] = path
                     costs.append(cost)
                 case 4:
-                    path, cost, pos_visited = self.a_star_solution(players[i], heuristics[i], paths)
+                    path, cost, debug = self.a_star_solution(players[i], heuristics[i], paths)
                     paths[i] = path
                     costs.append(cost)
                 case 5:
-                    path, cost, pos_visited = self.greedy_solution(players[i], heuristics[i], paths)
+                    path, cost, debug = self.greedy_solution(players[i], heuristics[i], paths)
                     paths[i] = path
                     costs.append(cost)
 
