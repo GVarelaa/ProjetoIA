@@ -22,14 +22,12 @@ vector_img = pygame.transform.scale(vector_img, (300, 300))
 rect_img = pygame.image.load("../circuits/rect.png")
 rect_img = pygame.transform.scale(rect_img, (400, 100))
 
-#snake_img = pygame.image.load("../circuits/snake.png")
-#snake_img = pygame.transform.scale(snake_img, (300,300))
+snake_img = pygame.image.load("../circuits/snake.png")
+snake_img = pygame.transform.scale(snake_img, (300, 300))
 
 
 def main_menu(circuits):
-    user_text = ""
     index = 0
-
     while True:
         screen.fill("white")
         draw_text("CIRCUITO", font_titulo, "black", screen, x // 2, y // 6)
@@ -52,8 +50,8 @@ def main_menu(circuits):
             screen.blit(vector_img, (SIZE_X - 150, 262.5))
         elif index == 4:
             screen.blit(rect_img, (SIZE_X - 200, 362.5))
-        #elif index == 5:
-            #screen.blit(snake_img), (SIZE_X - 200, 362.5)
+        elif index == 5:
+            screen.blit(snake_img, (SIZE_X - 150, 262.5))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
