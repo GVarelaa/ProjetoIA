@@ -243,7 +243,7 @@ class Graph:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return:
         """
-        i = 1
+        i = 0
         ret = None
 
         while ret is None:
