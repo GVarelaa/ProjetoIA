@@ -1,3 +1,4 @@
+import time
 import pygame
 from pygame.locals import *
 from race import Race
@@ -217,6 +218,8 @@ def menu_multiplayer_algorithms(players):
         draw_shadow_text(screen, alg_handler(indexes[index][0]), 30, x//2, y//2)
 
         if vert_index == 0:
+            pygame.draw.rect(screen, "black", button_player, width=2, border_radius=15)
+
             draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
             draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
 
@@ -532,9 +535,9 @@ def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
         y_draw += pixel
         x_draw = x_total
 
-
     for w in walls:
         pygame.draw.rect(screen, "white", w)
+
     for f in finish:
         pygame.draw.rect(screen, (255, 0, 0), f)
     for t in track:
@@ -558,7 +561,7 @@ def draw_final_path(path, matrix, x_total, y_total, cost, color):
             pygame.draw.line(screen, color, start_pos, final_pos, 2)
         pygame.draw.circle(screen, color, final_pos, 5)
 
-    draw_text(f"Jogador {path[0]} : Custo {cost}", font_pequena_pequena, color, screen, 110, 30 + 30*path[0])
+    draw_text(f"J {path[0]} : Custo {cost}", font_pequena_pequena, color, screen, 80, 30 + 30*path[0])
 
 
 def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
@@ -591,7 +594,20 @@ def draw_paths(paths, matrix, costs):
     i = 1
     index = 0
     running = True
+
     while running:
+        time.sleep(0.15)
+        keys = pygame.key.get_pressed()
+
+        if keys[K_LEFT]:
+            index = loop_index_left(index, max_len)
+            draw_circuit(matrix, x_total, y_total, 16)
+            draw_until_frame(paths, matrix, x_total, y_total, index, costs)
+        elif keys[K_RIGHT]:
+            index = loop_index_right(index, max_len)
+            draw_circuit(matrix, x_total, y_total, 16)
+            draw_until_frame(paths, matrix, x_total, y_total, index, costs)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -609,9 +625,11 @@ def draw_paths(paths, matrix, costs):
                 elif event.key == pygame.K_ESCAPE:
                     running = False
 
+
         clock.tick(60)
         pygame.display.update()
         i += 1
+
 
 circuits = list()
 circuits.append(("Iman", "../circuits/iman.txt"))
