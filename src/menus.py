@@ -1,4 +1,3 @@
-import pygame
 from drawer import *
 from parser import *
 from race import Race
