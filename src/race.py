@@ -1,15 +1,8 @@
 import math
-from enum import Enum
-from time import sleep
-
 from node import Node
 from parser import parser
 from graph import Graph
 import position_calculator
-from copy import deepcopy
-import drawer
-import math
-import matplotlib.pyplot as plt
 
 
 class Race:

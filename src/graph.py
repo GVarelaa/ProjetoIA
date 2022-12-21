@@ -1,7 +1,4 @@
-import networkx as nx
-import matplotlib.pyplot as plt
 from queue import Queue
-import drawer
 from src import position_calculator
 
 
