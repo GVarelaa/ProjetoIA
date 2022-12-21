@@ -24,8 +24,6 @@ def loop_index_right(index, len):
         return 0
     else:
         return index+1
-
-
 def draw_text(text, font, color, surface, x, y):
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect()
