@@ -35,6 +35,7 @@ def last_int(num):
     else:
         return math.floor(num)
 
+
 def calculate_next_border_position(current_pos, disp):
     """
     Calcula a borda da proxima posição
@@ -228,11 +229,19 @@ def calculate_stop_position(current_pos, disp, map):
     displacement_result = DispResult.ADVANCE
     return final_position, displacement_result
 
+
 def squares_visited(start_pos, disp):
+    """
+    Calcula as posições por onde passa ao efetuar um certo deslocamento
+    :param start_pos: Posição inicial
+    :param disp: Deslocamento
+    :return: Lista das posições
+    """
     squares_visited = list()
 
     i = 0
     current_pos = start_pos
+
     while i < abs(disp[0]) + abs(disp[1]):
         current_pos = calculate_next_border_position(current_pos, disp)  # Calculate position when leaving the square
         middle_pos = get_middle_position(current_pos, disp)
@@ -243,6 +252,6 @@ def squares_visited(start_pos, disp):
 
         if is_int_x and is_int_y:
             i += 1
-        i+=1
+        i += 1
 
     return squares_visited

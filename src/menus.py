@@ -26,8 +26,13 @@ snake_img = pygame.transform.scale(snake_img, (200, 200))
 
 
 def main_menu(circuits):
+    """
+    Menu para escolher circuito
+    :param circuits: Lista dos circuitos
+    """
     index = 0
     v_index = 0
+
     while True:
         screen.fill("white")
         draw_text("CIRCUITO", font_titulo, "black", screen, x // 2, y // 6)
@@ -92,11 +97,19 @@ def main_menu(circuits):
 
 
 def parse_circuit(circuit):
-    circuit = circuit.split(".")[0]
-    return circuit
+    """
+    Função auxiliar para obter nome do circuito
+    :param circuit: Nome do ficheiro
+    :return: Nome do circuito
+    """
+    return circuit.split(".")[0].capitalize()
 
 
 def menu_import_circuit(circuits):
+    """
+    Menu para adicionar um novo circuito à lista de circuitos
+    :param circuits: Lista de circuitos
+    """
     running = True
     user_text = ''
     button = pygame.Rect(SIZE_X - 112.5, SIZE_Y - 120, 225, 35)
@@ -124,15 +137,19 @@ def menu_import_circuit(circuits):
                 else:
                     user_text += event.unicode
 
-
         pygame.display.update()
         clock.tick(60)
 
 
 def menu_choose_mode(race):
+    """
+    Menu para escolher o modo de jogo
+    :param race: Race
+    """
     running = True
     index = 0
     modes = ["Singleplayer", "Multiplayer"]
+
     while running:
         screen.fill("white")
         draw_text("MODO DE JOGO", font_titulo, "black", screen, x // 2, y // 5)
@@ -171,6 +188,11 @@ def menu_choose_mode(race):
 
 
 def alg_handler(integer):
+    """
+    Função auxiliar para indicar o algoritmo respetivo
+    :param integer: Indíce
+    :return: Algoritmo respetivo
+    """
     if integer == 0:
         return "BFS"
     elif integer == 1:
@@ -186,6 +208,11 @@ def alg_handler(integer):
 
 
 def heur_handler(integer):
+    """
+    Função auxiliar para indicar a heurística respetiva
+    :param integer: Índice
+    :return: Heurística respetiva
+    """
     if integer == 0:
         return "distance"
     elif integer == 1:
@@ -193,6 +220,10 @@ def heur_handler(integer):
 
 
 def menu_multiplayer_algorithms(players):
+    """
+    Menu para escolher os algoritmos dos diversos jogadores
+    :param players: Jogadores
+    """
     indexes = dict()
     heuristics = ["distance", "velocity"]
 
@@ -340,6 +371,10 @@ def menu_multiplayer_algorithms(players):
 
 
 def menu_multiplayer(race):
+    """
+    Menu multiplayer
+    :param race: Race
+    """
     heuristics = dict()
 
     indexes = menu_multiplayer_algorithms(race.start)
@@ -361,6 +396,10 @@ def menu_multiplayer(race):
 
 
 def menu_choose_algorithm(race):
+    """
+    Menu para escolher algoritmo (singleplayer)
+    :param race: Race
+    """
     running = True
     vert_index = 0
     index_alg = 0
@@ -486,6 +525,11 @@ def menu_choose_algorithm(race):
 
 
 def menu_choose_player(race):
+    """
+    Menu para escolher jogador (singleplayer)
+    :param race: Race
+    :return: Índice do jogador
+    """
     running = True
     index = 0
     while running:

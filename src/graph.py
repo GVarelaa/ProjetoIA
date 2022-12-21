@@ -4,7 +4,6 @@ from node import Node
 
 
 class Graph:
-    # construtor de classe
     def __init__(self):
         """
         Construtor de um grafo
@@ -162,21 +161,6 @@ class Graph:
         print(heuristics)
 
     @staticmethod
-    def minor_length_path(paths):
-        """
-        Devolve o caminho com menor comprimento
-        :param paths: Dicionário com os caminhos
-        :return: Comprimento do menor caminho
-        """
-        min = len(list(paths.values())[0])
-
-        for path in list(paths.values()):
-            if len(path) < min:
-                min = len(path)
-
-        return min
-
-    @staticmethod
     def node_in_other_paths(start_node, final_node, iteration_number, paths):
         """
         Verifica se há colisão entre jogadores
@@ -197,6 +181,7 @@ class Graph:
             for square in disp_squares:
                 if len(list) > iteration_number and list[iteration_number].pos == square:
                     return True
+
         return False
 
     def DFS(self, start, end, path, visited, debug, paths=dict(), iter_number=0, depth=-1):
