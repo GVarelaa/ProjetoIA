@@ -41,6 +41,9 @@ vector_img = pygame.transform.scale(vector_img, (300, 300))
 rect_img = pygame.image.load("../circuits/rect.png")
 rect_img = pygame.transform.scale(rect_img, (400, 100))
 
+#snake_img = pygame.image.load("../circuits/snake.png")
+#snake_img = pygame.transform.scale(snake_img, (300,300))
+
 
 def loop_index_left(index, len):
     if index - 1 == -1:
@@ -105,6 +108,8 @@ def main_menu(circuits):
             screen.blit(vector_img, (SIZE_X - 150, 262.5))
         elif index == 4:
             screen.blit(rect_img, (SIZE_X - 200, 362.5))
+        #elif index == 5:
+            #screen.blit(snake_img), (SIZE_X - 200, 362.5)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -550,6 +555,14 @@ def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
         pygame.draw.rect(screen, (255, 153, 0), start[player])
 
 
+def draw_debug(pos_visited, matrix, x_total, y_total):
+    for i in range(len(pos_visited)):
+        curr_pos = pos_visited[i].pos
+        curr_pos = (x_total + curr_pos[0] * 16, y_total + len(matrix) * 16 - curr_pos[1] * 16)
+        if i > 0:
+            pygame.draw.circle(screen, "black", curr_pos, 5)
+
+
 def draw_final_path(path, matrix, x_total, y_total, cost, color):
     for i in range(len(path[1])):
         final_pos = path[1][i].pos
@@ -584,9 +597,6 @@ def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
         else:
             draw_final_path(paths[j], matrix, x_total, y_total, costs[j], colors[j])
 
-
-    print(index)
-    print(f_pos)
 
 def draw_paths(paths, matrix, costs):
     x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
