@@ -1,7 +1,6 @@
 from queue import Queue
-from src import position_calculator
-from src.node import Node
-
+from position_calculator import *
+from node import Node
 
 class Graph:
     # construtor de classe
