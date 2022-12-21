@@ -214,25 +214,28 @@ class Graph:
         :param depth: Profundidade (DFS iterativo)
         :return:
         """
-        path.append(start)
         visited.add(start)
         pos_visited.append(start.pos)  # debug
 
         for state in end:
             if state.pos == start.pos:
+                path.append(start)
                 total_cost = self.calc_path_cost(path)
                 return path, total_cost, pos_visited
 
         if depth == 0:
             return None
 
+
         for adj, cost in self.graph[start]:
             if adj not in visited and not Graph.node_in_other_paths(state, adj, iter_number, paths):
+                path.append(start)
                 ret = self.DFS(adj, end, path, visited, pos_visited, paths, iter_number+1, depth-1)
                 if ret is not None:
                     return ret
+                path.pop()
 
-        path.pop()  # se nao encontrar, remover o que está no caminho
+        #path.pop()  # se nao encontrar, remover o que está no caminho
         return None
 
     def iterative_DFS(self, start, end, paths=dict()):
@@ -249,6 +252,7 @@ class Graph:
         while ret is None:
             ret = self.DFS(start, end, path=[], visited=set(), pos_visited=[], paths=paths, depth=i)
             i += 1
+
 
         return ret
 
