@@ -2,6 +2,7 @@ from queue import Queue
 from position_calculator import *
 from node import Node
 
+
 class Graph:
     # construtor de classe
     def __init__(self):
@@ -190,7 +191,7 @@ class Graph:
             return False
 
         disp = Node.calculate_displacement(start_node.pos, final_node.pos)
-        disp_squares = position_calculator.squares_visited(start_node.pos, disp)
+        disp_squares = squares_visited(start_node.pos, disp)
 
         for list in paths.values():
             for square in disp_squares:

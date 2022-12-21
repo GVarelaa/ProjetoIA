@@ -69,7 +69,6 @@ def main_menu(circuits):
                 if event.key == pygame.K_RETURN:
                     if v_index == 0:
                         matrix, start, end = parser(circuits[index][1])
-                        print(start)
                         race = Race(matrix, start, end)
                         race.build_graph()
 
@@ -223,6 +222,16 @@ def menu_multiplayer_algorithms(players):
 
             draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
             draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
+
+            if indexes[index][0] == 4:
+                button_heuristic = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 55, 225, 65)
+                pygame.draw.rect(screen, (255, 179, 26), button_heuristic, border_radius=10)
+                draw_shadow_text(screen, heur_handler(indexes[index][1][0]), 30, x // 2, SIZE_Y + 85, font="freesansbold.ttf")
+
+            elif indexes[index][0] == 5:
+                button_heuristic = pygame.Rect(SIZE_X - 112.5, SIZE_Y + 55, 225, 65)
+                pygame.draw.rect(screen, (255, 179, 26), button_heuristic, border_radius=10)
+                draw_shadow_text(screen, heur_handler(indexes[index][1][1]), 30, x // 2, SIZE_Y + 85, font="freesansbold.ttf")
 
         elif vert_index == 1:
             pygame.draw.rect(screen, (255, 179, 26), button_player, border_radius=15)
