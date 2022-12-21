@@ -41,11 +41,10 @@ def main_menu(circuits):
         pygame.draw.rect(screen, (255, 204, 102), new_circuit, border_radius=15)
         draw_shadow_text(screen, "Novo circuito", 18, x // 2, y // 2 - 12, font="freesansbold.ttf")
 
-        draw_shadow_text(screen, ">", 50, x//2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
-        draw_shadow_text(screen, "<", 50, x//2 - 140, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
-
         if v_index == 0:
             pygame.draw.rect(screen, "black", button, width=2, border_radius=15)
+            draw_shadow_text(screen, ">", 50, x // 2 + 135, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
+            draw_shadow_text(screen, "<", 50, x // 2 - 140, y // 2 - 90.5, colour=(255, 179, 26), font="freesansbold.ttf")
         elif v_index == 1:
             pygame.draw.rect(screen, "black", new_circuit, width=2, border_radius=15)
 
