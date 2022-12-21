@@ -13,6 +13,12 @@ font_pequena_pequena = pygame.font.Font('freesansbold.ttf', 18)
 
 
 def loop_index_left(index, len):
+    """
+    Função auxiliar que devolve o novo índice ao ir para a esquerda
+    :param index: Índice atual
+    :param len: Comprimento da lista
+    :return: Novo índice
+    """
     if index - 1 == -1:
         return len - 1
     else:
@@ -20,11 +26,22 @@ def loop_index_left(index, len):
 
 
 def loop_index_right(index, len):
+    """
+    Função auxiliar que devolve o novo índice ao ir para a direita
+    :param index: Índice atual
+    :param len: Comprimento da lista
+    :return: Novo índice
+    """
     if index + 1 == len:
         return 0
     else:
         return index+1
+
+
 def draw_text(text, font, color, surface, x, y):
+    """
+    Desenha o texto
+    """
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect()
     textrect.center = (x, y)
@@ -32,6 +49,9 @@ def draw_text(text, font, color, surface, x, y):
 
 
 def draw_shadow_text(screen, text, size, x, y, colour=(255,255,255), drop_colour=(77, 77, 77), font=None):
+    """
+    Desenha texto com sombra
+    """
     dropshadow_offset = 1 + (size // 15)
     text_font = pygame.font.Font(font, size)
 
@@ -49,6 +69,9 @@ def draw_shadow_text(screen, text, size, x, y, colour=(255,255,255), drop_colour
 
 
 def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
+    """
+    Desenha o circuito
+    """
     x_draw = x_total
     y_draw = y_total
     walls = list()
@@ -88,6 +111,9 @@ def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
 
 
 def draw_debug_frame(matrix, debug, index):
+    """
+    Desenha um frame do modo debug
+    """
     x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
     y_total = 300 - (len(matrix) // 2) * 16
 
@@ -97,6 +123,9 @@ def draw_debug_frame(matrix, debug, index):
 
 
 def draw_debug(matrix, debug):
+    """
+    Simulação para o modo debug
+    """
     running = True
     index = 0
     x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
@@ -148,6 +177,9 @@ def draw_debug(matrix, debug):
 
 
 def draw_final_path(path, matrix, x_total, y_total, cost, color):
+    """
+    Desenha o caminho final
+    """
     for i in range(len(path[1])):
         final_pos = path[1][i].pos
         final_pos = (x_total + final_pos[0] * 16, y_total + len(matrix) * 16 - final_pos[1] * 16)
@@ -162,15 +194,15 @@ def draw_final_path(path, matrix, x_total, y_total, cost, color):
 
 
 def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
+    """
+    Desenha o caminho até uma determinada iteração
+    """
     colors = ['darkorange', 'darkviolet', 'royalblue', 'turquoise', 'seagreen', 'pink', 'saddlebrown', 'palegreen',
-              'maroon', (230, 0, 230), (255, 255, 0), (153, 51, 0), (204, 179, 255), (51, 102, 0), (255, 255, 255)]
-
-    f_pos = None
+          'maroon', (230, 0, 230), (255, 255, 0), (153, 51, 0), (204, 179, 255), (51, 102, 0), (255, 255, 255)]
     for j in range(len(paths)):
         if index + 1 < len(paths[j][1]):
             for i in range(index+1):
                 final_pos = paths[j][1][i].pos
-                f_pos = final_pos
                 final_pos = (x_total + final_pos[0] * 16, y_total + len(matrix) * 16 - final_pos[1] * 16)
                 if i > 0:
                     start_pos = paths[j][1][i - 1].pos
@@ -184,6 +216,9 @@ def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
 
 
 def draw_paths(paths, matrix, costs, debug=[]):
+    """
+    Simulação
+    """
     x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
     y_total = 300 - (len(matrix) // 2) * 16
     max_len = len(paths[0])

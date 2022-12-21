@@ -96,10 +96,8 @@ class Race:
 
     def build_graph(self):
         """
-        Constroi um grafo
-        :param initial_state: Estado inicial
+        Constrói um grafo
         """
-
         states = set()
         visited = set()
         for start in self.start:
@@ -191,12 +189,10 @@ class Race:
     def multiplayer(self, heuristics):
         """
         Executa o modo multiplayer
-        :param heuristics: Lista onde o indíce corresponde ao número do jogador e o valor à respetiva heurística
-                           (em caso de procura não-informada o valor é None)
+        :param Lista de tuplos (índice do jogador, caminho percorrido (lista de nodos)) ordenada pelo tamanho do caminho percorrido,
+               sendo a primeira posição da lista o tuplo com menor caminho
         """
-        # paths ,costs
         players = self.start
-        matrix = self.matrix
         paths = dict()
         costs = list()
 

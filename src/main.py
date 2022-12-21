@@ -5,7 +5,6 @@ from menus import main_menu
 def main():
     """
     Main
-    :return:
     """
     sys.setrecursionlimit(int(1e6))
 
