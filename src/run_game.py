@@ -437,7 +437,8 @@ def menu_choose_algorithm(race):
                         vert_index = loop_index_left(vert_index, 2)
 
                 elif event.key == pygame.K_RETURN:
-                    player = menu_choose_player(race)
+                    player_index = menu_choose_player(race)
+                    player = race.start[player_index]
                     screen.fill("white")
                     x_total = 450 - ((len(race.matrix[0]) // 2) * 16) - 16
                     y_total = 300 - (len(race.matrix) // 2) * 16
@@ -445,32 +446,32 @@ def menu_choose_algorithm(race):
                     if index_alg == 0:
                         path, cost, pos_visited = race.BFS_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([path], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost])
 
                     if index_alg == 1:
                         path, cost, pos_visited = race.DFS_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([path], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost])
 
                     if index_alg == 2:
                         path, cost, pos_visited = race.iterative_DFS_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([path], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost])
 
                     if index_alg == 3:
                         path, cost, pos_visited = race.uniform_cost_solution(player)
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([path], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost])
 
                     if index_alg == 4:
                         path, cost, pos_visited = race.a_star_solution(player, heuristics[index_a])
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([path], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost])
 
                     if index_alg == 5:
                         path, cost, pos_visited = race.greedy_solution(player, heuristics[index_greedy])
                         draw_circuit(race.matrix, x_total, y_total, 16)
-                        draw_paths([path], race.matrix, [cost])
+                        draw_paths([(player_index, path)], race.matrix, [cost])
 
                 elif event.key == pygame.K_ESCAPE:
                     running = False
@@ -512,7 +513,7 @@ def menu_choose_player(race):
         pygame.display.update()
         clock.tick(60)
 
-    return race.start[index]
+    return index
 
 
 def draw_circuit(matrix, x_total, y_total, pixel, player=-1):
@@ -601,7 +602,7 @@ def draw_until_frame(paths, matrix, x_total, y_total, index, costs):
 def draw_paths(paths, matrix, costs):
     x_total = 450 - ((len(matrix[0]) // 2) * 16) - 16
     y_total = 300 - (len(matrix) // 2) * 16
-    max_len = len(paths[0][1])
+    max_len = len(paths[0])
 
     for path in paths:
         if len(path[1]) > max_len:
@@ -640,7 +641,6 @@ def draw_paths(paths, matrix, costs):
                     draw_until_frame(paths, matrix, x_total, y_total, index, costs)
                 elif event.key == pygame.K_ESCAPE:
                     running = False
-
 
         clock.tick(60)
         pygame.display.update()
