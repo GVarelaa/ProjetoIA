@@ -302,7 +302,6 @@ class Graph:
                             visited.add(adj)
                             break
 
-
         # reconstruir o caminho
         path = []
         if path_found:
