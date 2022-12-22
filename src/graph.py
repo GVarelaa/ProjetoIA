@@ -193,7 +193,7 @@ class Graph:
         :param debug: Posições visitadas (debug)
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :param iter_number: Número de iteração (multiplayer)
-        :return:
+        :return: Caminho final, custo da solução e lista de posições visitadas para debug atualizada
         """
         visited.add(start)
         debug.append(start.pos)  # debug
@@ -213,15 +213,14 @@ class Graph:
 
     def iterative_DFS_aux(self, start, end, depth, debug=list(), paths=dict(), iter_number=0):
         """
-        Algoritmo "Depth-First-Search"
+        Função auxiliar para aplicar o algoritmo DFS numa profundidade dada
         :param start: Posição inicial
         :param end: Posições finais
-        :param depth: Profundidade (DFS iterativo)
-        :param visited: Nodos visitados
+        :param depth: Profundidade
         :param debug: Posições visitadas (debug)
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :param iter_number: Número de iteração (multiplayer)
-        :return:
+        :return: Caminho final, custo da solução e lista de posições visitadas para debug atualizada
         """
         debug.append(start.pos)  # debug
 
@@ -247,7 +246,7 @@ class Graph:
         :param start: Posição inicial
         :param end: Posições finais
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
-        :return:
+        :return: Caminho final, custo da solução e lista de posições visitadas para debug
         """
         depth = 0
         ret = None
