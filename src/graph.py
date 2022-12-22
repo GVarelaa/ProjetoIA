@@ -219,13 +219,13 @@ class Graph:
                     return ret
                 path.pop()
 
-        if count == 0:
+        """if count == 0:
             for (adj, cost) in self.graph[start]:
                 if adj == start:
                     path.append(start)
                     ret = self.DFS(adj, end, path, visited, debug, paths, iter_number + 1, depth - 1)
                     if ret is not None:
-                        return ret
+                        return ret"""
 
 
 
@@ -240,7 +240,7 @@ class Graph:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return:
         """
-        i = 0
+        i = 1
         ret = None
 
         while ret is None:
