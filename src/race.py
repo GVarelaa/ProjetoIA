@@ -131,7 +131,8 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, debug = self.graph.DFS(initial_state, self.end, [], set(), [], paths)
+        debug = list()
+        path, cost = self.graph.DFS(initial_state, self.end, debug=debug, paths=paths)
         return path, cost, debug
 
     def iterative_DFS_solution(self, initial_state, paths=dict()):
@@ -141,7 +142,7 @@ class Race:
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
-        path, cost, debug = self.graph.iterative_DFS(initial_state, self.end, paths)
+        (path, cost), debug = self.graph.iterative_DFS(initial_state, self.end, paths)
         return path, cost, debug
 
     def BFS_solution(self, initial_state, paths=dict()):
