@@ -209,13 +209,25 @@ class Graph:
         if depth == 0:
             return None
 
+        count = 0
         for adj, cost in self.graph[start]:
             if adj not in visited and not Graph.node_in_other_paths(start, adj, iter_number, paths):
+                count += 1
                 path.append(start)
                 ret = self.DFS(adj, end, path, visited, debug, paths, iter_number+1, depth-1)
                 if ret is not None:
                     return ret
                 path.pop()
+
+        if count == 0:
+            for (adj, cost) in self.graph[start]:
+                if adj == start:
+                    path.append(start)
+                    ret = self.DFS(adj, end, path, visited, debug, paths, iter_number + 1, depth - 1)
+                    if ret is not None:
+                        return ret
+
+
 
         #path.pop()  # se nao encontrar, remover o que está no caminho
         return None
@@ -321,6 +333,7 @@ class Graph:
         costs = {start: 0}
 
         debug = [start.pos]  # debug
+        remains_same_spot = []
 
         while len(open_list) > 0:
             n = None
@@ -339,8 +352,13 @@ class Graph:
                     reconst_path = []
 
                     while parents[n] != n:
+                        if n in remains_same_spot:
+                            reconst_path.append(n)
                         reconst_path.append(n)
                         n = parents[n]
+
+                    if n in remains_same_spot:
+                        reconst_path.append(n)
 
                     reconst_path.append(start)
                     reconst_path.reverse()
@@ -354,6 +372,16 @@ class Graph:
                     parents[adj] = n
                     level[adj] = i
                     costs[adj] = costs[n] + cost
+
+                if len(open_list) == 1:
+                    for adj, cost in self.graph[n]:
+                        if adj == node:
+                            remains_same_spot.append(adj)
+                            open_list.add(adj)
+                            level[adj] = i
+                            costs[adj] = costs[n] + cost
+                            break
+
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
@@ -383,6 +411,7 @@ class Graph:
         parents = {start: start}  # mantém o antecessor de um nodo
 
         debug = [start.pos]  # debug
+        remains_same_spot = []
 
         while len(open_list) > 0:
             n = None
@@ -401,8 +430,13 @@ class Graph:
                     reconst_path = []
 
                     while parents[n] != n:
+                        if n in remains_same_spot:
+                            reconst_path.append(n)
                         reconst_path.append(n)
                         n = parents[n]
+
+                    if n in remains_same_spot:
+                        reconst_path.append(n)
 
                     reconst_path.append(start)
                     reconst_path.reverse()
@@ -416,6 +450,14 @@ class Graph:
                     open_list.add(adj)
                     parents[adj] = n
                     level[adj] = i
+
+                if len(open_list) == 1:
+                    for adj, cost in self.graph[n]:
+                        if adj == node:
+                            remains_same_spot.append(adj)
+                            open_list.add(adj)
+                            level[adj] = i
+                            break
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)
@@ -445,6 +487,7 @@ class Graph:
         costs = {start: 0}
 
         debug = [start.pos]  # debug
+        remains_same_spot = []
 
         while len(open_list) > 0:
             n = None
@@ -463,14 +506,17 @@ class Graph:
                     reconst_path = []
 
                     while parents[n] != n:
+                        if n in remains_same_spot:
+                            reconst_path.append(n)
                         reconst_path.append(n)
                         n = parents[n]
+                    if n in remains_same_spot:
+                        reconst_path.append(n)
 
                     reconst_path.append(start)
                     reconst_path.reverse()
 
                     return reconst_path, self.calc_path_cost(reconst_path), debug
-
             for adj, cost in self.graph[n]:
                 i = level[n] + 1
                 if adj not in open_list and adj not in closed_list and not Graph.node_in_other_paths(n, adj, i, paths):
@@ -478,6 +524,14 @@ class Graph:
                     parents[adj] = n
                     level[adj] = i
                     costs[adj] = costs[n] + cost
+                if len(open_list) == 1:
+                    for adj, cost in self.graph[n]:
+                        if adj == node:
+                            remains_same_spot.append(adj)
+                            open_list.add(adj)
+                            level[adj] = i
+                            costs[adj] = costs[n] + cost
+                            break
 
             # remover n da open_list e adiciona-lo à closed_list - todos os seus vizinhos já foram inspecionados
             open_list.remove(n)

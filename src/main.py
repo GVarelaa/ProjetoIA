@@ -15,8 +15,7 @@ def main():
     circuits.append(("Vector", "../circuits/vector.txt"))
     circuits.append(("Rect", "../circuits/rect.txt"))
     circuits.append(("Snake", "../circuits/snake.txt"))
-    circuits.append(("Teste", "../circuits/test.txt"))
-    circuits.append(("Teste2", "../circuits/test2.txt"))
+    circuits.append(("Test", "../circuits/test.txt"))
 
     main_menu(circuits)
 
