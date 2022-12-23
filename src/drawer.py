@@ -10,6 +10,7 @@ screen = pygame.display.set_mode((x, y))
 clock = pygame.time.Clock()
 font_titulo = pygame.font.Font('freesansbold.ttf', 40)
 font_pequena_pequena = pygame.font.Font('freesansbold.ttf', 18)
+font_custo = pygame.font.Font('freesansbold.ttf', 14)
 
 
 def loop_index_left(index, len):
@@ -190,7 +191,7 @@ def draw_final_path(path, matrix, x_total, y_total, cost, color):
             pygame.draw.line(screen, color, start_pos, final_pos, 2)
         pygame.draw.circle(screen, color, final_pos, 5)
 
-    draw_text(f"J {path[0]} : Custo {cost}", font_pequena_pequena, color, screen, 80, 30 + 30*path[0])
+    draw_text(f"J {path[0]} : Custo {cost}", font_custo, color, screen, 60, 30 + 20*path[0])
 
 
 def draw_until_frame(paths, matrix, x_total, y_total, index, costs):

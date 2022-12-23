@@ -136,16 +136,6 @@ class Race:
         path, cost = self.graph.DFS(initial_state, self.end, visited, debug=debug, paths=paths)
         return path, cost, debug
 
-    def iterative_DFS_solution(self, initial_state, paths=dict()):
-        """
-        Aplica o algoritmo DFS iterativo
-        :param initial_state: Estado inicial
-        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
-        :return: Caminho final, custo da solução e posições visitadas para debug
-        """
-        (path, cost), debug = self.graph.iterative_DFS(initial_state, self.end, paths)
-        return path, cost, debug
-
     def BFS_solution(self, initial_state, paths=dict()):
         """
         Aplica o algoritmo BFS
@@ -209,18 +199,14 @@ class Race:
                     paths[i] = path
                     costs.append(cost)
                 case 2:
-                    path, cost, debug = self.iterative_DFS_solution(players[i], paths)
-                    paths[i] = path
-                    costs.append(cost)
-                case 3:
                     path, cost, debug = self.uniform_cost_solution(players[i], paths)
                     paths[i] = path
                     costs.append(cost)
-                case 4:
+                case 3:
                     path, cost, debug = self.a_star_solution(players[i], heuristics[i], paths)
                     paths[i] = path
                     costs.append(cost)
-                case 5:
+                case 4:
                     path, cost, debug = self.greedy_solution(players[i], heuristics[i], paths)
                     paths[i] = path
                     costs.append(cost)
