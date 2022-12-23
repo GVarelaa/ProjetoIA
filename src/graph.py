@@ -1,6 +1,8 @@
 from queue import Queue
 from position_calculator import *
 from node import Node
+from collections import deque
+from copy import deepcopy
 
 
 class Graph:
@@ -183,41 +185,99 @@ class Graph:
                     return True
 
         return False
+    def DFSNonRecursive(self, start, end, max_depth, paths):
+        parents = {start: None}
+        depths = {start: 0}
+        states = {v: 0 for v in self.nodes}
 
-    def DFS(self, start, end, path, visited, debug, paths=dict(), iter_number=0, depth=-1):
+        stack = deque()
+        stack.append(start)
+
+        while len(stack) > 0:
+            node = stack.pop()
+
+            for adj, cost in self.graph[node]:
+                depth = depths[node] + 1
+                if depth < max_depth: #and adj not in visited: # and not Graph.node_in_other_paths(start, adj, depths[adj], paths):
+                    stack.append(adj)
+                    depths[adj] = depths[node] + 1
+                    parents[adj] = node
+                    for state in end:
+                        if state.pos == adj.pos:
+                            path = []
+                            i = 1
+                            path.insert(0, adj)
+                            while parents[adj] is not None:
+                                path.insert(i, parents[adj])
+                                adj = parents[adj]
+                                i += 1
+
+                            path.insert(i, start)
+                            path.reverse()
+
+                            total_cost = self.calc_path_cost(path)
+                            return path, total_cost
+            visited.add(node)
+        return None
+
+
+
+    def DFS(self, start, end, visited=set(), debug=list(), paths=dict(), iter_number=0):
         """
         Algoritmo "Depth-First-Search"
         :param start: Posição inicial
         :param end: Posições finais
-        :param path: Caminho final
         :param visited: Nodos visitados
         :param debug: Posições visitadas (debug)
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
         :param iter_number: Número de iteração (multiplayer)
-        :param depth: Profundidade (DFS iterativo)
-        :return:
+        :return: Caminho final, custo da solução e lista de posições visitadas para debug atualizada
         """
         visited.add(start)
         debug.append(start.pos)  # debug
 
         for state in end:
             if state.pos == start.pos:
-                path.append(start)
-                total_cost = self.calc_path_cost(path)
-                return path, total_cost, debug
+                return [start], 0
+
+        for adj, cost in self.graph[start]:
+            if adj not in visited and not Graph.node_in_other_paths(start, adj, iter_number, paths):
+                ret = self.DFS(adj, end, visited, debug, paths, iter_number + 1)
+                if ret is not None:
+                    p, c = ret
+                    return [start] + p, c + cost
+
+        return None
+
+    def iterative_DFS_aux(self, start, end, depth, debug=list(), paths=dict(), iter_number=0, visited = set(), visited_in_this_trav = set()):
+        """
+        Função auxiliar para aplicar o algoritmo DFS numa profundidade dada
+        :param start: Posição inicial
+        :param end: Posições finais
+        :param depth: Profundidade
+        :param debug: Posições visitadas (debug)
+        :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
+        :param iter_number: Número de iteração (multiplayer)
+        :return: Caminho final, custo da solução e lista de posições visitadas para debug atualizada
+        """
+        #debug.append(start.pos)  # debug
+
+        for state in end:
+            if state.pos == start.pos:
+                return [start], 0
 
         if depth == 0:
             return None
 
-        count = 0
         for adj, cost in self.graph[start]:
-            if adj not in visited and not Graph.node_in_other_paths(start, adj, iter_number, paths):
-                count += 1
-                path.append(start)
-                ret = self.DFS(adj, end, path, visited, debug, paths, iter_number+1, depth-1)
+            visited_in_this_traversal = deepcopy(visited_in_this_trav)
+            if adj not in visited_in_this_traversal and not Graph.node_in_other_paths(start, adj, iter_number, paths):
+                visited_in_this_traversal.add(adj)
+                ret = self.iterative_DFS_aux(adj, end, depth-1, debug, paths, iter_number + 1, visited, visited_in_this_traversal)
                 if ret is not None:
-                    return ret
-                path.pop()
+                    p, c = ret
+                    return [start] + p, c + cost
+        visited.add(start)
 
         """if count == 0:
             for (adj, cost) in self.graph[start]:
@@ -238,16 +298,18 @@ class Graph:
         :param start: Posição inicial
         :param end: Posições finais
         :param paths: Dicionário com os caminhos dos vários jogadores (multiplayer)
-        :return:
+        :return: Caminho final, custo da solução e lista de posições visitadas para debug
         """
-        i = 1
+
+        depth = 1
         ret = None
+        debug = list()
 
         while ret is None:
-            ret = self.DFS(start, end, path=[], visited=set(), debug=[], paths=paths, depth=i)
-            i += 1
+            ret = self.iterative_DFS_aux(start, end, depth, debug)
+            depth += 1
 
-        return ret
+        return ret, debug
 
     def BFS(self, start, end, paths=dict()):
         """
