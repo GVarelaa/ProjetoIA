@@ -222,7 +222,7 @@ class Graph:
 
 
 
-    def DFS(self, start, end, visited=set(), debug=list(), paths=dict(), iter_number=0):
+    def DFS(self, start, end, visited, debug=list(), paths=dict(), iter_number=0):
         """
         Algoritmo "Depth-First-Search"
         :param start: Posição inicial

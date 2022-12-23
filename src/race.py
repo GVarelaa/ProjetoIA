@@ -132,7 +132,8 @@ class Race:
         :return: Caminho final, custo da solução e posições visitadas para debug
         """
         debug = list()
-        path, cost = self.graph.DFS(initial_state, self.end, debug=debug, paths=paths)
+        visited = set()
+        path, cost = self.graph.DFS(initial_state, self.end, visited, debug=debug, paths=paths)
         return path, cost, debug
 
     def iterative_DFS_solution(self, initial_state, paths=dict()):
