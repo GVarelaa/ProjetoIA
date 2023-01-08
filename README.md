@@ -1,4 +1,12 @@
 ## Grupo 12
+
+Guia de utilização:
+- pip install pygame
+- python3 main.py
+- "ESC" - voltar para o menu anterior
+- Setas - navegação dentro dos menus
+- "ENTER" - avançar para o menu seguinte
+
 Trabalho realizado no âmbito da unidade curricular de Inteligência Artificial
 
 - Emanuel Lopes Monteiro da Silva - a95114 - [@EmanuelsGiT](https://github.com/EmanuelsGiT)
